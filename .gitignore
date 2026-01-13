@@ -1,0 +1,128 @@
+# ============================================
+# Movie & TV Recommender - .gitignore
+# ============================================
+
+# ----- Python -----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# ----- Environment & Secrets -----
+.env
+.env.local
+.env.*.local
+.venv/
+venv/
+ENV/
+env/
+*.env
+
+# ----- Data Files (too large for GitHub) -----
+# Database files (excluded from Git - stays local)
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+
+# Pickle files (processed data)
+data/*.pkl
+data/*.pickle
+
+# CSV files (raw scraped data)
+data/*.csv
+!data/.gitkeep
+
+# Local documentation (not for GitHub)
+_local_docs/
+GITHUB_FINAL_CHECKLIST.md
+
+# Checkpoints (intermediate files)
+checkpoints/
+*.checkpoint
+
+# Provider logos (keep these - they're small)
+# data/provider_logos/*.png - KEEP THESE
+
+# ----- Jupyter Notebooks -----
+.ipynb_checkpoints/
+*.ipynb_meta
+# Keep notebooks for documentation, but ignore checkpoints
+
+# ----- Streamlit -----
+.streamlit/secrets.toml
+.streamlit/config.toml.local
+
+# ----- IDE / Editors -----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+
+# ----- OS Files -----
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+Icon?
+
+# ----- Logs -----
+*.log
+logs/
+*.log.*
+
+# ----- Media (keep demo files, remove large videos) -----
+*.mp4
+*.avi
+*.mov
+# Keep: demo_video.gif, recommender.png, recommender_light.png
+
+# ----- Temp Files -----
+*.tmp
+*.temp
+*.bak
+*.cache
+*.swp
+
+# ----- Debug & Test Output -----
+test_output/
+debug_output/
+*.debug
+
+# ----- Selenium / Web Scraping -----
+geckodriver.log
+chromedriver.log
+*.crx
+*.pem
+
+# ----- Coverage Reports -----
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# ----- Distribution / Packaging -----
+*.egg-info/
+.eggs/
+dist/
+build/
+wheels/
+*.whl

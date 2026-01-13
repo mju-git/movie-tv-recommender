@@ -1,0 +1,19 @@
+# Streamlit Configuration
+# This file is safe to commit (no secrets)
+
+[theme]
+primaryColor = "#e50914"
+backgroundColor = "#fafafa"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#1a1a1a"
+font = "Inter"
+
+[server]
+headless = false
+port = 8501
+enableCORS = true
+enableXsrfProtection = true
+
+[browser]
+gatherUsageStats = false
+
