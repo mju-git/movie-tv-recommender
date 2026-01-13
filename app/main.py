@@ -21,7 +21,18 @@ Author: Movie Recommender Team
 License: MIT
 """
 import sys
+import traceback
 from pathlib import Path
+
+# Log all errors to stderr (visible in Streamlit Cloud logs)
+def log_error(exc_type, exc_value, exc_traceback):
+    if issubclass(exc_type, KeyboardInterrupt):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+    error_msg = ''.join(traceback.format_exception(exc_type, exc_value, exc_traceback))
+    print(f"ERROR: {error_msg}", file=sys.stderr, flush=True)
+
+sys.excepthook = log_error
 
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
@@ -58,16 +69,34 @@ if USE_DATABASE:
     
     # Run migration once per session if needed (quiet mode for Streamlit)
     if 'migration_run' not in st.session_state:
-        migrate_add_poster_and_providers(quiet=True)
-        st.session_state.migration_run = True
+        try:
+            migrate_add_poster_and_providers(quiet=True)
+            st.session_state.migration_run = True
+        except Exception as e:
+            # Migration failed but continue anyway
+            print(f"Warning: Migration failed: {e}", file=sys.stderr, flush=True)
+            st.session_state.migration_run = True
 
 # Import analytics module for dialog (use importlib for path flexibility)
 import importlib.util
 analytics_path = Path(__file__).parent / "components" / "analytics.py"
-spec = importlib.util.spec_from_file_location("analytics", analytics_path)
-analytics_module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(analytics_module)
-render_analytics = analytics_module.render_analytics
+try:
+    if analytics_path.exists():
+        spec = importlib.util.spec_from_file_location("analytics", analytics_path)
+        analytics_module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(analytics_module)
+        render_analytics = analytics_module.render_analytics
+    else:
+        # Analytics file doesn't exist - create a dummy function
+        def render_analytics(*args, **kwargs):
+            st.warning("Analytics dashboard not available")
+        render_analytics = render_analytics
+except Exception as e:
+    # If analytics import fails, create a dummy function
+    print(f"Warning: Analytics module import failed: {e}", file=sys.stderr, flush=True)
+    def render_analytics(*args, **kwargs):
+        st.warning("Analytics dashboard not available")
+    render_analytics = render_analytics
 
 st.set_page_config(
     page_title="Movie Recommender", 
@@ -842,74 +871,86 @@ def get_recommendations_db(titles, num_of_rec=16, genre_filter=None, media_type=
 
 
 def main():
-    # Get media type from session state (default to movies)
-    media_type = st.session_state.get('media_type', 'movies')
-    
-    # Load data based on media type and available source
-    if USE_DATABASE:
-        if media_type == 'tv':
-            all_titles = get_all_tv_titles()
-            all_genres = get_all_genres()  # Genres are shared
-            data_source = "SQLite Database (TV Shows)"
-        else:
-            all_titles = get_all_titles()
-            all_genres = get_all_genres()
-            data_source = "SQLite Database (Movies)"
-        movies_df = None
-        tfidf = None
-    else:
-        if media_type == 'tv':
-            movies_df = load_pickle('data/tv_shows.pkl')
-            tfidf = load_pickle('data/tv_similarity.pkl')
-            data_source = "Pickle Files (TV Shows)"
-        else:
-            movies_df = load_pickle('data/movies.pkl')
-            tfidf = load_pickle('data/similarity.pkl')
-            data_source = "Pickle Files (Movies)"
-        # Sort by vote_average descending
-        sorted_df = movies_df.sort_values('vote_average', ascending=False)
-        # Format titles with year: "Title (Year)" or just "Title" if year is None
-        all_titles = []
-        for _, row in sorted_df.iterrows():
-            title = row['title']
-            year = row.get('year')
-            if pd.notna(year) and year is not None and year != '':
-                try:
-                    all_titles.append(f"{title} ({int(year)})")
-                except (ValueError, TypeError):
-                    all_titles.append(title)
-            else:
-                all_titles.append(title)
-        all_genres = get_genres_from_df(movies_df)
-    
-    # Helper function to extract title from "Title (Year)" format
-    def extract_title(title_with_year):
-        """Extract just the title from 'Title (Year)' format."""
-        if ' (' in title_with_year and title_with_year.endswith(')'):
-            return title_with_year.rsplit(' (', 1)[0]
-        return title_with_year
-    
-    # Default selection
-    if media_type == 'tv':
-        default_title = "Breaking Bad"
-    else:
-        default_title = "The Shawshank Redemption"
-    
-    # Find default index - check both with and without year format
-    default_index = 0
-    for i, title in enumerate(all_titles):
-        if extract_title(title) == default_title or title == default_title:
-            default_index = i
-            break
-
-    # ===== SIDEBAR =====
-    with st.sidebar:
-        st.markdown("## ⚙️ Settings")
-        st.divider()
+    try:
+        # Get media type from session state (default to movies)
+        media_type = st.session_state.get('media_type', 'movies')
         
-        # Media type toggle (Movies/TV)
-        st.markdown("**Content Type**")
-        media_type = st.radio(
+        # Load data based on media type and available source
+        if USE_DATABASE:
+            if media_type == 'tv':
+                all_titles = get_all_tv_titles()
+                all_genres = get_all_genres()  # Genres are shared
+                data_source = "SQLite Database (TV Shows)"
+            else:
+                all_titles = get_all_titles()
+                all_genres = get_all_genres()
+                data_source = "SQLite Database (Movies)"
+            movies_df = None
+            tfidf = None
+        else:
+            # Try to load pickle files, but handle missing files gracefully
+            try:
+                if media_type == 'tv':
+                    movies_df = load_pickle('data/tv_shows.pkl')
+                    tfidf = load_pickle('data/tv_similarity.pkl')
+                    data_source = "Pickle Files (TV Shows)"
+                else:
+                    movies_df = load_pickle('data/movies.pkl')
+                    tfidf = load_pickle('data/similarity.pkl')
+                    data_source = "Pickle Files (Movies)"
+            except FileNotFoundError as e:
+                st.error(f"❌ Data files not found: {e}")
+                st.info("Please ensure data files (movies.pkl, similarity.pkl) or database (movies.db) are available.")
+                st.stop()
+            except Exception as e:
+                st.error(f"❌ Error loading data: {e}")
+                st.exception(e)
+                st.stop()
+            
+            # Sort by vote_average descending
+            sorted_df = movies_df.sort_values('vote_average', ascending=False)
+            # Format titles with year: "Title (Year)" or just "Title" if year is None
+            all_titles = []
+            for _, row in sorted_df.iterrows():
+                title = row['title']
+                year = row.get('year')
+                if pd.notna(year) and year is not None and year != '':
+                    try:
+                        all_titles.append(f"{title} ({int(year)})")
+                    except (ValueError, TypeError):
+                        all_titles.append(title)
+                else:
+                    all_titles.append(title)
+            all_genres = get_genres_from_df(movies_df)
+        
+        # Helper function to extract title from "Title (Year)" format
+        def extract_title(title_with_year):
+            """Extract just the title from 'Title (Year)' format."""
+            if ' (' in title_with_year and title_with_year.endswith(')'):
+                return title_with_year.rsplit(' (', 1)[0]
+            return title_with_year
+        
+        # Default selection
+        if media_type == 'tv':
+            default_title = "Breaking Bad"
+        else:
+            default_title = "The Shawshank Redemption"
+        
+        # Find default index - check both with and without year format
+        default_index = 0
+        for i, title in enumerate(all_titles):
+            if extract_title(title) == default_title or title == default_title:
+                default_index = i
+                break
+
+        # ===== SIDEBAR =====
+        with st.sidebar:
+            st.markdown("## ⚙️ Settings")
+            st.divider()
+            
+            # Media type toggle (Movies/TV)
+            st.markdown("**Content Type**")
+            media_type = st.radio(
             "Media Type",
             options=['movies', 'tv'],
             format_func=lambda x: '🎬 Movies' if x == 'movies' else '📺 TV Shows',
@@ -917,94 +958,94 @@ def main():
             horizontal=True,
             label_visibility="collapsed",
             index=0
-        )
-        
-        st.divider()
-        
-        st.markdown("**Genre Filter**")
-        genre_filter = st.multiselect(
+            )
+            
+            st.divider()
+            
+            st.markdown("**Genre Filter**")
+            genre_filter = st.multiselect(
             "Genre",
             options=all_genres,
             default=[],
             placeholder="All genres",
             label_visibility="collapsed"
-        )
-        
-        st.divider()
-        
-        st.markdown("**Number of Results**")
-        num_recommendations = st.slider(
+            )
+            
+            st.divider()
+            
+            st.markdown("**Number of Results**")
+            num_recommendations = st.slider(
             "Results",
             min_value=5,
             max_value=30,
             value=10,
             step=5,
             label_visibility="collapsed"
-        )
-        
-        st.divider()
-        
-        st.markdown(f"**Multi-{media_type.capitalize()} Mode**")
-        multi_mode = st.toggle(
+            )
+            
+            st.divider()
+            
+            st.markdown(f"**Multi-{media_type.capitalize()} Mode**")
+            multi_mode = st.toggle(
             "Combine favorites", 
             value=False,
             help=f"Get recommendations based on multiple {media_type}"
-        )
-        
-        st.divider()
-        
-        st.markdown("**Theme**")
-        theme_choice = st.radio(
+            )
+            
+            st.divider()
+            
+            st.markdown("**Theme**")
+            theme_choice = st.radio(
             "Theme",
             options=['light', 'dark'],
             format_func=lambda x: '☀️ Light' if x == 'light' else '🌙 Dark',
             key='theme',
             horizontal=True,
             label_visibility="collapsed"
-        )
-        
-        # Analytics button above How It Works (no divider above)
-        if st.button("📊 Analytics Dashboard", use_container_width=True, key="analytics_btn"):
-            st.session_state.show_analytics = True
-        
-        with st.expander("ℹ️ How It Works"):
-            st.markdown(f"""
-            {media_type.capitalize()} are matched by analyzing genres, cast, plot, and keywords using TF-IDF and cosine similarity.
-            """)
+            )
             
-            # Data source info inside expander
-            st.markdown("---")
-            st.caption(f"**Data Source:** {data_source}")
-            if USE_DATABASE:
-                stats = get_database_stats()
-                if media_type == 'tv':
-                    st.caption(f"TV Shows: {stats.get('total_tv_shows', 0):,}")
-                else:
-                    st.caption(f"Movies: {stats.get('total_movies', 0):,}")
+            # Analytics button above How It Works (no divider above)
+            if st.button("📊 Analytics Dashboard", use_container_width=True, key="analytics_btn"):
+                st.session_state.show_analytics = True
+            
+            with st.expander("ℹ️ How It Works"):
+                st.markdown(f"""
+                {media_type.capitalize()} are matched by analyzing genres, cast, plot, and keywords using TF-IDF and cosine similarity.
+                """)
+                
+                # Data source info inside expander
+                st.markdown("---")
+                st.caption(f"**Data Source:** {data_source}")
+                if USE_DATABASE:
+                    stats = get_database_stats()
+                    if media_type == 'tv':
+                        st.caption(f"TV Shows: {stats.get('total_tv_shows', 0):,}")
+                    else:
+                        st.caption(f"Movies: {stats.get('total_movies', 0):,}")
 
-    # Apply theme CSS
-    is_dark = st.session_state.get('theme', 'light') == 'dark'
-    st.markdown(get_theme_css(is_dark), unsafe_allow_html=True)
+        # Apply theme CSS
+        is_dark = st.session_state.get('theme', 'light') == 'dark'
+        st.markdown(get_theme_css(is_dark), unsafe_allow_html=True)
 
-    # ===== ANALYTICS DIALOG =====
-    dialog_title = "TV Show Analytics" if media_type == 'tv' else "Movie Analytics"
-    @st.dialog(dialog_title, width="large")
-    def show_analytics_dialog():
-        render_analytics(is_dark, media_type=media_type)
-    
-    # Show analytics if button was clicked
-    if st.session_state.get('show_analytics', False):
-        st.session_state.show_analytics = False
-        show_analytics_dialog()
+        # ===== ANALYTICS DIALOG =====
+        dialog_title = "TV Show Analytics" if media_type == 'tv' else "Movie Analytics"
+        @st.dialog(dialog_title, width="large")
+        def show_analytics_dialog():
+            render_analytics(is_dark, media_type=media_type)
+        
+        # Show analytics if button was clicked
+        if st.session_state.get('show_analytics', False):
+            st.session_state.show_analytics = False
+            show_analytics_dialog()
 
-    # ===== MAIN HEADER =====
-    header_title = "TV Show Recommender" if media_type == 'tv' else "Movie Recommender"
-    header_subtitle = "Discover your next favorite show" if media_type == 'tv' else "Discover your next favorite film"
-    st.markdown(f'<h1 class="main-title" id="main-title">{header_title}</h1>', unsafe_allow_html=True)
-    st.markdown(f'<p class="subtitle" id="main-subtitle">{header_subtitle}</p>', unsafe_allow_html=True)
-    
-    # JavaScript for responsive scaling based on window/sidebar size
-    st.markdown("""
+        # ===== MAIN HEADER =====
+        header_title = "TV Show Recommender" if media_type == 'tv' else "Movie Recommender"
+        header_subtitle = "Discover your next favorite show" if media_type == 'tv' else "Discover your next favorite film"
+        st.markdown(f'<h1 class="main-title" id="main-title">{header_title}</h1>', unsafe_allow_html=True)
+        st.markdown(f'<p class="subtitle" id="main-subtitle">{header_subtitle}</p>', unsafe_allow_html=True)
+        
+        # JavaScript for responsive scaling based on window/sidebar size
+        st.markdown("""
     <script>
         function updateScaling() {
             const sidebar = document.querySelector('section[data-testid="stSidebar"]');
@@ -1061,157 +1102,164 @@ def main():
     </script>
     """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns([1, 2, 1])
-    
-    with col2:
-        icon = "📺" if media_type == 'tv' else "🎬"
-        if multi_mode:
-            # For multiselect, find default with year format
-            default_with_year = next((t for t in all_titles if extract_title(t) == default_title), default_title)
-            selected_movies_with_year = st.multiselect(
+        col1, col2, col3 = st.columns([1, 2, 1])
+        
+        with col2:
+            icon = "📺" if media_type == 'tv' else "🎬"
+            if multi_mode:
+                # For multiselect, find default with year format
+                default_with_year = next((t for t in all_titles if extract_title(t) == default_title), default_title)
+                selected_movies_with_year = st.multiselect(
                 f"{icon} Select {media_type} (up to 5)",
                 options=all_titles,
                 default=[default_with_year] if default_with_year in all_titles else [],
                 max_selections=5
-            )
-            # Extract just titles from "Title (Year)" format
-            selected_movies = [extract_title(t) for t in selected_movies_with_year]
-        else:
-            selected_movie_with_year = st.selectbox(
-                f"{icon} Select a {'TV show' if media_type == 'tv' else 'movie'}",
-                options=all_titles,
-                index=default_index
-            )
-            # Extract just the title from "Title (Year)" format
-            selected_movie = extract_title(selected_movie_with_year) if selected_movie_with_year else None
-            selected_movies = [selected_movie] if selected_movie else []
-        
-        st.text("")
-        
-        recommend_clicked = st.button(
-            "✨ Get Recommendations",
-            type="primary",
-            use_container_width=True
-        )
-
-    # ===== RESULTS =====
-    if recommend_clicked and selected_movies:
-        media_label = "TV shows" if media_type == 'tv' else "Movies"
-        if len(selected_movies) == 1:
-            st.markdown(f'<p class="rec-header">{media_label.capitalize()} like {selected_movies[0]}</p>', unsafe_allow_html=True)
-        else:
-            st.markdown(f'<p class="rec-header">Based on your selection</p>', unsafe_allow_html=True)
-        
-        if genre_filter:
-            st.markdown(f'<p class="rec-subheader">Filtered: {", ".join(genre_filter)}</p>', unsafe_allow_html=True)
-        
-        with st.spinner(f"Finding {media_label}..."):
-            # Use appropriate data source
-            if USE_DATABASE:
-                rec_movies, posters, urls, providers_list, error = get_recommendations_db(
-                    selected_movies,
-                    num_of_rec=num_recommendations,
-                    genre_filter=genre_filter if genre_filter else None,
-                    media_type=media_type
                 )
+                # Extract just titles from "Title (Year)" format
+                selected_movies = [extract_title(t) for t in selected_movies_with_year]
             else:
-                rec_movies, posters, urls, error = get_recommendations_pickle(
-                    selected_movies,
-                    cosine_sim_mat=tfidf,
-                    df=movies_df,
-                    num_of_rec=num_recommendations,
-                    genre_filter=genre_filter if genre_filter else None
+                selected_movie_with_year = st.selectbox(
+                    f"{icon} Select a {'TV show' if media_type == 'tv' else 'movie'}",
+                    options=all_titles,
+                    index=default_index
                 )
-                providers_list = None  # Not available in pickle mode yet
-        
-        if error:
-            st.error(f"⚠️ {error}")
-        elif rec_movies:
-            num_movies = len(rec_movies)
-            num_rows = (num_movies + 4) // 5
+                # Extract just the title from "Title (Year)" format
+                selected_movie = extract_title(selected_movie_with_year) if selected_movie_with_year else None
+                selected_movies = [selected_movie] if selected_movie else []
             
-            # Handle providers_list (might be None for pickle mode)
-            if providers_list is None:
-                providers_list = [None] * num_movies
+            st.text("")
             
-            for i in range(num_rows):
-                cols = st.columns(5, gap='medium')
-                for j in range(5):
-                    idx = j + (i * 5)
-                    if idx >= num_movies:
-                        break
-                    
-                    rating = round(rec_movies[idx].vote_average, 1)
-                    title = rec_movies[idx].title
-                    year_val = rec_movies[idx].year
-                    year = int(year_val) if year_val else 0
-                    # COMMENTED OUT: Watch providers temporarily disabled
-                    # providers = providers_list[idx] if idx < len(providers_list) else []
-                    # 
-                    # # Provider badges HTML with local logos
-                    # provider_badges = ""
-                    # if providers and len(providers) > 0:
-                    #     logo_htmls = []
-                    #     for provider in providers:
-                    #         # Get provider name (normalized)
-                    #         if isinstance(provider, dict):
-                    #             provider_name = get_provider_name(provider)
-                    #         else:
-                    #             provider_name = str(provider)
-                    #         
-                    #         normalized_name = normalize_provider_name(provider_name)
-                    #         
-                    #         # Try local logo first (as base64)
-                    #         logo_base64 = get_provider_logo_base64(normalized_name)
-                    #         if logo_base64:
-                    #             logo_htmls.append(
-                    #                 f'<img src="{logo_base64}" alt="{normalized_name}" title="{normalized_name}" '
-                    #                 f'style="height:20px; width:auto; margin:0 4px; vertical-align:middle; opacity:0.9; border-radius:6px; object-fit:contain; cursor:pointer;" />'
-                    #             )
-                    #         elif isinstance(provider, dict):
-                    #             # Fallback to TMDB URL if available
-                    #             logo_url = get_provider_logo_url(provider)
-                    #             if logo_url:
-                    #                 logo_htmls.append(
-                    #                     f'<img src="{logo_url}" alt="{normalized_name}" title="{normalized_name}" '
-                    #                     f'style="height:20px; width:auto; margin:0 4px; vertical-align:middle; opacity:0.9; border-radius:6px; object-fit:contain; cursor:pointer;" />'
-                    #                 )
-                    #             else:
-                    #                 # Final fallback: show name
-                    #                 if normalized_name:
-                    #                     logo_htmls.append(f'<span style="font-size:0.7rem; margin:0 2px;">{normalized_name}</span>')
-                    #         else:
-                    #             # Old format: show name
-                    #             if normalized_name:
-                    #                 logo_htmls.append(f'<span style="font-size:0.7rem; margin:0 2px;">{normalized_name}</span>')
-                    #     
-                    #     if logo_htmls:
-                    #         provider_badges = f'<div style="text-align:center; margin-top:10px; margin-bottom:20px; display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;">{"".join(logo_htmls)}</div>'
-                    
-                    provider_badges = ""  # Empty for now
-                    
-                    with cols[j]:
-                        if posters[idx]:
-                            st.markdown(f'''
-                                <a href="{urls[idx]}" target="_blank" style="text-decoration:none;">
-                                    <div class="poster-card">
-                                        <img src="{posters[idx]}" alt="{title}" title="⭐ {rating}/10">
-                                    </div>
-                                </a>
-                                <p class="movie-title">{title} <span class="movie-year">({year})</span></p>
-                                {provider_badges}
-                            ''', unsafe_allow_html=True)
-                        else:
-                            st.markdown(f'''
-                                <div class="no-poster">🎬</div>
-                                <p class="movie-title">{title} <span class="movie-year">({year})</span></p>
-                                {provider_badges}
-                            ''', unsafe_allow_html=True)
-    
-    elif recommend_clicked:
-        st.warning(f"Please select at least one {'TV show' if media_type == 'tv' else 'movie'}.")
+            recommend_clicked = st.button(
+                "✨ Get Recommendations",
+                type="primary",
+                use_container_width=True
+            )
 
-    st.markdown('<p class="footer">Made with ❤️</p>', unsafe_allow_html=True)
+        # ===== RESULTS =====
+        if recommend_clicked and selected_movies:
+            media_label = "TV shows" if media_type == 'tv' else "Movies"
+            if len(selected_movies) == 1:
+                st.markdown(f'<p class="rec-header">{media_label.capitalize()} like {selected_movies[0]}</p>', unsafe_allow_html=True)
+            else:
+                st.markdown(f'<p class="rec-header">Based on your selection</p>', unsafe_allow_html=True)
+            
+            if genre_filter:
+                st.markdown(f'<p class="rec-subheader">Filtered: {", ".join(genre_filter)}</p>', unsafe_allow_html=True)
+            
+            with st.spinner(f"Finding {media_label}..."):
+                # Use appropriate data source
+                if USE_DATABASE:
+                    rec_movies, posters, urls, providers_list, error = get_recommendations_db(
+                        selected_movies,
+                        num_of_rec=num_recommendations,
+                        genre_filter=genre_filter if genre_filter else None,
+                        media_type=media_type
+                    )
+                else:
+                    rec_movies, posters, urls, error = get_recommendations_pickle(
+                        selected_movies,
+                        cosine_sim_mat=tfidf,
+                        df=movies_df,
+                        num_of_rec=num_recommendations,
+                        genre_filter=genre_filter if genre_filter else None
+                    )
+                    providers_list = None  # Not available in pickle mode yet
+            
+            if error:
+                st.error(f"⚠️ {error}")
+            elif rec_movies:
+                num_movies = len(rec_movies)
+                num_rows = (num_movies + 4) // 5
+                
+                # Handle providers_list (might be None for pickle mode)
+                if providers_list is None:
+                    providers_list = [None] * num_movies
+                
+                for i in range(num_rows):
+                    cols = st.columns(5, gap='medium')
+                    for j in range(5):
+                        idx = j + (i * 5)
+                        if idx >= num_movies:
+                            break
+                        
+                        rating = round(rec_movies[idx].vote_average, 1)
+                        title = rec_movies[idx].title
+                        year_val = rec_movies[idx].year
+                        year = int(year_val) if year_val else 0
+                        # COMMENTED OUT: Watch providers temporarily disabled
+                        # providers = providers_list[idx] if idx < len(providers_list) else []
+                        # 
+                        # # Provider badges HTML with local logos
+                        # provider_badges = ""
+                        # if providers and len(providers) > 0:
+                        #     logo_htmls = []
+                        #     for provider in providers:
+                        #         # Get provider name (normalized)
+                        #         if isinstance(provider, dict):
+                        #             provider_name = get_provider_name(provider)
+                        #         else:
+                        #             provider_name = str(provider)
+                        #         
+                        #         normalized_name = normalize_provider_name(provider_name)
+                        #         
+                        #         # Try local logo first (as base64)
+                        #         logo_base64 = get_provider_logo_base64(normalized_name)
+                        #         if logo_base64:
+                        #             logo_htmls.append(
+                        #                 f'<img src="{logo_base64}" alt="{normalized_name}" title="{normalized_name}" '
+                        #                 f'style="height:20px; width:auto; margin:0 4px; vertical-align:middle; opacity:0.9; border-radius:6px; object-fit:contain; cursor:pointer;" />'
+                        #             )
+                        #         elif isinstance(provider, dict):
+                        #             # Fallback to TMDB URL if available
+                        #             logo_url = get_provider_logo_url(provider)
+                        #             if logo_url:
+                        #                 logo_htmls.append(
+                        #                     f'<img src="{logo_url}" alt="{normalized_name}" title="{normalized_name}" '
+                        #                     f'style="height:20px; width:auto; margin:0 4px; vertical-align:middle; opacity:0.9; border-radius:6px; object-fit:contain; cursor:pointer;" />'
+                        #                 )
+                        #             else:
+                        #                 # Final fallback: show name
+                        #                 if normalized_name:
+                        #                     logo_htmls.append(f'<span style="font-size:0.7rem; margin:0 2px;">{normalized_name}</span>')
+                        #         else:
+                        #             # Old format: show name
+                        #             if normalized_name:
+                        #                 logo_htmls.append(f'<span style="font-size:0.7rem; margin:0 2px;">{normalized_name}</span>')
+                        #     
+                        #     if logo_htmls:
+                        #         provider_badges = f'<div style="text-align:center; margin-top:10px; margin-bottom:20px; display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;">{"".join(logo_htmls)}</div>'
+                        
+                        provider_badges = ""  # Empty for now
+                        
+                        with cols[j]:
+                            if posters[idx]:
+                                st.markdown(f'''
+                                    <a href="{urls[idx]}" target="_blank" style="text-decoration:none;">
+                                        <div class="poster-card">
+                                            <img src="{posters[idx]}" alt="{title}" title="⭐ {rating}/10">
+                                        </div>
+                                    </a>
+                                    <p class="movie-title">{title} <span class="movie-year">({year})</span></p>
+                                    {provider_badges}
+                                ''', unsafe_allow_html=True)
+                            else:
+                                st.markdown(f'''
+                                    <div class="no-poster">🎬</div>
+                                    <p class="movie-title">{title} <span class="movie-year">({year})</span></p>
+                                    {provider_badges}
+                                ''', unsafe_allow_html=True)
+        
+        elif recommend_clicked:
+            st.warning(f"Please select at least one {'TV show' if media_type == 'tv' else 'movie'}.")
+
+        st.markdown('<p class="footer">Made with ❤️</p>', unsafe_allow_html=True)
+    
+    except Exception as e:
+        st.error(f"❌ Application Error: {e}")
+        st.exception(e)  # Show full traceback
+        st.info("Please check the logs for more details.")
+        print(f"FATAL ERROR in main(): {e}", file=sys.stderr, flush=True)
+        traceback.print_exc(file=sys.stderr)
 
 
 if __name__ == '__main__':
