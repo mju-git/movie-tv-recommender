@@ -74,7 +74,13 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="collapsed"
 )
-Config.validate()
+
+# Validate config (non-blocking - app will work without API key, just without poster images)
+try:
+    Config.validate()
+except ValueError:
+    # API key not set - app will still work but poster images won't load
+    pass
 
 # ============ THEME ============
 
@@ -199,12 +205,30 @@ def load_pickle(file):
 
 @st.cache_data(show_spinner=False)
 def fetch_poster(movie_id):
-    url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={Config.TMDB_API_KEY}&language=en-US"
+    """
+    Fetch movie poster URL from TMDB API.
+    Supports both Bearer token (v4) and API key (v3) authentication methods.
+    """
+    headers, use_bearer = Config.get_tmdb_auth()
+    
+    if use_bearer:
+        # Use Bearer token authentication (v4 API - preferred method)
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?language=en-US"
+        headers["accept"] = "application/json"
+    elif Config.TMDB_API_KEY:
+        # Use API key authentication (v3 API - fallback method)
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={Config.TMDB_API_KEY}&language=en-US"
+    else:
+        # No authentication available
+        return ""
+    
     try:
-        data = requests.get(url, timeout=5).json()
-        poster_path = data.get('poster_path', '')
-        if poster_path:
-            return f"https://image.tmdb.org/t/p/w500/{poster_path}"
+        response = requests.get(url, headers=headers, timeout=5)
+        if response.status_code == 200:
+            data = response.json()
+            poster_path = data.get('poster_path', '')
+            if poster_path:
+                return f"https://image.tmdb.org/t/p/w500/{poster_path}"
     except:
         pass
     return ""
