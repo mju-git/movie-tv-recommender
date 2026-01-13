@@ -28,11 +28,11 @@ env/
 *.env
 
 # ----- Data Files (too large for GitHub) -----
-# Database files (excluded from Git - stays local)
-data/*.db
-data/*.db-journal
-data/*.db-wal
-data/*.db-shm
+# Database files (excluded from Git tracked with Git LFS)
+# data/*.db
+# data/*.db-journal
+# data/*.db-wal
+# data/*.db-shm
 
 # Pickle files (processed data)
 data/*.pkl
