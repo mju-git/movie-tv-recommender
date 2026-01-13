@@ -34,6 +34,11 @@ def log_error(exc_type, exc_value, exc_traceback):
 
 sys.excepthook = log_error
 
+# Debug: Print startup message
+print("=" * 60, file=sys.stderr, flush=True)
+print("STARTING APP: app/main.py", file=sys.stderr, flush=True)
+print("=" * 60, file=sys.stderr, flush=True)
+
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -53,6 +58,31 @@ import pickle
 import pandas as pd
 from ast import literal_eval
 
+# Now safe to import other modules and use Streamlit
+import requests
+import pickle
+import pandas as pd
+from ast import literal_eval
+
+# Initialize variables with defaults
+USE_DATABASE = False
+DB_PATH = None
+get_all_titles = None
+get_all_genres = None
+get_movie_by_title = None
+get_recommendations_from_cache = None
+filter_by_genre = None
+get_all_movies = None
+get_database_stats = None
+get_all_tv_titles = None
+get_tv_by_title = None
+get_tv_recommendations_from_cache = None
+get_connection = None
+migrate_add_poster_and_providers = None
+get_movie_genres = None
+get_tv_genres = None
+render_analytics = None
+
 # Now safe to import and do other operations
 try:
     from src.config import Config
@@ -62,48 +92,26 @@ try:
     USE_DATABASE = DB_PATH.exists()
     
     if USE_DATABASE:
-        from src.database import (
-            get_all_titles,
-            get_all_genres,
-            get_movie_by_title,
-            get_recommendations_from_cache,
-            filter_by_genre,
-            get_all_movies,
-            get_database_stats,
-            get_all_tv_titles,
-            get_tv_by_title,
-            get_tv_recommendations_from_cache,
-            get_connection,
-            migrate_add_poster_and_providers,
-            get_movie_genres,
-            get_tv_genres
-        )
-        
-        # Run migration once per session if needed (quiet mode for Streamlit)
-        if 'migration_run' not in st.session_state:
-            try:
-                migrate_add_poster_and_providers(quiet=True)
-                st.session_state.migration_run = True
-            except Exception as e:
-                # Migration failed but continue anyway
-                print(f"Warning: Migration failed: {e}", file=sys.stderr, flush=True)
-                st.session_state.migration_run = True
-    else:
-        # Set dummy functions if database not available
-        get_all_titles = None
-        get_all_genres = None
-        get_movie_by_title = None
-        get_recommendations_from_cache = None
-        filter_by_genre = None
-        get_all_movies = None
-        get_database_stats = None
-        get_all_tv_titles = None
-        get_tv_by_title = None
-        get_tv_recommendations_from_cache = None
-        get_connection = None
-        migrate_add_poster_and_providers = None
-        get_movie_genres = None
-        get_tv_genres = None
+        try:
+            from src.database import (
+                get_all_titles,
+                get_all_genres,
+                get_movie_by_title,
+                get_recommendations_from_cache,
+                filter_by_genre,
+                get_all_movies,
+                get_database_stats,
+                get_all_tv_titles,
+                get_tv_by_title,
+                get_tv_recommendations_from_cache,
+                get_connection,
+                migrate_add_poster_and_providers,
+                get_movie_genres,
+                get_tv_genres
+            )
+        except Exception as e:
+            print(f"Warning: Database imports failed: {e}", file=sys.stderr, flush=True)
+            USE_DATABASE = False
     
     # Import analytics module for dialog (use importlib for path flexibility)
     import importlib.util
@@ -133,6 +141,18 @@ except Exception as e:
     st.error(f"❌ Application initialization failed: {e}")
     st.exception(e)
     st.stop()
+
+# Run migration once per session if needed (quiet mode for Streamlit)
+# This must be AFTER st.set_page_config() and AFTER imports
+if USE_DATABASE and migrate_add_poster_and_providers:
+    if 'migration_run' not in st.session_state:
+        try:
+            migrate_add_poster_and_providers(quiet=True)
+            st.session_state.migration_run = True
+        except Exception as e:
+            # Migration failed but continue anyway
+            print(f"Warning: Migration failed: {e}", file=sys.stderr, flush=True)
+            st.session_state.migration_run = True
 
 # Validate config (non-blocking - app will work without API key, just without poster images)
 try:
