@@ -38,71 +38,101 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 import streamlit as st
-import requests
-import pickle
-import pandas as pd
-from ast import literal_eval
 
-from src.config import Config
-
-# Check if database exists
-DB_PATH = Path(Config.DATA_PATH) / "movies.db"
-USE_DATABASE = DB_PATH.exists()
-
-if USE_DATABASE:
-    from src.database import (
-        get_all_titles,
-        get_all_genres,
-        get_movie_by_title,
-        get_recommendations_from_cache,
-        filter_by_genre,
-        get_all_movies,
-        get_database_stats,
-        get_all_tv_titles,
-        get_tv_by_title,
-        get_tv_recommendations_from_cache,
-        get_connection,
-        migrate_add_poster_and_providers,
-        get_movie_genres,
-        get_tv_genres
-    )
-    
-    # Run migration once per session if needed (quiet mode for Streamlit)
-    if 'migration_run' not in st.session_state:
-        try:
-            migrate_add_poster_and_providers(quiet=True)
-            st.session_state.migration_run = True
-        except Exception as e:
-            # Migration failed but continue anyway
-            print(f"Warning: Migration failed: {e}", file=sys.stderr, flush=True)
-            st.session_state.migration_run = True
-
-# Import analytics module for dialog (use importlib for path flexibility)
-import importlib.util
-analytics_path = Path(__file__).parent / "components" / "analytics.py"
-try:
-    if analytics_path.exists():
-        spec = importlib.util.spec_from_file_location("analytics", analytics_path)
-        analytics_module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(analytics_module)
-        render_analytics = analytics_module.render_analytics
-    else:
-        # Analytics file doesn't exist - create a dummy function
-        def render_analytics(*args, **kwargs):
-            st.warning("Analytics dashboard not available")
-        render_analytics = render_analytics
-except Exception as e:
-    # If analytics import fails, create a dummy function
-    print(f"Warning: Analytics module import failed: {e}", file=sys.stderr, flush=True)
-    def render_analytics(*args, **kwargs):
-        st.warning("Analytics dashboard not available")
-    render_analytics = render_analytics
-
+# CRITICAL: st.set_page_config() MUST be the FIRST Streamlit command
+# It must be called before ANY other Streamlit operations (including st.session_state)
 st.set_page_config(
     page_title="Movie Recommender", 
     layout="wide",
     initial_sidebar_state="collapsed"
 )
+
+# Now safe to import other modules and use Streamlit
+import requests
+import pickle
+import pandas as pd
+from ast import literal_eval
+
+# Now safe to import and do other operations
+try:
+    from src.config import Config
+    
+    # Check if database exists
+    DB_PATH = Path(Config.DATA_PATH) / "movies.db"
+    USE_DATABASE = DB_PATH.exists()
+    
+    if USE_DATABASE:
+        from src.database import (
+            get_all_titles,
+            get_all_genres,
+            get_movie_by_title,
+            get_recommendations_from_cache,
+            filter_by_genre,
+            get_all_movies,
+            get_database_stats,
+            get_all_tv_titles,
+            get_tv_by_title,
+            get_tv_recommendations_from_cache,
+            get_connection,
+            migrate_add_poster_and_providers,
+            get_movie_genres,
+            get_tv_genres
+        )
+        
+        # Run migration once per session if needed (quiet mode for Streamlit)
+        if 'migration_run' not in st.session_state:
+            try:
+                migrate_add_poster_and_providers(quiet=True)
+                st.session_state.migration_run = True
+            except Exception as e:
+                # Migration failed but continue anyway
+                print(f"Warning: Migration failed: {e}", file=sys.stderr, flush=True)
+                st.session_state.migration_run = True
+    else:
+        # Set dummy functions if database not available
+        get_all_titles = None
+        get_all_genres = None
+        get_movie_by_title = None
+        get_recommendations_from_cache = None
+        filter_by_genre = None
+        get_all_movies = None
+        get_database_stats = None
+        get_all_tv_titles = None
+        get_tv_by_title = None
+        get_tv_recommendations_from_cache = None
+        get_connection = None
+        migrate_add_poster_and_providers = None
+        get_movie_genres = None
+        get_tv_genres = None
+    
+    # Import analytics module for dialog (use importlib for path flexibility)
+    import importlib.util
+    analytics_path = Path(__file__).parent / "components" / "analytics.py"
+    try:
+        if analytics_path.exists():
+            spec = importlib.util.spec_from_file_location("analytics", analytics_path)
+            analytics_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(analytics_module)
+            render_analytics = analytics_module.render_analytics
+        else:
+            # Analytics file doesn't exist - create a dummy function
+            def render_analytics(*args, **kwargs):
+                st.warning("Analytics dashboard not available")
+            render_analytics = render_analytics
+    except Exception as e:
+        # If analytics import fails, create a dummy function
+        print(f"Warning: Analytics module import failed: {e}", file=sys.stderr, flush=True)
+        def render_analytics(*args, **kwargs):
+            st.warning("Analytics dashboard not available")
+        render_analytics = render_analytics
+
+except Exception as e:
+    # If initialization fails, show error and stop
+    print(f"FATAL: Initialization failed: {e}", file=sys.stderr, flush=True)
+    traceback.print_exc(file=sys.stderr)
+    st.error(f"❌ Application initialization failed: {e}")
+    st.exception(e)
+    st.stop()
 
 # Validate config (non-blocking - app will work without API key, just without poster images)
 try:
