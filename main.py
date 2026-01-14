@@ -150,7 +150,7 @@ def main():
                 section[data-testid="stSidebar"] .stRadio, section[data-testid="stSidebar"] .stMultiSelect, section[data-testid="stSidebar"] .stSlider, section[data-testid="stSidebar"] .stToggle, section[data-testid="stSidebar"] .stButton { margin-bottom: 0.5rem !important; }
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
                 
-                section[data-testid="stMain"] .block-container { max-width: 1600px !important; margin: 0 auto !important; }
+                section[data-testid="stMain"] .block-container { max-width: 1100px !important; margin: 0 auto !important; }
                 
                 .main-title { text-align: center; font-size: clamp(1.5rem, calc(3rem * var(--scale-factor)), 3rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
                 .subtitle { text-align: center; color: #ffffff !important; font-size: clamp(0.9rem, calc(1.1rem * var(--scale-factor)), 1.1rem); font-weight: 400; margin-bottom: 2rem; opacity: 0.9; transition: font-size 0.3s ease; }
@@ -173,6 +173,7 @@ def main():
                 
                 .stSelectbox [data-baseweb="select"] span, .stSelectbox [data-baseweb="select"] div, .stSelectbox input,
                 .stMultiSelect [data-baseweb="select"] span, .stMultiSelect [data-baseweb="select"] div, .stMultiSelect input { color: #1a1a1a !important; }
+                .stMultiSelect [data-baseweb="select"] { border: 1px solid #d0d0d0 !important; border-radius: 4px !important; }
                 
                 [data-baseweb="popover"] li, [data-baseweb="popover"] span, [data-baseweb="popover"] div,
                 [data-baseweb="menu"] li, [data-baseweb="menu"] span, [data-baseweb="menu"] div,
@@ -206,7 +207,7 @@ def main():
                 section[data-testid="stSidebar"] .stRadio, section[data-testid="stSidebar"] .stMultiSelect, section[data-testid="stSidebar"] .stSlider, section[data-testid="stSidebar"] .stToggle, section[data-testid="stSidebar"] .stButton { margin-bottom: 0.5rem !important; }
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
                 
-                section[data-testid="stMain"] .block-container { max-width: 1600px !important; margin: 0 auto !important; }
+                section[data-testid="stMain"] .block-container { max-width: 1100px !important; margin: 0 auto !important; }
                 
                 .main-title { text-align: center; font-size: clamp(1.5rem, calc(3rem * var(--scale-factor)), 3rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
                 .subtitle { text-align: center; color: #666666; font-size: clamp(0.9rem, calc(1.1rem * var(--scale-factor)), 1.1rem); font-weight: 400; margin-bottom: 2rem; transition: font-size 0.3s ease; }
@@ -226,6 +227,7 @@ def main():
                 .stButton > button:hover { background: #c7000d !important; }
                 
                 .no-poster { width: 100%; aspect-ratio: 2/3; background: #f0f0f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #999999; }
+                .stMultiSelect [data-baseweb="select"] { border: 1px solid #d0d0d0 !important; border-radius: 4px !important; }
                 .footer { text-align: center; color: #999999; padding: 3rem 0 1rem 0; }
             </style>
             """
