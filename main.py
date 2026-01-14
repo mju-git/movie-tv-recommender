@@ -135,6 +135,7 @@ def main():
                 
                 .stApp { background-color: #141414; }
                 #MainMenu, footer, header { visibility: hidden; }
+                button[data-testid="baseButton-header"], [data-testid="collapsedControl"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
                 
                 html, body, [class*="css"], p, span, label, div {
                     font-family: 'Inter', sans-serif;
