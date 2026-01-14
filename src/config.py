@@ -10,11 +10,15 @@ Usage:
     Config.validate()  # Check required settings at startup
 """
 import os
-from dotenv import load_dotenv
 
-# Automatically load .env file from project root if it exists
+# Try to load .env file from project root if it exists (optional)
 # In production (Streamlit Cloud), use environment variables instead
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # python-dotenv not installed - fine for production (uses env vars directly)
+    pass
 
 
 class Config:
