@@ -196,6 +196,7 @@ def main():
                 
                 .stApp { background-color: #fafafa; }
                 #MainMenu, footer, header { visibility: hidden; }
+                button[data-testid="baseButton-header"] { display: block !important; visibility: visible !important; }
                 
                 html, body, [class*="css"] { font-family: 'Inter', sans-serif; color: #1a1a1a; }
                 
@@ -1021,13 +1022,22 @@ def main():
     st.markdown(f'<h1 class="main-title" id="main-title">{header_title}</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="subtitle" id="main-subtitle">{header_subtitle}</p>', unsafe_allow_html=True)
     
-    # ===== ANALYTICS (REPLACED st.dialog with expander for better UX) =====
-    # CLOUD-SAFE: No st.dialog - use expander instead to keep it contained
+    # ===== ANALYTICS (Inline with close button - Cloud-safe alternative to st.dialog) =====
+    # Keep analytics visible until user closes it
     if st.session_state.get('show_analytics', False):
-        st.session_state.show_analytics = False
+        st.session_state.show_analytics = True  # Keep it visible
         if render_analytics:
-            with st.expander("📊 Analytics Dashboard", expanded=True):
-                render_analytics(is_dark, media_type=media_type)
+            # Close button
+            col1, col2 = st.columns([1, 20])
+            with col1:
+                if st.button("✕", key="close_analytics", help="Close analytics"):
+                    st.session_state.show_analytics = False
+                    st.rerun()
+            with col2:
+                st.markdown("### 📊 Analytics Dashboard")
+            
+            st.divider()
+            render_analytics(is_dark, media_type=media_type)
         else:
             st.warning("Analytics dashboard not available")
     
