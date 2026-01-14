@@ -138,12 +138,22 @@ def main():
                 button[data-testid="baseButton-header"], [data-testid="collapsedControl"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
                 
                 html, body, [class*="css"], p, span, label, div {
-                    font-family: 'Inter', sans-serif;
+                    font-family: 'Inter', system-ui, sans-serif;
+                    font-size: 17px !important;
                     color: #ffffff !important;
+                }
+                
+                h1 { font-size: 2.4rem !important; }
+                h2 { font-size: 2.0rem !important; }
+                h3 { font-size: 1.6rem !important; }
+                p, span, label, div {
+                    font-size: 1rem !important;
                 }
                 
                 section[data-testid="stSidebar"] { 
                     background-color: #0d0d0d; 
+                    min-width: 280px !important;
+                    display: block !important;
                 }
                 section[data-testid="stSidebar"] * { color: #ffffff !important; }
                 section[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.2) !important; margin: 0.5rem 0 !important; }
@@ -152,6 +162,17 @@ def main():
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
                 
                 section[data-testid="stMain"] .block-container { max-width: 1100px !important; margin: 0 auto !important; }
+                
+                /* Hide dialog title */
+                [data-testid="stDialog"] h2:first-child,
+                [data-testid="stDialog"] header h2 {
+                    display: none !important;
+                }
+                
+                /* Reduce dialog top padding */
+                [data-testid="stDialog"] .block-container {
+                    padding-top: 0.5rem !important;
+                }
                 
                 .main-title { text-align: center; font-size: clamp(1.5rem, calc(3rem * var(--scale-factor)), 3rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
                 .subtitle { text-align: center; color: #ffffff !important; font-size: clamp(0.9rem, calc(1.1rem * var(--scale-factor)), 1.1rem); font-weight: 400; margin-bottom: 2rem; opacity: 0.9; transition: font-size 0.3s ease; }
@@ -199,10 +220,23 @@ def main():
                 #MainMenu, footer, header { visibility: hidden; }
                 button[data-testid="baseButton-header"] { display: block !important; visibility: visible !important; }
                 
-                html, body, [class*="css"] { font-family: 'Inter', sans-serif; color: #1a1a1a; }
+                html, body, [class*="css"] { 
+                    font-family: 'Inter', system-ui, sans-serif; 
+                    font-size: 17px !important;
+                    color: #1a1a1a; 
+                }
+                
+                h1 { font-size: 2.4rem !important; }
+                h2 { font-size: 2.0rem !important; }
+                h3 { font-size: 1.6rem !important; }
+                p, span, label, div {
+                    font-size: 1rem !important;
+                }
                 
                 section[data-testid="stSidebar"] { 
                     background-color: #ffffff; 
+                    min-width: 280px !important;
+                    display: block !important;
                 }
                 section[data-testid="stSidebar"] hr { border-color: #e0e0e0 !important; margin: 0.5rem 0 !important; }
                 section[data-testid="stSidebar"] .stMarkdown { margin-bottom: 0.25rem !important; margin-top: 0.25rem !important; }
@@ -210,6 +244,17 @@ def main():
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
                 
                 section[data-testid="stMain"] .block-container { max-width: 1100px !important; margin: 0 auto !important; }
+                
+                /* Hide dialog title */
+                [data-testid="stDialog"] h2:first-child,
+                [data-testid="stDialog"] header h2 {
+                    display: none !important;
+                }
+                
+                /* Reduce dialog top padding */
+                [data-testid="stDialog"] .block-container {
+                    padding-top: 0.5rem !important;
+                }
                 
                 .main-title { text-align: center; font-size: clamp(1.5rem, calc(3rem * var(--scale-factor)), 3rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
                 .subtitle { text-align: center; color: #666666; font-size: clamp(0.9rem, calc(1.1rem * var(--scale-factor)), 1.1rem); font-weight: 400; margin-bottom: 2rem; transition: font-size 0.3s ease; }
@@ -935,7 +980,7 @@ def main():
 
     # ===== SIDEBAR =====
     with st.sidebar:
-        st.markdown("## ⚙️ Settings")
+        st.markdown("### ⚙️ Settings")
         st.divider()
         
         # Media type toggle (Movies/TV)
@@ -953,13 +998,17 @@ def main():
         st.divider()
         
         st.markdown("**Genre Filter**")
-        genre_filter = st.multiselect(
-            "Genre",
-            options=all_genres,
-            default=[],
-            placeholder="All genres",
-            label_visibility="collapsed"
-        )
+        if all_genres:
+            genre_filter = st.multiselect(
+                "Genre",
+                options=all_genres,
+                default=[],
+                placeholder="All genres",
+                label_visibility="collapsed"
+            )
+        else:
+            st.info("Loading genres…")
+            genre_filter = []
         
         st.divider()
         
@@ -1023,24 +1072,17 @@ def main():
     st.markdown(f'<h1 class="main-title" id="main-title">{header_title}</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="subtitle" id="main-subtitle">{header_subtitle}</p>', unsafe_allow_html=True)
     
-    # ===== ANALYTICS (Inline with close button - Cloud-safe alternative to st.dialog) =====
-    # Keep analytics visible until user closes it
-    if st.session_state.get('show_analytics', False):
-        st.session_state.show_analytics = True  # Keep it visible
-        if render_analytics:
-            # Close button
-            col1, col2 = st.columns([1, 20])
-            with col1:
-                if st.button("✕", key="close_analytics", help="Close analytics"):
-                    st.session_state.show_analytics = False
-                    st.rerun()
-            with col2:
-                st.markdown("### 📊 Analytics Dashboard")
-            
-            st.divider()
+    # ===== ANALYTICS (Dialog popup) =====
+    if render_analytics:
+        @st.dialog(" ", width="large")
+        def analytics_dialog():
             render_analytics(is_dark, media_type=media_type)
-        else:
-            st.warning("Analytics dashboard not available")
+        
+        # Show dialog when button is clicked
+        if st.session_state.get('show_analytics', False):
+            analytics_dialog()
+            # Reset flag after dialog is shown (dialog handles its own close)
+            st.session_state.show_analytics = False
     
     # JavaScript for responsive scaling based on window/sidebar size
     st.markdown("""
