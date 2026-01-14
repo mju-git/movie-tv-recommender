@@ -7,7 +7,7 @@ name = "movie-recommender"
 version = "1.0.0"
 description = "A content-based movie recommendation system"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = "==3.12"
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
