@@ -27,7 +27,7 @@ import streamlit as st
 st.set_page_config(
     page_title="Movie Recommender", 
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 
@@ -129,7 +129,7 @@ def main():
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
                 
                 :root {
-                    --scale-factor: 1;
+                    --scale-factor: 1.2;
                     --available-width: 100vw;
                 }
                 
@@ -190,7 +190,7 @@ def main():
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
                 
                 :root {
-                    --scale-factor: 1;
+                    --scale-factor: 1.2;
                     --available-width: 100vw;
                 }
                 
@@ -227,7 +227,7 @@ def main():
                 .stButton > button:hover { background: #c7000d !important; }
                 
                 .no-poster { width: 100%; aspect-ratio: 2/3; background: #f0f0f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #999999; }
-                .stMultiSelect [data-baseweb="select"] { border: 1px solid #d0d0d0 !important; border-radius: 4px !important; }
+                .stMultiSelect [data-baseweb="select"] { border: 1px solid #d0d0d0 !important; border-radius: 8px !important; }
                 .footer { text-align: center; color: #999999; padding: 3rem 0 1rem 0; }
             </style>
             """
