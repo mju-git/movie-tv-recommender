@@ -1015,21 +1015,21 @@ def main():
     is_dark = st.session_state.get('theme', 'light') == 'dark'
     st.markdown(get_theme_css(is_dark), unsafe_allow_html=True)
 
-    # ===== ANALYTICS (REPLACED st.dialog with conditional rendering) =====
-    # CLOUD-SAFE: No st.dialog - use conditional rendering instead
-    if st.session_state.get('show_analytics', False):
-        st.session_state.show_analytics = False
-        if render_analytics:
-            st.subheader("TV Show Analytics" if media_type == 'tv' else "Movie Analytics")
-            render_analytics(is_dark, media_type=media_type)
-        else:
-            st.warning("Analytics dashboard not available")
-
     # ===== MAIN HEADER =====
     header_title = "TV Show Recommender" if media_type == 'tv' else "Movie Recommender"
     header_subtitle = "Discover your next favorite show" if media_type == 'tv' else "Discover your next favorite film"
     st.markdown(f'<h1 class="main-title" id="main-title">{header_title}</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="subtitle" id="main-subtitle">{header_subtitle}</p>', unsafe_allow_html=True)
+    
+    # ===== ANALYTICS (REPLACED st.dialog with expander for better UX) =====
+    # CLOUD-SAFE: No st.dialog - use expander instead to keep it contained
+    if st.session_state.get('show_analytics', False):
+        st.session_state.show_analytics = False
+        if render_analytics:
+            with st.expander("📊 Analytics Dashboard", expanded=True):
+                render_analytics(is_dark, media_type=media_type)
+        else:
+            st.warning("Analytics dashboard not available")
     
     # JavaScript for responsive scaling based on window/sidebar size
     st.markdown("""
