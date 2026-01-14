@@ -173,7 +173,7 @@ def main():
                 
                 .stSelectbox [data-baseweb="select"] span, .stSelectbox [data-baseweb="select"] div, .stSelectbox input,
                 .stMultiSelect [data-baseweb="select"] span, .stMultiSelect [data-baseweb="select"] div, .stMultiSelect input { color: #1a1a1a !important; }
-                .stMultiSelect [data-baseweb="select"] { border: 1px solid #d0d0d0 !important; border-radius: 4px !important; }
+                .stMultiSelect [data-baseweb="select"] { border: 1px solid rgba(255,255,255,0.2) !important; border-radius: 8px !important; }
                 
                 [data-baseweb="popover"] li, [data-baseweb="popover"] span, [data-baseweb="popover"] div,
                 [data-baseweb="menu"] li, [data-baseweb="menu"] span, [data-baseweb="menu"] div,
