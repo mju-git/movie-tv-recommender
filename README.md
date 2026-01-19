@@ -60,7 +60,7 @@ A professional content-based recommendation web application built with Streamlit
 
 6. **Run the app**
    ```bash
-   streamlit run app/main.py
+   streamlit run main.py
    ```
 
 The app will open at `http://localhost:8501`
@@ -140,7 +140,7 @@ pytest -v
    - Set environment variables:
      - `TMDB_API_KEY`: Your TMDB API key
      - `DATA_PATH`: `data/`
-   - Main file: `app/main.py`
+   - Main file: `main.py`
    - Deploy!
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.

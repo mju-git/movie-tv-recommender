@@ -128,28 +128,50 @@ def main():
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
                 
+                /* ============================================
+                   CSS Theme Variables & Base Styling
+                   ============================================
+                   Defines scaling factor and base styles for responsive design.
+                   Increased scale-factor for Streamlit Cloud to match local appearance.
+                */
                 :root {
-                    --scale-factor: 1.2;
+                    --scale-factor: 1.4;
                     --available-width: 100vw;
                 }
                 
+                /* ============================================
+                   App Layout & Visibility Controls
+                   ============================================
+                   Hides default Streamlit UI elements and ensures sidebar toggle is visible.
+                */
                 .stApp { background-color: #141414; }
                 #MainMenu, footer, header { visibility: hidden; }
                 button[data-testid="baseButton-header"], [data-testid="collapsedControl"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
                 
+                /* ============================================
+                   Typography - Increased Sizes for Streamlit Cloud
+                   ============================================
+                   Font sizes increased to match local development appearance.
+                   Base font: 19px (was 17px), headings proportionally increased.
+                */
                 html, body, [class*="css"], p, span, label, div {
                     font-family: 'Inter', system-ui, sans-serif;
-                    font-size: 17px !important;
+                    font-size: 19px !important;
                     color: #ffffff !important;
                 }
                 
-                h1 { font-size: 2.4rem !important; }
-                h2 { font-size: 2.0rem !important; }
-                h3 { font-size: 1.6rem !important; }
+                h1 { font-size: 2.8rem !important; }
+                h2 { font-size: 2.3rem !important; }
+                h3 { font-size: 1.9rem !important; }
                 p, span, label, div {
-                    font-size: 1rem !important;
+                    font-size: 1.1rem !important;
                 }
                 
+                /* ============================================
+                   Sidebar Styling
+                   ============================================
+                   Customizes sidebar appearance with dark theme colors and spacing.
+                */
                 section[data-testid="stSidebar"] { 
                     background-color: #0d0d0d; 
                     min-width: 280px !important;
@@ -161,34 +183,65 @@ def main():
                 section[data-testid="stSidebar"] .stRadio, section[data-testid="stSidebar"] .stMultiSelect, section[data-testid="stSidebar"] .stSlider, section[data-testid="stSidebar"] .stToggle, section[data-testid="stSidebar"] .stButton { margin-bottom: 0.5rem !important; }
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
                 
-                section[data-testid="stMain"] .block-container { max-width: 1100px !important; margin: 0 auto !important; }
+                /* ============================================
+                   Main Content Centering & Layout
+                   ============================================
+                   Ensures main content is centered regardless of sidebar state.
+                   Uses flexbox for proper centering and max-width constraint.
+                   Content shifts automatically when sidebar opens/closes.
+                */
+                section[data-testid="stMain"] {
+                    flex: 1 1 0% !important;
+                    min-width: 0 !important;
+                    display: flex !important;
+                    justify-content: center !important;
+                    align-items: flex-start !important;
+                }
                 
-                /* Hide dialog title */
+                section[data-testid="stMain"] .block-container { 
+                    max-width: 1100px !important; 
+                    width: 100% !important;
+                    margin-left: auto !important;
+                    margin-right: auto !important;
+                    padding-left: 2rem !important;
+                    padding-right: 2rem !important;
+                }
+                
+                /* ============================================
+                   Dialog Styling
+                   ============================================
+                   Hides default dialog title and reduces padding for cleaner appearance.
+                */
                 [data-testid="stDialog"] h2:first-child,
                 [data-testid="stDialog"] header h2 {
                     display: none !important;
                 }
                 
-                /* Reduce dialog top padding */
                 [data-testid="stDialog"] .block-container {
                     padding-top: 0.5rem !important;
                 }
                 
-                .main-title { text-align: center; font-size: clamp(1.5rem, calc(3rem * var(--scale-factor)), 3rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
-                .subtitle { text-align: center; color: #ffffff !important; font-size: clamp(0.9rem, calc(1.1rem * var(--scale-factor)), 1.1rem); font-weight: 400; margin-bottom: 2rem; opacity: 0.9; transition: font-size 0.3s ease; }
-                .data-source { text-align: center; color: #ffffff !important; font-size: 0.8rem; opacity: 0.5; margin-bottom: 1rem; }
+                /* ============================================
+                   Custom Component Styling
+                   ============================================
+                   Styles for titles, posters, buttons, and other UI elements.
+                   Font sizes increased for better visibility on Streamlit Cloud.
+                */
+                .main-title { text-align: center; font-size: clamp(1.8rem, calc(3.2rem * var(--scale-factor)), 3.2rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
+                .subtitle { text-align: center; color: #ffffff !important; font-size: clamp(1rem, calc(1.2rem * var(--scale-factor)), 1.2rem); font-weight: 400; margin-bottom: 2rem; opacity: 0.9; transition: font-size 0.3s ease; }
+                .data-source { text-align: center; color: #ffffff !important; font-size: 0.9rem; opacity: 0.5; margin-bottom: 1rem; }
                 
                 .poster-card { border-radius: 12px; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
                 .poster-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(229, 9, 20, 0.3); }
                 .poster-card img { width: 100%; display: block; border-radius: 12px; }
                 
-                .movie-title { text-align: center; color: #ffffff !important; font-size: 0.9rem; font-weight: 500; margin-top: 10px; }
+                .movie-title { text-align: center; color: #ffffff !important; font-size: 1rem; font-weight: 500; margin-top: 10px; }
                 .movie-year { color: #ffffff !important; opacity: 0.7; }
                 
-                .rec-header { color: #ffffff !important; font-size: 1.5rem; font-weight: 600; text-align: center; margin: 2rem 0 0.5rem 0; }
-                .rec-subheader { color: #ffffff !important; opacity: 0.7; font-size: 1rem; text-align: center; margin-bottom: 2rem; }
+                .rec-header { color: #ffffff !important; font-size: 1.7rem; font-weight: 600; text-align: center; margin: 2rem 0 0.5rem 0; }
+                .rec-subheader { color: #ffffff !important; opacity: 0.7; font-size: 1.1rem; text-align: center; margin-bottom: 2rem; }
                 
-                .stButton > button { background: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 8px; font-weight: 600; padding: clamp(0.5rem, calc(0.75rem * var(--scale-factor)), 0.75rem) clamp(1rem, calc(2rem * var(--scale-factor)), 2rem); font-size: clamp(0.85rem, calc(1rem * var(--scale-factor)), 1rem); white-space: nowrap !important; transition: padding 0.3s ease, font-size 0.3s ease; }
+                .stButton > button { background: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 8px; font-weight: 600; padding: clamp(0.6rem, calc(0.85rem * var(--scale-factor)), 0.85rem) clamp(1.2rem, calc(2.2rem * var(--scale-factor)), 2.2rem); font-size: clamp(0.95rem, calc(1.1rem * var(--scale-factor)), 1.1rem); white-space: nowrap !important; transition: padding 0.3s ease, font-size 0.3s ease; }
                 .stButton > button:hover { background: #f40612 !important; }
                 
                 .no-poster { width: 100%; aspect-ratio: 2/3; background: #2a2a2a; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ffffff !important; }
@@ -205,34 +258,90 @@ def main():
                 details { background: #1a1a1a !important; border-radius: 8px; }
                 details summary, details div { color: #ffffff !important; }
             </style>
+            <script>
+                // Dynamic centering based on sidebar state
+                function centerMainContent() {
+                    const sidebar = document.querySelector('section[data-testid="stSidebar"]');
+                    const main = document.querySelector('section[data-testid="stMain"]');
+                    const container = main?.querySelector('.block-container');
+                    
+                    if (!main || !container) return;
+                    
+                    // Check if sidebar is visible/expanded
+                    const sidebarVisible = sidebar && window.getComputedStyle(sidebar).display !== 'none';
+                    
+                    if (sidebarVisible) {
+                        // Sidebar is open - ensure content is centered in remaining space
+                        container.style.marginLeft = 'auto';
+                        container.style.marginRight = 'auto';
+                    } else {
+                        // Sidebar is closed - center in full width
+                        container.style.marginLeft = 'auto';
+                        container.style.marginRight = 'auto';
+                    }
+                }
+                
+                // Run on load and when sidebar state changes
+                window.addEventListener('load', centerMainContent);
+                setInterval(centerMainContent, 100);
+                
+                // Watch for sidebar toggle
+                const observer = new MutationObserver(centerMainContent);
+                const sidebar = document.querySelector('section[data-testid="stSidebar"]');
+                if (sidebar) {
+                    observer.observe(sidebar, { attributes: true, attributeFilter: ['style', 'class'] });
+                }
+            </script>
             """
         else:
             return """
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
                 
+                /* ============================================
+                   CSS Theme Variables & Base Styling (Light Theme)
+                   ============================================
+                   Defines scaling factor and base styles for responsive design.
+                   Increased scale-factor for Streamlit Cloud to match local appearance.
+                */
                 :root {
-                    --scale-factor: 1.2;
+                    --scale-factor: 1.4;
                     --available-width: 100vw;
                 }
                 
+                /* ============================================
+                   App Layout & Visibility Controls (Light Theme)
+                   ============================================
+                   Hides default Streamlit UI elements and ensures sidebar toggle is visible.
+                */
                 .stApp { background-color: #fafafa; }
                 #MainMenu, footer, header { visibility: hidden; }
                 button[data-testid="baseButton-header"] { display: block !important; visibility: visible !important; }
                 
+                /* ============================================
+                   Typography - Increased Sizes for Streamlit Cloud (Light Theme)
+                   ============================================
+                   Font sizes increased to match local development appearance.
+                   Base font: 19px (was 17px), headings proportionally increased.
+                */
                 html, body, [class*="css"] { 
                     font-family: 'Inter', system-ui, sans-serif; 
-                    font-size: 17px !important;
+                    font-size: 19px !important;
                     color: #1a1a1a; 
                 }
                 
-                h1 { font-size: 2.4rem !important; }
-                h2 { font-size: 2.0rem !important; }
-                h3 { font-size: 1.6rem !important; }
+                h1 { font-size: 2.8rem !important; }
+                h2 { font-size: 2.3rem !important; }
+                h3 { font-size: 1.9rem !important; }
                 p, span, label, div {
-                    font-size: 1rem !important;
+                    font-size: 1.1rem !important;
                 }
                 
+                /* ============================================
+                   Sidebar Styling (Light Theme)
+                   ============================================
+                   Customizes sidebar appearance with light theme colors and spacing.
+                */
                 section[data-testid="stSidebar"] { 
                     background-color: #ffffff; 
                     min-width: 280px !important;
@@ -243,40 +352,105 @@ def main():
                 section[data-testid="stSidebar"] .stRadio, section[data-testid="stSidebar"] .stMultiSelect, section[data-testid="stSidebar"] .stSlider, section[data-testid="stSidebar"] .stToggle, section[data-testid="stSidebar"] .stButton { margin-bottom: 0.5rem !important; }
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
                 
-                section[data-testid="stMain"] .block-container { max-width: 1100px !important; margin: 0 auto !important; }
+                /* ============================================
+                   Main Content Centering & Layout (Light Theme)
+                   ============================================
+                   Ensures main content is centered regardless of sidebar state.
+                   Uses flexbox for proper centering and max-width constraint.
+                   Content shifts automatically when sidebar opens/closes.
+                */
+                section[data-testid="stMain"] {
+                    flex: 1 1 0% !important;
+                    min-width: 0 !important;
+                    display: flex !important;
+                    justify-content: center !important;
+                    align-items: flex-start !important;
+                }
                 
-                /* Hide dialog title */
+                section[data-testid="stMain"] .block-container { 
+                    max-width: 1100px !important; 
+                    width: 100% !important;
+                    margin-left: auto !important;
+                    margin-right: auto !important;
+                    padding-left: 2rem !important;
+                    padding-right: 2rem !important;
+                }
+                
+                /* ============================================
+                   Dialog Styling (Light Theme)
+                   ============================================
+                   Hides default dialog title and reduces padding for cleaner appearance.
+                */
                 [data-testid="stDialog"] h2:first-child,
                 [data-testid="stDialog"] header h2 {
                     display: none !important;
                 }
                 
-                /* Reduce dialog top padding */
                 [data-testid="stDialog"] .block-container {
                     padding-top: 0.5rem !important;
                 }
                 
-                .main-title { text-align: center; font-size: clamp(1.5rem, calc(3rem * var(--scale-factor)), 3rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
-                .subtitle { text-align: center; color: #666666; font-size: clamp(0.9rem, calc(1.1rem * var(--scale-factor)), 1.1rem); font-weight: 400; margin-bottom: 2rem; transition: font-size 0.3s ease; }
-                .data-source { text-align: center; color: #999999; font-size: 0.8rem; margin-bottom: 1rem; }
+                /* ============================================
+                   Custom Component Styling (Light Theme)
+                   ============================================
+                   Styles for titles, posters, buttons, and other UI elements.
+                   Font sizes increased for better visibility on Streamlit Cloud.
+                */
+                .main-title { text-align: center; font-size: clamp(1.8rem, calc(3.2rem * var(--scale-factor)), 3.2rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
+                .subtitle { text-align: center; color: #666666; font-size: clamp(1rem, calc(1.2rem * var(--scale-factor)), 1.2rem); font-weight: 400; margin-bottom: 2rem; transition: font-size 0.3s ease; }
+                .data-source { text-align: center; color: #999999; font-size: 0.9rem; margin-bottom: 1rem; }
                 
                 .poster-card { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
                 .poster-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(229, 9, 20, 0.2); }
                 .poster-card img { width: 100%; display: block; border-radius: 12px; }
                 
-                .movie-title { text-align: center; color: #1a1a1a; font-size: 0.9rem; font-weight: 500; margin-top: 10px; }
+                .movie-title { text-align: center; color: #1a1a1a; font-size: 1rem; font-weight: 500; margin-top: 10px; }
                 .movie-year { color: #666666; }
                 
-                .rec-header { color: #1a1a1a; font-size: 1.5rem; font-weight: 600; text-align: center; margin: 2rem 0 0.5rem 0; }
-                .rec-subheader { color: #666666; font-size: 1rem; text-align: center; margin-bottom: 2rem; }
+                .rec-header { color: #1a1a1a; font-size: 1.7rem; font-weight: 600; text-align: center; margin: 2rem 0 0.5rem 0; }
+                .rec-subheader { color: #666666; font-size: 1.1rem; text-align: center; margin-bottom: 2rem; }
                 
-                .stButton > button { background: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 8px; font-weight: 600; padding: clamp(0.5rem, calc(0.75rem * var(--scale-factor)), 0.75rem) clamp(1rem, calc(2rem * var(--scale-factor)), 2rem); font-size: clamp(0.85rem, calc(1rem * var(--scale-factor)), 1rem); white-space: nowrap !important; transition: padding 0.3s ease, font-size 0.3s ease; }
+                .stButton > button { background: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 8px; font-weight: 600; padding: clamp(0.6rem, calc(0.85rem * var(--scale-factor)), 0.85rem) clamp(1.2rem, calc(2.2rem * var(--scale-factor)), 2.2rem); font-size: clamp(0.95rem, calc(1.1rem * var(--scale-factor)), 1.1rem); white-space: nowrap !important; transition: padding 0.3s ease, font-size 0.3s ease; }
                 .stButton > button:hover { background: #c7000d !important; }
                 
                 .no-poster { width: 100%; aspect-ratio: 2/3; background: #f0f0f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #999999; }
                 .stMultiSelect [data-baseweb="select"] { border: 1px solid #d0d0d0 !important; border-radius: 8px !important; }
                 .footer { text-align: center; color: #999999; padding: 3rem 0 1rem 0; }
             </style>
+            <script>
+                // Dynamic centering based on sidebar state (Light Theme)
+                function centerMainContent() {
+                    const sidebar = document.querySelector('section[data-testid="stSidebar"]');
+                    const main = document.querySelector('section[data-testid="stMain"]');
+                    const container = main?.querySelector('.block-container');
+                    
+                    if (!main || !container) return;
+                    
+                    // Check if sidebar is visible/expanded
+                    const sidebarVisible = sidebar && window.getComputedStyle(sidebar).display !== 'none';
+                    
+                    if (sidebarVisible) {
+                        // Sidebar is open - ensure content is centered in remaining space
+                        container.style.marginLeft = 'auto';
+                        container.style.marginRight = 'auto';
+                    } else {
+                        // Sidebar is closed - center in full width
+                        container.style.marginLeft = 'auto';
+                        container.style.marginRight = 'auto';
+                    }
+                }
+                
+                // Run on load and when sidebar state changes
+                window.addEventListener('load', centerMainContent);
+                setInterval(centerMainContent, 100);
+                
+                // Watch for sidebar toggle
+                const observer = new MutationObserver(centerMainContent);
+                const sidebar = document.querySelector('section[data-testid="stSidebar"]');
+                if (sidebar) {
+                    observer.observe(sidebar, { attributes: true, attributeFilter: ['style', 'class'] });
+                }
+            </script>
             """
     
     # ============ DATA FUNCTIONS ============
