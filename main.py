@@ -306,6 +306,14 @@ def main():
                 :root {
                     --scale-factor: 1.4;
                     --available-width: 100vw;
+                    --sidebar-bg-light: #ffffff;
+                    --sidebar-text-light: #1a1a1a;
+                }
+                
+                /* Option 3: Force root-level overrides for light theme */
+                .stApp {
+                    --sidebar-bg: var(--sidebar-bg-light) !important;
+                    --sidebar-text: var(--sidebar-text-light) !important;
                 }
                 
                 /* ============================================
