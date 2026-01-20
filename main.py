@@ -168,28 +168,12 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling (Option 4: Target All Containers)
+                   Sidebar Styling
                    ============================================
                    Customizes sidebar appearance with dark theme colors and spacing.
-                   Targets sidebar and all possible wrapper elements.
                 */
-                /* Target sidebar and all possible wrappers */
-                [data-testid="stSidebar"],
-                [data-testid="stSidebar"] ~ *,
-                * > [data-testid="stSidebar"],
-                * [data-testid="stSidebar"],
-                section[data-testid="stSidebar"] {
-                    background-color: #222222 !important;
-                    color: #ffffff !important;
-                }
-                
-                /* Target any parent with emotion-cache that contains sidebar */
-                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
-                    background-color: #222222 !important;
-                    color: #ffffff !important;
-                }
-                
                 section[data-testid="stSidebar"] { 
+                    background-color: #222222; 
                     min-width: 280px !important;
                     display: block !important;
                 }
@@ -260,8 +244,25 @@ def main():
                 .no-poster { width: 100%; aspect-ratio: 2/3; background: #2a2a2a; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ffffff !important; }
                 
                 .stSelectbox [data-baseweb="select"] span, .stSelectbox [data-baseweb="select"] div, .stSelectbox input,
-                .stMultiSelect [data-baseweb="select"] span, .stMultiSelect [data-baseweb="select"] div, .stMultiSelect input { color: #1a1a1a !important; }
+                .stMultiSelect [data-baseweb="select"] span, .stMultiSelect [data-baseweb="select"] div, .stMultiSelect input { color: #ffffff !important; }
                 .stMultiSelect [data-baseweb="select"] { border: 1px solid rgba(255,255,255,0.2) !important; border-radius: 8px !important; }
+                
+                /* Fix dropdown arrow visibility in dark mode */
+                .stMultiSelect [data-baseweb="select"] svg,
+                .stSelectbox [data-baseweb="select"] svg {
+                    fill: #ffffff !important;
+                    color: #ffffff !important;
+                }
+                
+                /* Fix toggle button visibility in dark mode */
+                .stToggle [role="switch"],
+                .stToggle [data-baseweb="switch"] {
+                    background-color: #444444 !important;
+                }
+                .stToggle [role="switch"][aria-checked="true"],
+                .stToggle [data-baseweb="switch"][aria-checked="true"] {
+                    background-color: #e50914 !important;
+                }
                 
                 [data-baseweb="popover"] li, [data-baseweb="popover"] span, [data-baseweb="popover"] div,
                 [data-baseweb="menu"] li, [data-baseweb="menu"] span, [data-baseweb="menu"] div,
@@ -351,28 +352,12 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling (Light Theme) (Option 4: Target All Containers)
+                   Sidebar Styling (Light Theme)
                    ============================================
                    Customizes sidebar appearance with light theme colors and spacing.
-                   Targets sidebar and all possible wrapper elements.
                 */
-                /* Target sidebar and all possible wrappers */
-                [data-testid="stSidebar"],
-                [data-testid="stSidebar"] ~ *,
-                * > [data-testid="stSidebar"],
-                * [data-testid="stSidebar"],
-                section[data-testid="stSidebar"] {
-                    background-color: #ffffff !important;
-                    color: #1a1a1a !important;
-                }
-                
-                /* Target any parent with emotion-cache that contains sidebar */
-                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
-                    background-color: #ffffff !important;
-                    color: #1a1a1a !important;
-                }
-                
                 section[data-testid="stSidebar"] { 
+                    background-color: #ffffff; 
                     min-width: 280px !important;
                     display: block !important;
                 }
