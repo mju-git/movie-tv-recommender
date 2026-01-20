@@ -27,7 +27,7 @@ import streamlit as st
 st.set_page_config(
     page_title="Movie Recommender", 
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 
@@ -144,27 +144,27 @@ def main():
                    ============================================
                    Hides default Streamlit UI elements and ensures sidebar toggle is visible.
                 */
-                .stApp { background-color: #141414; }
+                .stApp { background-color: #2a2a2a; }
+                html { scroll-behavior: auto !important; }
                 #MainMenu, footer, header { visibility: hidden; }
                 button[data-testid="baseButton-header"], [data-testid="collapsedControl"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
                 
                 /* ============================================
-                   Typography - Increased Sizes for Streamlit Cloud
+                   Typography
                    ============================================
-                   Font sizes increased to match local development appearance.
-                   Base font: 19px (was 17px), headings proportionally increased.
+                   Base font: 17px, headings proportionally sized.
                 */
                 html, body, [class*="css"], p, span, label, div {
                     font-family: 'Inter', system-ui, sans-serif;
-                    font-size: 19px !important;
+                    font-size: 17px !important;
                     color: #ffffff !important;
                 }
                 
-                h1 { font-size: 2.8rem !important; }
-                h2 { font-size: 2.3rem !important; }
-                h3 { font-size: 1.9rem !important; }
+                h1 { font-size: 2.4rem !important; }
+                h2 { font-size: 2.0rem !important; }
+                h3 { font-size: 1.6rem !important; }
                 p, span, label, div {
-                    font-size: 1.1rem !important;
+                    font-size: 1.0rem !important;
                 }
                 
                 /* ============================================
@@ -173,7 +173,7 @@ def main():
                    Customizes sidebar appearance with dark theme colors and spacing.
                 */
                 section[data-testid="stSidebar"] { 
-                    background-color: #0d0d0d; 
+                    background-color: #222222; 
                     min-width: 280px !important;
                     display: block !important;
                 }
@@ -184,18 +184,15 @@ def main():
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
                 
                 /* ============================================
-                   Main Content Centering & Layout
+                   Main Content Centering & Layout (Option 2)
                    ============================================
                    Ensures main content is centered regardless of sidebar state.
-                   Uses flexbox for proper centering and max-width constraint.
-                   Content shifts automatically when sidebar opens/closes.
+                   Uses block-container centering without flexbox to avoid scroll issues.
                 */
                 section[data-testid="stMain"] {
                     flex: 1 1 0% !important;
                     min-width: 0 !important;
-                    display: flex !important;
-                    justify-content: center !important;
-                    align-items: flex-start !important;
+                    overflow-y: auto !important;
                 }
                 
                 section[data-testid="stMain"] .block-container { 
@@ -225,23 +222,23 @@ def main():
                    Custom Component Styling
                    ============================================
                    Styles for titles, posters, buttons, and other UI elements.
-                   Font sizes increased for better visibility on Streamlit Cloud.
+                   Font sizes balanced for readability.
                 */
-                .main-title { text-align: center; font-size: clamp(1.8rem, calc(3.2rem * var(--scale-factor)), 3.2rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
-                .subtitle { text-align: center; color: #ffffff !important; font-size: clamp(1rem, calc(1.2rem * var(--scale-factor)), 1.2rem); font-weight: 400; margin-bottom: 2rem; opacity: 0.9; transition: font-size 0.3s ease; }
-                .data-source { text-align: center; color: #ffffff !important; font-size: 0.9rem; opacity: 0.5; margin-bottom: 1rem; }
+                .main-title { text-align: center; font-size: clamp(1.6rem, calc(2.8rem * var(--scale-factor)), 2.8rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
+                .subtitle { text-align: center; color: #ffffff !important; font-size: clamp(0.9rem, calc(1.1rem * var(--scale-factor)), 1.1rem); font-weight: 400; margin-bottom: 2rem; opacity: 0.9; transition: font-size 0.3s ease; }
+                .data-source { text-align: center; color: #ffffff !important; font-size: 0.85rem; opacity: 0.5; margin-bottom: 1rem; }
                 
                 .poster-card { border-radius: 12px; overflow: hidden; transition: transform 0.3s ease, box-shadow 0.3s ease; }
                 .poster-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(229, 9, 20, 0.3); }
                 .poster-card img { width: 100%; display: block; border-radius: 12px; }
                 
-                .movie-title { text-align: center; color: #ffffff !important; font-size: 1rem; font-weight: 500; margin-top: 10px; }
+                .movie-title { text-align: center; color: #ffffff !important; font-size: 0.9rem; font-weight: 500; margin-top: 10px; }
                 .movie-year { color: #ffffff !important; opacity: 0.7; }
                 
-                .rec-header { color: #ffffff !important; font-size: 1.7rem; font-weight: 600; text-align: center; margin: 2rem 0 0.5rem 0; }
-                .rec-subheader { color: #ffffff !important; opacity: 0.7; font-size: 1.1rem; text-align: center; margin-bottom: 2rem; }
+                .rec-header { color: #ffffff !important; font-size: 1.5rem; font-weight: 600; text-align: center; margin: 2rem 0 0.5rem 0; }
+                .rec-subheader { color: #ffffff !important; opacity: 0.7; font-size: 1.0rem; text-align: center; margin-bottom: 2rem; }
                 
-                .stButton > button { background: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 8px; font-weight: 600; padding: clamp(0.6rem, calc(0.85rem * var(--scale-factor)), 0.85rem) clamp(1.2rem, calc(2.2rem * var(--scale-factor)), 2.2rem); font-size: clamp(0.95rem, calc(1.1rem * var(--scale-factor)), 1.1rem); white-space: nowrap !important; transition: padding 0.3s ease, font-size 0.3s ease; }
+                .stButton > button { background: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 8px; font-weight: 600; padding: clamp(0.5rem, calc(0.75rem * var(--scale-factor)), 0.75rem) clamp(1rem, calc(2rem * var(--scale-factor)), 2rem); font-size: clamp(0.85rem, calc(1.0rem * var(--scale-factor)), 1.0rem); white-space: nowrap !important; transition: padding 0.3s ease, font-size 0.3s ease; }
                 .stButton > button:hover { background: #f40612 !important; }
                 
                 .no-poster { width: 100%; aspect-ratio: 2/3; background: #2a2a2a; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ffffff !important; }
@@ -315,26 +312,26 @@ def main():
                    Hides default Streamlit UI elements and ensures sidebar toggle is visible.
                 */
                 .stApp { background-color: #fafafa; }
+                html { scroll-behavior: auto !important; }
                 #MainMenu, footer, header { visibility: hidden; }
                 button[data-testid="baseButton-header"] { display: block !important; visibility: visible !important; }
                 
                 /* ============================================
-                   Typography - Increased Sizes for Streamlit Cloud (Light Theme)
+                   Typography (Light Theme)
                    ============================================
-                   Font sizes increased to match local development appearance.
-                   Base font: 19px (was 17px), headings proportionally increased.
+                   Base font: 17px, headings proportionally sized.
                 */
                 html, body, [class*="css"] { 
                     font-family: 'Inter', system-ui, sans-serif; 
-                    font-size: 19px !important;
+                    font-size: 17px !important;
                     color: #1a1a1a; 
                 }
                 
-                h1 { font-size: 2.8rem !important; }
-                h2 { font-size: 2.3rem !important; }
-                h3 { font-size: 1.9rem !important; }
+                h1 { font-size: 2.4rem !important; }
+                h2 { font-size: 2.0rem !important; }
+                h3 { font-size: 1.6rem !important; }
                 p, span, label, div {
-                    font-size: 1.1rem !important;
+                    font-size: 1.0rem !important;
                 }
                 
                 /* ============================================
@@ -353,18 +350,15 @@ def main():
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
                 
                 /* ============================================
-                   Main Content Centering & Layout (Light Theme)
+                   Main Content Centering & Layout (Light Theme) (Option 2)
                    ============================================
                    Ensures main content is centered regardless of sidebar state.
-                   Uses flexbox for proper centering and max-width constraint.
-                   Content shifts automatically when sidebar opens/closes.
+                   Uses block-container centering without flexbox to avoid scroll issues.
                 */
                 section[data-testid="stMain"] {
                     flex: 1 1 0% !important;
                     min-width: 0 !important;
-                    display: flex !important;
-                    justify-content: center !important;
-                    align-items: flex-start !important;
+                    overflow-y: auto !important;
                 }
                 
                 section[data-testid="stMain"] .block-container { 
@@ -394,23 +388,23 @@ def main():
                    Custom Component Styling (Light Theme)
                    ============================================
                    Styles for titles, posters, buttons, and other UI elements.
-                   Font sizes increased for better visibility on Streamlit Cloud.
+                   Font sizes balanced for readability.
                 */
-                .main-title { text-align: center; font-size: clamp(1.8rem, calc(3.2rem * var(--scale-factor)), 3.2rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
-                .subtitle { text-align: center; color: #666666; font-size: clamp(1rem, calc(1.2rem * var(--scale-factor)), 1.2rem); font-weight: 400; margin-bottom: 2rem; transition: font-size 0.3s ease; }
-                .data-source { text-align: center; color: #999999; font-size: 0.9rem; margin-bottom: 1rem; }
+                .main-title { text-align: center; font-size: clamp(1.6rem, calc(2.8rem * var(--scale-factor)), 2.8rem); font-weight: 800; color: #e50914 !important; margin: 0; padding: 1rem 0 0.5rem 0; transition: font-size 0.3s ease; }
+                .subtitle { text-align: center; color: #666666; font-size: clamp(0.9rem, calc(1.1rem * var(--scale-factor)), 1.1rem); font-weight: 400; margin-bottom: 2rem; transition: font-size 0.3s ease; }
+                .data-source { text-align: center; color: #999999; font-size: 0.85rem; margin-bottom: 1rem; }
                 
                 .poster-card { border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
                 .poster-card:hover { transform: translateY(-8px); box-shadow: 0 12px 30px rgba(229, 9, 20, 0.2); }
                 .poster-card img { width: 100%; display: block; border-radius: 12px; }
                 
-                .movie-title { text-align: center; color: #1a1a1a; font-size: 1rem; font-weight: 500; margin-top: 10px; }
+                .movie-title { text-align: center; color: #1a1a1a; font-size: 0.9rem; font-weight: 500; margin-top: 10px; }
                 .movie-year { color: #666666; }
                 
-                .rec-header { color: #1a1a1a; font-size: 1.7rem; font-weight: 600; text-align: center; margin: 2rem 0 0.5rem 0; }
-                .rec-subheader { color: #666666; font-size: 1.1rem; text-align: center; margin-bottom: 2rem; }
+                .rec-header { color: #1a1a1a; font-size: 1.5rem; font-weight: 600; text-align: center; margin: 2rem 0 0.5rem 0; }
+                .rec-subheader { color: #666666; font-size: 1.0rem; text-align: center; margin-bottom: 2rem; }
                 
-                .stButton > button { background: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 8px; font-weight: 600; padding: clamp(0.6rem, calc(0.85rem * var(--scale-factor)), 0.85rem) clamp(1.2rem, calc(2.2rem * var(--scale-factor)), 2.2rem); font-size: clamp(0.95rem, calc(1.1rem * var(--scale-factor)), 1.1rem); white-space: nowrap !important; transition: padding 0.3s ease, font-size 0.3s ease; }
+                .stButton > button { background: #e50914 !important; color: #ffffff !important; border: none !important; border-radius: 8px; font-weight: 600; padding: clamp(0.5rem, calc(0.75rem * var(--scale-factor)), 0.75rem) clamp(1rem, calc(2rem * var(--scale-factor)), 2rem); font-size: clamp(0.85rem, calc(1.0rem * var(--scale-factor)), 1.0rem); white-space: nowrap !important; transition: padding 0.3s ease, font-size 0.3s ease; }
                 .stButton > button:hover { background: #c7000d !important; }
                 
                 .no-poster { width: 100%; aspect-ratio: 2/3; background: #f0f0f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #999999; }
@@ -1245,6 +1239,64 @@ def main():
     header_subtitle = "Discover your next favorite show" if media_type == 'tv' else "Discover your next favorite film"
     st.markdown(f'<h1 class="main-title" id="main-title">{header_title}</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="subtitle" id="main-subtitle">{header_subtitle}</p>', unsafe_allow_html=True)
+    
+    # JavaScript to keep title visible - scroll to top when recommendations load (Option 4: DISABLED)
+    # st.markdown("""
+    # <script>
+    #     (function() {
+    #         let hasScrolled = false;
+    #         const titleElement = document.getElementById('main-title');
+    #         
+    #         function scrollToTitle() {
+    #             if (titleElement && !hasScrolled) {
+    #                 // Small delay to ensure DOM is ready
+    #                 setTimeout(() => {
+    #                     titleElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    #                     hasScrolled = true;
+    #                     // Reset flag after a delay to allow re-scrolling if needed
+    #                     setTimeout(() => { hasScrolled = false; }, 2000);
+    #                 }, 100);
+    #             }
+    #         }
+    #         
+    #         // Watch for recommendations section appearing
+    #         const observer = new MutationObserver((mutations) => {
+    #             mutations.forEach((mutation) => {
+    #                 mutation.addedNodes.forEach((node) => {
+    #                     if (node.nodeType === 1) { // Element node
+    #                         // Check if this is the recommendations header
+    #                         if (node.classList && node.classList.contains('rec-header')) {
+    #                             scrollToTitle();
+    #                         }
+    #                         // Also check children
+    #                         const recHeader = node.querySelector && node.querySelector('.rec-header');
+    #                         if (recHeader) {
+    #                             scrollToTitle();
+    #                         }
+    #                     }
+    #                 });
+    #             });
+    #         });
+    #         
+    #         // Start observing after page load
+    #         if (document.readyState === 'loading') {
+    #             document.addEventListener('DOMContentLoaded', () => {
+    #                 observer.observe(document.body, { childList: true, subtree: true });
+    #             });
+    #         } else {
+    #             observer.observe(document.body, { childList: true, subtree: true });
+    #         }
+    #         
+    #         // Also check periodically for rec-header (fallback)
+    #         setInterval(() => {
+    #             const recHeader = document.querySelector('.rec-header');
+    #             if (recHeader && recHeader.offsetParent !== null) {
+    #                 scrollToTitle();
+    #             }
+    #         }, 500);
+    #     })();
+    # </script>
+    # """, unsafe_allow_html=True)
     
     # ===== ANALYTICS (Dialog popup) =====
     if render_analytics:
