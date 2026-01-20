@@ -40,9 +40,9 @@ def main():
     # Import everything inside main() - safe for Cloud
     import sys
     from pathlib import Path
-    import requests
+import requests
     import pickle
-    import pandas as pd
+import pandas as pd
     from ast import literal_eval
     import importlib.util
     
@@ -137,14 +137,6 @@ def main():
                 :root {
                     --scale-factor: 1.4;
                     --available-width: 100vw;
-                    --sidebar-bg-dark: #222222;
-                    --sidebar-text-dark: #ffffff;
-                }
-                
-                /* Option 3: Force root-level overrides for dark theme */
-                .stApp {
-                    --sidebar-bg: var(--sidebar-bg-dark) !important;
-                    --sidebar-text: var(--sidebar-text-dark) !important;
                 }
                 
                 /* ============================================
@@ -176,18 +168,32 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling (Option 3: CSS Variables)
+                   Sidebar Styling (Option 4: Target All Containers)
                    ============================================
                    Customizes sidebar appearance with dark theme colors and spacing.
-                   Uses CSS variables defined at root level.
+                   Targets sidebar and all possible wrapper elements.
                 */
+                /* Target sidebar and all possible wrappers */
+                [data-testid="stSidebar"],
+                [data-testid="stSidebar"] ~ *,
+                * > [data-testid="stSidebar"],
+                * [data-testid="stSidebar"],
+                section[data-testid="stSidebar"] {
+                    background-color: #222222 !important;
+                    color: #ffffff !important;
+                }
+                
+                /* Target any parent with emotion-cache that contains sidebar */
+                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
+                    background-color: #222222 !important;
+                    color: #ffffff !important;
+                }
+                
                 section[data-testid="stSidebar"] { 
-                    background-color: var(--sidebar-bg-dark, #222222) !important; 
-                    color: var(--sidebar-text-dark, #ffffff) !important;
                     min-width: 280px !important;
                     display: block !important;
                 }
-                section[data-testid="stSidebar"] * { color: var(--sidebar-text-dark, #ffffff) !important; }
+                section[data-testid="stSidebar"] * { color: #ffffff !important; }
                 section[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.2) !important; margin: 0.5rem 0 !important; }
                 section[data-testid="stSidebar"] .stMarkdown { margin-bottom: 0.25rem !important; margin-top: 0.25rem !important; }
                 section[data-testid="stSidebar"] .stRadio, section[data-testid="stSidebar"] .stMultiSelect, section[data-testid="stSidebar"] .stSlider, section[data-testid="stSidebar"] .stToggle, section[data-testid="stSidebar"] .stButton { margin-bottom: 0.5rem !important; }
@@ -314,14 +320,6 @@ def main():
                 :root {
                     --scale-factor: 1.4;
                     --available-width: 100vw;
-                    --sidebar-bg-light: #ffffff;
-                    --sidebar-text-light: #1a1a1a;
-                }
-                
-                /* Option 3: Force root-level overrides for light theme */
-                .stApp {
-                    --sidebar-bg: var(--sidebar-bg-light) !important;
-                    --sidebar-text: var(--sidebar-text-light) !important;
                 }
                 
                 /* ============================================
@@ -353,14 +351,28 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling (Light Theme) (Option 3: CSS Variables)
+                   Sidebar Styling (Light Theme) (Option 4: Target All Containers)
                    ============================================
                    Customizes sidebar appearance with light theme colors and spacing.
-                   Uses CSS variables defined at root level.
+                   Targets sidebar and all possible wrapper elements.
                 */
+                /* Target sidebar and all possible wrappers */
+                [data-testid="stSidebar"],
+                [data-testid="stSidebar"] ~ *,
+                * > [data-testid="stSidebar"],
+                * [data-testid="stSidebar"],
+                section[data-testid="stSidebar"] {
+                    background-color: #ffffff !important;
+                    color: #1a1a1a !important;
+                }
+                
+                /* Target any parent with emotion-cache that contains sidebar */
+                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
+                    background-color: #ffffff !important;
+                    color: #1a1a1a !important;
+                }
+                
                 section[data-testid="stSidebar"] { 
-                    background-color: var(--sidebar-bg-light, #ffffff) !important; 
-                    color: var(--sidebar-text-light, #1a1a1a) !important;
                     min-width: 280px !important;
                     display: block !important;
                 }
@@ -562,7 +574,7 @@ def main():
                 try:
                     if isinstance(movie_genres_raw, str):
                         movie_genres = [g.strip().title() for g in literal_eval(movie_genres_raw)]
-                    else:
+        else:
                         movie_genres = [g.strip().title() for g in movie_genres_raw]
                     if any(g in movie_genres for g in genre_filter):
                         filtered_scores.append(idx_score)
