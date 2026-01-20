@@ -168,28 +168,12 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling (Option 1: High Specificity)
+                   Sidebar Styling
                    ============================================
                    Customizes sidebar appearance with dark theme colors and spacing.
-                   Forces consistent colors regardless of Streamlit's default theme detection.
                 */
-                /* Force sidebar colors - highest specificity */
-                section[data-testid="stSidebar"],
-                section[data-testid="stSidebar"] > div,
-                section[data-testid="stSidebar"] > div > div,
-                [data-testid="stSidebar"] {
-                    background-color: #222222 !important;
-                    color: #ffffff !important;
-                }
-                
-                /* Override any emotion-cache classes */
-                [class*="st-emotion-cache"][data-testid="stSidebar"],
-                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
-                    background-color: #222222 !important;
-                    color: #ffffff !important;
-                }
-                
                 section[data-testid="stSidebar"] { 
+                    background-color: #222222; 
                     min-width: 280px !important;
                     display: block !important;
                 }
@@ -351,28 +335,12 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling (Light Theme) (Option 1: High Specificity)
+                   Sidebar Styling (Light Theme)
                    ============================================
                    Customizes sidebar appearance with light theme colors and spacing.
-                   Forces consistent colors regardless of Streamlit's default theme detection.
                 */
-                /* Force sidebar colors - highest specificity */
-                section[data-testid="stSidebar"],
-                section[data-testid="stSidebar"] > div,
-                section[data-testid="stSidebar"] > div > div,
-                [data-testid="stSidebar"] {
-                    background-color: #ffffff !important;
-                    color: #1a1a1a !important;
-                }
-                
-                /* Override any emotion-cache classes */
-                [class*="st-emotion-cache"][data-testid="stSidebar"],
-                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
-                    background-color: #ffffff !important;
-                    color: #1a1a1a !important;
-                }
-                
                 section[data-testid="stSidebar"] { 
+                    background-color: #ffffff; 
                     min-width: 280px !important;
                     display: block !important;
                 }
@@ -1271,6 +1239,61 @@ def main():
     header_subtitle = "Discover your next favorite show" if media_type == 'tv' else "Discover your next favorite film"
     st.markdown(f'<h1 class="main-title" id="main-title">{header_title}</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="subtitle" id="main-subtitle">{header_subtitle}</p>', unsafe_allow_html=True)
+    
+    # Option 2: JavaScript to force consistent sidebar colors
+    st.markdown(f"""
+    <script>
+        (function() {{
+            function forceSidebarColors() {{
+                const isDark = {str(is_dark).lower()};
+                const sidebar = document.querySelector('section[data-testid="stSidebar"]');
+                
+                if (sidebar) {{
+                    const bgColor = isDark ? '#222222' : '#ffffff';
+                    const textColor = isDark ? '#ffffff' : '#1a1a1a';
+                    
+                    // Force sidebar colors
+                    sidebar.style.setProperty('background-color', bgColor, 'important');
+                    sidebar.style.setProperty('color', textColor, 'important');
+                    
+                    // Also target parent containers with emotion-cache classes
+                    let parent = sidebar.parentElement;
+                    let depth = 0;
+                    while (parent && parent !== document.body && depth < 5) {{
+                        const classList = parent.classList.toString();
+                        if (classList.includes('st-emotion-cache')) {{
+                            parent.style.setProperty('background-color', bgColor, 'important');
+                            parent.style.setProperty('color', textColor, 'important');
+                        }}
+                        parent = parent.parentElement;
+                        depth++;
+                    }}
+                    
+                    // Force all child elements text color
+                    const allChildren = sidebar.querySelectorAll('*');
+                    allChildren.forEach(child => {{
+                        child.style.setProperty('color', textColor, 'important');
+                    }});
+                }}
+            }}
+            
+            // Run immediately
+            forceSidebarColors();
+            
+            // Run on load
+            window.addEventListener('load', forceSidebarColors);
+            
+            // Run on DOM changes (Streamlit reruns)
+            const observer = new MutationObserver(() => {{
+                forceSidebarColors();
+            }});
+            observer.observe(document.body, {{ childList: true, subtree: true, attributes: true }});
+            
+            // Also run periodically to catch any late-applied styles
+            setInterval(forceSidebarColors, 500);
+        }})();
+    </script>
+    """, unsafe_allow_html=True)
     
     # JavaScript to keep title visible - scroll to top when recommendations load (Option 4: DISABLED)
     # st.markdown("""
