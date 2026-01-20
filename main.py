@@ -171,9 +171,15 @@ def main():
                    Sidebar Styling
                    ============================================
                    Customizes sidebar appearance with dark theme colors and spacing.
+                   Overrides Streamlit's default theme detection.
                 */
+                section[data-testid="stSidebar"],
+                section[data-testid="stSidebar"] > div,
+                [class*="st-emotion-cache"] {
+                    background-color: #222222 !important;
+                    color: #ffffff !important;
+                }
                 section[data-testid="stSidebar"] { 
-                    background-color: #222222; 
                     min-width: 280px !important;
                     display: block !important;
                 }
@@ -338,9 +344,15 @@ def main():
                    Sidebar Styling (Light Theme)
                    ============================================
                    Customizes sidebar appearance with light theme colors and spacing.
+                   Overrides Streamlit's default theme detection.
                 */
+                section[data-testid="stSidebar"],
+                section[data-testid="stSidebar"] > div,
+                [class*="st-emotion-cache"] {
+                    background-color: #ffffff !important;
+                    color: #1a1a1a !important;
+                }
                 section[data-testid="stSidebar"] { 
-                    background-color: #ffffff; 
                     min-width: 280px !important;
                     display: block !important;
                 }
