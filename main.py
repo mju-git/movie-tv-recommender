@@ -168,12 +168,28 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling
+                   Sidebar Styling (Option 1: High Specificity)
                    ============================================
                    Customizes sidebar appearance with dark theme colors and spacing.
+                   Forces consistent colors regardless of Streamlit's default theme detection.
                 */
+                /* Force sidebar colors - highest specificity */
+                section[data-testid="stSidebar"],
+                section[data-testid="stSidebar"] > div,
+                section[data-testid="stSidebar"] > div > div,
+                [data-testid="stSidebar"] {
+                    background-color: #222222 !important;
+                    color: #ffffff !important;
+                }
+                
+                /* Override any emotion-cache classes */
+                [class*="st-emotion-cache"][data-testid="stSidebar"],
+                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
+                    background-color: #222222 !important;
+                    color: #ffffff !important;
+                }
+                
                 section[data-testid="stSidebar"] { 
-                    background-color: #222222; 
                     min-width: 280px !important;
                     display: block !important;
                 }
@@ -335,12 +351,28 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling (Light Theme)
+                   Sidebar Styling (Light Theme) (Option 1: High Specificity)
                    ============================================
                    Customizes sidebar appearance with light theme colors and spacing.
+                   Forces consistent colors regardless of Streamlit's default theme detection.
                 */
+                /* Force sidebar colors - highest specificity */
+                section[data-testid="stSidebar"],
+                section[data-testid="stSidebar"] > div,
+                section[data-testid="stSidebar"] > div > div,
+                [data-testid="stSidebar"] {
+                    background-color: #ffffff !important;
+                    color: #1a1a1a !important;
+                }
+                
+                /* Override any emotion-cache classes */
+                [class*="st-emotion-cache"][data-testid="stSidebar"],
+                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
+                    background-color: #ffffff !important;
+                    color: #1a1a1a !important;
+                }
+                
                 section[data-testid="stSidebar"] { 
-                    background-color: #ffffff; 
                     min-width: 280px !important;
                     display: block !important;
                 }
