@@ -168,22 +168,18 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling (Option 5: Combined CSS + JS)
+                   Sidebar Styling (Option 3: CSS Variables)
                    ============================================
                    Customizes sidebar appearance with dark theme colors and spacing.
-                   CSS provides base styling, JavaScript enforces it.
+                   Uses CSS variables defined at root level.
                 */
                 section[data-testid="stSidebar"] { 
-                    background-color: #222222 !important; 
+                    background-color: var(--sidebar-bg-dark, #222222) !important; 
+                    color: var(--sidebar-text-dark, #ffffff) !important;
                     min-width: 280px !important;
                     display: block !important;
                 }
-                section[data-testid="stSidebar"] * { color: #ffffff !important; }
-                
-                /* Override emotion-cache parent containers */
-                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
-                    background-color: #222222 !important;
-                }
+                section[data-testid="stSidebar"] * { color: var(--sidebar-text-dark, #ffffff) !important; }
                 section[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.2) !important; margin: 0.5rem 0 !important; }
                 section[data-testid="stSidebar"] .stMarkdown { margin-bottom: 0.25rem !important; margin-top: 0.25rem !important; }
                 section[data-testid="stSidebar"] .stRadio, section[data-testid="stSidebar"] .stMultiSelect, section[data-testid="stSidebar"] .stSlider, section[data-testid="stSidebar"] .stToggle, section[data-testid="stSidebar"] .stButton { margin-bottom: 0.5rem !important; }
@@ -341,20 +337,16 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling (Light Theme) (Option 5: Combined CSS + JS)
+                   Sidebar Styling (Light Theme) (Option 3: CSS Variables)
                    ============================================
                    Customizes sidebar appearance with light theme colors and spacing.
-                   CSS provides base styling, JavaScript enforces it.
+                   Uses CSS variables defined at root level.
                 */
                 section[data-testid="stSidebar"] { 
-                    background-color: #ffffff !important; 
+                    background-color: var(--sidebar-bg-light, #ffffff) !important; 
+                    color: var(--sidebar-text-light, #1a1a1a) !important;
                     min-width: 280px !important;
                     display: block !important;
-                }
-                
-                /* Override emotion-cache parent containers */
-                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
-                    background-color: #ffffff !important;
                 }
                 section[data-testid="stSidebar"] hr { border-color: #e0e0e0 !important; margin: 0.5rem 0 !important; }
                 section[data-testid="stSidebar"] .stMarkdown { margin-bottom: 0.25rem !important; margin-top: 0.25rem !important; }
@@ -1251,48 +1243,6 @@ def main():
     header_subtitle = "Discover your next favorite show" if media_type == 'tv' else "Discover your next favorite film"
     st.markdown(f'<h1 class="main-title" id="main-title">{header_title}</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="subtitle" id="main-subtitle">{header_subtitle}</p>', unsafe_allow_html=True)
-    
-    # Option 5: Combined CSS + JavaScript to force consistent colors
-    st.markdown(f"""
-    <script>
-        (function() {{
-            function forceSidebarColors() {{
-                const isDark = {str(is_dark).lower()};
-                const sidebar = document.querySelector('section[data-testid="stSidebar"]');
-                
-                if (!sidebar) return;
-                
-                const bgColor = isDark ? '#222222' : '#ffffff';
-                const textColor = isDark ? '#ffffff' : '#1a1a1a';
-                
-                // Force sidebar element
-                sidebar.style.setProperty('background-color', bgColor, 'important');
-                
-                // Find and override parent containers with emotion-cache
-                let parent = sidebar.parentElement;
-                let depth = 0;
-                while (parent && parent !== document.body && depth < 5) {{
-                    const classList = parent.classList.toString();
-                    if (classList.includes('st-emotion-cache')) {{
-                        parent.style.setProperty('background-color', bgColor, 'important');
-                    }}
-                    parent = parent.parentElement;
-                    depth++;
-                }}
-            }}
-            
-            // Run after a small delay to let Streamlit render
-            setTimeout(forceSidebarColors, 100);
-            window.addEventListener('load', () => setTimeout(forceSidebarColors, 200));
-            
-            // Watch for DOM changes
-            const observer = new MutationObserver(() => {{
-                setTimeout(forceSidebarColors, 50);
-            }});
-            observer.observe(document.body, {{ childList: true, subtree: true }});
-        }})();
-    </script>
-    """, unsafe_allow_html=True)
     
     # JavaScript to keep title visible - scroll to top when recommendations load (Option 4: DISABLED)
     # st.markdown("""
