@@ -173,7 +173,7 @@ def main():
                    Customizes sidebar appearance with dark theme colors and spacing.
                 */
                 section[data-testid="stSidebar"] { 
-                    background-color: #222222; 
+                    background-color: #2a2a2a; 
                     min-width: 280px !important;
                     display: block !important;
                 }
@@ -243,15 +243,47 @@ def main():
                 
                 .no-poster { width: 100%; aspect-ratio: 2/3; background: #2a2a2a; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #ffffff !important; }
                 
-                .stSelectbox [data-baseweb="select"] span, .stSelectbox [data-baseweb="select"] div, .stSelectbox input,
-                .stMultiSelect [data-baseweb="select"] span, .stMultiSelect [data-baseweb="select"] div, .stMultiSelect input { color: #ffffff !important; }
-                .stMultiSelect [data-baseweb="select"] { border: 1px solid rgba(255,255,255,0.2) !important; border-radius: 8px !important; }
+                /* Fix dropdown styling in dark mode */
+                .stSelectbox [data-baseweb="select"],
+                .stMultiSelect [data-baseweb="select"] {
+                    background-color: #333333 !important;
+                    border: 1px solid rgba(255,255,255,0.2) !important;
+                    border-radius: 8px !important;
+                }
+                .stSelectbox [data-baseweb="select"] span, 
+                .stSelectbox [data-baseweb="select"] div, 
+                .stSelectbox input,
+                .stMultiSelect [data-baseweb="select"] span, 
+                .stMultiSelect [data-baseweb="select"] div, 
+                .stMultiSelect input { 
+                    color: #ffffff !important; 
+                    background-color: #333333 !important;
+                }
                 
-                /* Fix dropdown arrow visibility in dark mode */
+                /* Fix dropdown arrow visibility */
                 .stMultiSelect [data-baseweb="select"] svg,
                 .stSelectbox [data-baseweb="select"] svg {
                     fill: #ffffff !important;
                     color: #ffffff !important;
+                }
+                
+                /* Fix dropdown popover/menu background when opened */
+                [data-baseweb="popover"],
+                [data-baseweb="menu"],
+                ul[role="listbox"] {
+                    background-color: #333333 !important;
+                }
+                [data-baseweb="popover"] li, 
+                [data-baseweb="popover"] span, 
+                [data-baseweb="popover"] div,
+                [data-baseweb="menu"] li, 
+                [data-baseweb="menu"] span, 
+                [data-baseweb="menu"] div,
+                ul[role="listbox"] li, 
+                ul[role="listbox"] span, 
+                ul[role="listbox"] div { 
+                    color: #ffffff !important; 
+                    background-color: #333333 !important;
                 }
                 
                 /* Fix toggle button visibility in dark mode */
