@@ -144,7 +144,7 @@ def main():
                    ============================================
                    Hides default Streamlit UI elements and ensures sidebar toggle is visible.
                 */
-                .stApp { background-color: #2a2a2a; }
+                .stApp { background-color: #2d2d2d; }
                 html { scroll-behavior: auto !important; }
                 #MainMenu, footer, header { visibility: hidden; }
                 button[data-testid="baseButton-header"], [data-testid="collapsedControl"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
