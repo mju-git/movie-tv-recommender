@@ -168,16 +168,22 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling
+                   Sidebar Styling (Option 5: Combined CSS + JS)
                    ============================================
                    Customizes sidebar appearance with dark theme colors and spacing.
+                   CSS provides base styling, JavaScript enforces it.
                 */
                 section[data-testid="stSidebar"] { 
-                    background-color: #222222; 
+                    background-color: #222222 !important; 
                     min-width: 280px !important;
                     display: block !important;
                 }
                 section[data-testid="stSidebar"] * { color: #ffffff !important; }
+                
+                /* Override emotion-cache parent containers */
+                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
+                    background-color: #222222 !important;
+                }
                 section[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.2) !important; margin: 0.5rem 0 !important; }
                 section[data-testid="stSidebar"] .stMarkdown { margin-bottom: 0.25rem !important; margin-top: 0.25rem !important; }
                 section[data-testid="stSidebar"] .stRadio, section[data-testid="stSidebar"] .stMultiSelect, section[data-testid="stSidebar"] .stSlider, section[data-testid="stSidebar"] .stToggle, section[data-testid="stSidebar"] .stButton { margin-bottom: 0.5rem !important; }
@@ -335,14 +341,20 @@ def main():
                 }
                 
                 /* ============================================
-                   Sidebar Styling (Light Theme)
+                   Sidebar Styling (Light Theme) (Option 5: Combined CSS + JS)
                    ============================================
                    Customizes sidebar appearance with light theme colors and spacing.
+                   CSS provides base styling, JavaScript enforces it.
                 */
                 section[data-testid="stSidebar"] { 
-                    background-color: #ffffff; 
+                    background-color: #ffffff !important; 
                     min-width: 280px !important;
                     display: block !important;
+                }
+                
+                /* Override emotion-cache parent containers */
+                [class*="st-emotion-cache"]:has([data-testid="stSidebar"]) {
+                    background-color: #ffffff !important;
                 }
                 section[data-testid="stSidebar"] hr { border-color: #e0e0e0 !important; margin: 0.5rem 0 !important; }
                 section[data-testid="stSidebar"] .stMarkdown { margin-bottom: 0.25rem !important; margin-top: 0.25rem !important; }
@@ -1240,7 +1252,7 @@ def main():
     st.markdown(f'<h1 class="main-title" id="main-title">{header_title}</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="subtitle" id="main-subtitle">{header_subtitle}</p>', unsafe_allow_html=True)
     
-    # Option 2: JavaScript to force consistent sidebar colors
+    # Option 5: Combined CSS + JavaScript to force consistent colors
     st.markdown(f"""
     <script>
         (function() {{
@@ -1248,49 +1260,36 @@ def main():
                 const isDark = {str(is_dark).lower()};
                 const sidebar = document.querySelector('section[data-testid="stSidebar"]');
                 
-                if (sidebar) {{
-                    const bgColor = isDark ? '#222222' : '#ffffff';
-                    const textColor = isDark ? '#ffffff' : '#1a1a1a';
-                    
-                    // Force sidebar colors
-                    sidebar.style.setProperty('background-color', bgColor, 'important');
-                    sidebar.style.setProperty('color', textColor, 'important');
-                    
-                    // Also target parent containers with emotion-cache classes
-                    let parent = sidebar.parentElement;
-                    let depth = 0;
-                    while (parent && parent !== document.body && depth < 5) {{
-                        const classList = parent.classList.toString();
-                        if (classList.includes('st-emotion-cache')) {{
-                            parent.style.setProperty('background-color', bgColor, 'important');
-                            parent.style.setProperty('color', textColor, 'important');
-                        }}
-                        parent = parent.parentElement;
-                        depth++;
+                if (!sidebar) return;
+                
+                const bgColor = isDark ? '#222222' : '#ffffff';
+                const textColor = isDark ? '#ffffff' : '#1a1a1a';
+                
+                // Force sidebar element
+                sidebar.style.setProperty('background-color', bgColor, 'important');
+                
+                // Find and override parent containers with emotion-cache
+                let parent = sidebar.parentElement;
+                let depth = 0;
+                while (parent && parent !== document.body && depth < 5) {{
+                    const classList = parent.classList.toString();
+                    if (classList.includes('st-emotion-cache')) {{
+                        parent.style.setProperty('background-color', bgColor, 'important');
                     }}
-                    
-                    // Force all child elements text color
-                    const allChildren = sidebar.querySelectorAll('*');
-                    allChildren.forEach(child => {{
-                        child.style.setProperty('color', textColor, 'important');
-                    }});
+                    parent = parent.parentElement;
+                    depth++;
                 }}
             }}
             
-            // Run immediately
-            forceSidebarColors();
+            // Run after a small delay to let Streamlit render
+            setTimeout(forceSidebarColors, 100);
+            window.addEventListener('load', () => setTimeout(forceSidebarColors, 200));
             
-            // Run on load
-            window.addEventListener('load', forceSidebarColors);
-            
-            // Run on DOM changes (Streamlit reruns)
+            // Watch for DOM changes
             const observer = new MutationObserver(() => {{
-                forceSidebarColors();
+                setTimeout(forceSidebarColors, 50);
             }});
-            observer.observe(document.body, {{ childList: true, subtree: true, attributes: true }});
-            
-            // Also run periodically to catch any late-applied styles
-            setInterval(forceSidebarColors, 500);
+            observer.observe(document.body, {{ childList: true, subtree: true }});
         }})();
     </script>
     """, unsafe_allow_html=True)
