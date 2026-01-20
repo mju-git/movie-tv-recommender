@@ -137,6 +137,14 @@ def main():
                 :root {
                     --scale-factor: 1.4;
                     --available-width: 100vw;
+                    --sidebar-bg-dark: #222222;
+                    --sidebar-text-dark: #ffffff;
+                }
+                
+                /* Option 3: Force root-level overrides for dark theme */
+                .stApp {
+                    --sidebar-bg: var(--sidebar-bg-dark) !important;
+                    --sidebar-text: var(--sidebar-text-dark) !important;
                 }
                 
                 /* ============================================
