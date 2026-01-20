@@ -40,9 +40,9 @@ def main():
     # Import everything inside main() - safe for Cloud
     import sys
     from pathlib import Path
-import requests
+    import requests
     import pickle
-import pandas as pd
+    import pandas as pd
     from ast import literal_eval
     import importlib.util
     
@@ -574,7 +574,7 @@ import pandas as pd
                 try:
                     if isinstance(movie_genres_raw, str):
                         movie_genres = [g.strip().title() for g in literal_eval(movie_genres_raw)]
-        else:
+                    else:
                         movie_genres = [g.strip().title() for g in movie_genres_raw]
                     if any(g in movie_genres for g in genre_filter):
                         filtered_scores.append(idx_score)
