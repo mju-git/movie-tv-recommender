@@ -144,6 +144,10 @@ def main():
                    ============================================
                    Hides default Streamlit UI elements and ensures sidebar toggle is visible.
                 */
+                /* Force dark color scheme to prevent system theme interference */
+                html, body, .stApp {
+                    color-scheme: dark !important;
+                }
                 .stApp { background-color: #2d2d2d; }
                 html { scroll-behavior: auto !important; }
                 #MainMenu, footer, header { visibility: hidden; }
@@ -173,9 +177,10 @@ def main():
                    Customizes sidebar appearance with dark theme colors and spacing.
                 */
                 section[data-testid="stSidebar"] { 
-                    background-color: #2a2a2a; 
+                    background-color: #2d2d2d; 
                     min-width: 280px !important;
                     display: block !important;
+                    border-right: 1px solid rgba(255,255,255,0.1) !important;
                 }
                 section[data-testid="stSidebar"] * { color: #ffffff !important; }
                 section[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.2) !important; margin: 0.5rem 0 !important; }
@@ -208,7 +213,14 @@ def main():
                    Dialog Styling
                    ============================================
                    Hides default dialog title and reduces padding for cleaner appearance.
+                   Explicit background color to match app theme.
                 */
+                [data-testid="stDialog"],
+                [data-testid="stDialog"] > div,
+                [role="dialog"],
+                [role="dialog"] > div {
+                    background-color: #2d2d2d !important;
+                }
                 [data-testid="stDialog"] h2:first-child,
                 [data-testid="stDialog"] header h2 {
                     display: none !important;
@@ -216,6 +228,7 @@ def main():
                 
                 [data-testid="stDialog"] .block-container {
                     padding-top: 0.5rem !important;
+                    background-color: #2d2d2d !important;
                 }
                 
                 /* ============================================
@@ -267,12 +280,16 @@ def main():
                     color: #ffffff !important;
                 }
                 
-                /* Fix dropdown popover/menu background when opened */
+                /* Fix dropdown popover/menu - force explicit colors */
                 [data-baseweb="popover"],
+                [data-baseweb="popover"] > div,
                 [data-baseweb="menu"],
-                ul[role="listbox"] {
+                ul[role="listbox"],
+                [class*="st-emotion-cache"][role="listbox"] {
                     background-color: #333333 !important;
+                    border: 1px solid rgba(255,255,255,0.2) !important;
                 }
+                /* Dropdown menu items - force white text */
                 [data-baseweb="popover"] li, 
                 [data-baseweb="popover"] span, 
                 [data-baseweb="popover"] div,
@@ -281,28 +298,131 @@ def main():
                 [data-baseweb="menu"] div,
                 ul[role="listbox"] li, 
                 ul[role="listbox"] span, 
-                ul[role="listbox"] div { 
+                ul[role="listbox"] div,
+                li[role="option"],
+                li[role="option"] span,
+                li[role="option"] div,
+                [data-baseweb="option"],
+                [data-baseweb="option"] span,
+                [data-baseweb="option"] div { 
                     color: #ffffff !important; 
                     background-color: #333333 !important;
                 }
-                
-                /* Fix toggle button visibility in dark mode */
-                .stToggle [role="switch"],
-                .stToggle [data-baseweb="switch"] {
+                /* Dropdown hover state */
+                li[role="option"]:hover,
+                li[role="option"]:hover span,
+                li[role="option"]:hover div,
+                [data-baseweb="option"]:hover {
                     background-color: #444444 !important;
+                    color: #ffffff !important;
                 }
-                .stToggle [role="switch"][aria-checked="true"],
-                .stToggle [data-baseweb="switch"][aria-checked="true"] {
+                /* Selected/highlighted option */
+                li[role="option"][aria-selected="true"],
+                [data-baseweb="option"][aria-selected="true"] {
+                    background-color: #e50914 !important;
+                    color: #ffffff !important;
+                }
+                
+                /* Fix toggle button visibility in dark mode - aggressive targeting */
+                .stToggle > label > div:first-of-type,
+                .stToggle > label > div:first-of-type > div,
+                .stToggle span[data-baseweb="switch"],
+                .stToggle span[data-baseweb="switch"] > div,
+                .stToggle [data-testid="stToggle"] > div,
+                div[data-baseweb="switch"],
+                div[data-baseweb="switch"] > div {
+                    background-color: #505050 !important;
+                }
+                .stToggle > label > div:first-of-type[aria-checked="true"],
+                .stToggle > label > div:first-of-type[aria-checked="true"] > div,
+                .stToggle span[data-baseweb="switch"][aria-checked="true"],
+                .stToggle span[data-baseweb="switch"][aria-checked="true"] > div,
+                div[data-baseweb="switch"][aria-checked="true"],
+                div[data-baseweb="switch"][aria-checked="true"] > div {
+                    background-color: #e50914 !important;
+                }
+                /* Target the track background specifically */
+                .stToggle [class*="Track"],
+                .stToggle [class*="track"],
+                [class*="st-emotion-cache"][data-baseweb="switch"],
+                [class*="st-emotion-cache"][data-baseweb="switch"] > div:first-child {
+                    background-color: #505050 !important;
+                }
+                [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"],
+                [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"] > div:first-child {
                     background-color: #e50914 !important;
                 }
                 
-                [data-baseweb="popover"] li, [data-baseweb="popover"] span, [data-baseweb="popover"] div,
-                [data-baseweb="menu"] li, [data-baseweb="menu"] span, [data-baseweb="menu"] div,
-                ul[role="listbox"] li, ul[role="listbox"] span, ul[role="listbox"] div { color: #1a1a1a !important; }
+                /* Multiselect tags - selected items with red background */
+                [data-baseweb="tag"],
+                span[data-baseweb="tag"],
+                div[data-baseweb="tag"],
+                .stMultiSelect [data-baseweb="tag"],
+                [class*="st-emotion-cache"][data-baseweb="tag"] {
+                    background-color: #e50914 !important;
+                    border-color: #e50914 !important;
+                    border: none !important;
+                }
+                [data-baseweb="tag"] > span,
+                [data-baseweb="tag"] > div,
+                [data-baseweb="tag"] span,
+                [data-baseweb="tag"] div,
+                [data-baseweb="tag"] *,
+                .stMultiSelect [data-baseweb="tag"] *,
+                [class*="st-emotion-cache"][data-baseweb="tag"] * {
+                    background-color: transparent !important;
+                    background: transparent !important;
+                    color: #ffffff !important;
+                }
+                /* Tag close button */
+                [data-baseweb="tag"] svg,
+                [data-baseweb="tag"] path {
+                    fill: #ffffff !important;
+                    color: #ffffff !important;
+                }
+                /* Target emotion-cache classes for tags */
+                .stMultiSelect [class*="Tag"],
+                .stMultiSelect [class*="tag"] {
+                    background-color: #e50914 !important;
+                    background: #e50914 !important;
+                }
+                
+                /* Hide scrollbar in dropdown menus */
+                [data-baseweb="popover"] > div,
+                [data-baseweb="menu"],
+                ul[role="listbox"] {
+                    scrollbar-width: none !important;
+                    -ms-overflow-style: none !important;
+                }
+                [data-baseweb="popover"] > div::-webkit-scrollbar,
+                [data-baseweb="menu"]::-webkit-scrollbar,
+                ul[role="listbox"]::-webkit-scrollbar {
+                    display: none !important;
+                    width: 0 !important;
+                }
+                
+                /* Dropdown border more visible */
+                .stSelectbox [data-baseweb="select"],
+                .stMultiSelect [data-baseweb="select"] {
+                    border: 1px solid rgba(255,255,255,0.35) !important;
+                }
                 
                 .footer { text-align: center; color: #ffffff !important; opacity: 0.6; padding: 3rem 0 1rem 0; }
-                details { background: #1a1a1a !important; border-radius: 8px; }
-                details summary, details div { color: #ffffff !important; }
+                /* Expander/Details styling - matches app background */
+                details, 
+                [data-testid="stExpander"],
+                [data-testid="stExpander"] > div {
+                    background: #333333 !important; 
+                    border-radius: 8px;
+                }
+                details summary, 
+                details div,
+                [data-testid="stExpander"] summary,
+                [data-testid="stExpander"] div,
+                [data-testid="stExpander"] * { 
+                    color: #ffffff !important; 
+                    background-color: transparent !important;
+                }
             </style>
             <script>
                 // Dynamic centering based on sidebar state
@@ -359,11 +479,15 @@ def main():
                    App Layout & Visibility Controls (Light Theme)
                    ============================================
                    Hides default Streamlit UI elements and ensures sidebar toggle is visible.
+                   Force light color scheme to prevent system theme interference.
                 */
+                html, body, .stApp {
+                    color-scheme: light !important;
+                }
                 .stApp { background-color: #fafafa; }
                 html { scroll-behavior: auto !important; }
                 #MainMenu, footer, header { visibility: hidden; }
-                button[data-testid="baseButton-header"] { display: block !important; visibility: visible !important; }
+                button[data-testid="baseButton-header"], [data-testid="collapsedControl"] { display: block !important; visibility: visible !important; opacity: 1 !important; }
                 
                 /* ============================================
                    Typography (Light Theme)
@@ -423,7 +547,14 @@ def main():
                    Dialog Styling (Light Theme)
                    ============================================
                    Hides default dialog title and reduces padding for cleaner appearance.
+                   Explicit background color to match app theme.
                 */
+                [data-testid="stDialog"],
+                [data-testid="stDialog"] > div,
+                [role="dialog"],
+                [role="dialog"] > div {
+                    background-color: #fafafa !important;
+                }
                 [data-testid="stDialog"] h2:first-child,
                 [data-testid="stDialog"] header h2 {
                     display: none !important;
@@ -431,6 +562,23 @@ def main():
                 
                 [data-testid="stDialog"] .block-container {
                     padding-top: 0.5rem !important;
+                    background-color: #fafafa !important;
+                }
+                
+                /* Expander/Details styling (Light Theme) */
+                details, 
+                [data-testid="stExpander"],
+                [data-testid="stExpander"] > div {
+                    background: #f0f0f0 !important; 
+                    border-radius: 8px;
+                }
+                details summary, 
+                details div,
+                [data-testid="stExpander"] summary,
+                [data-testid="stExpander"] div,
+                [data-testid="stExpander"] * { 
+                    color: #1a1a1a !important; 
+                    background-color: transparent !important;
                 }
                 
                 /* ============================================
@@ -457,7 +605,83 @@ def main():
                 .stButton > button:hover { background: #c7000d !important; }
                 
                 .no-poster { width: 100%; aspect-ratio: 2/3; background: #f0f0f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #999999; }
-                .stMultiSelect [data-baseweb="select"] { border: 1px solid #d0d0d0 !important; border-radius: 8px !important; }
+                
+                /* Fix dropdown styling (Light Theme) - explicit colors */
+                .stSelectbox [data-baseweb="select"],
+                .stMultiSelect [data-baseweb="select"] { 
+                    border: 1px solid #d0d0d0 !important; 
+                    border-radius: 8px !important; 
+                    background-color: #ffffff !important;
+                }
+                .stSelectbox [data-baseweb="select"] span, 
+                .stSelectbox [data-baseweb="select"] div, 
+                .stSelectbox input,
+                .stMultiSelect [data-baseweb="select"] span, 
+                .stMultiSelect [data-baseweb="select"] div, 
+                .stMultiSelect input { 
+                    color: #1a1a1a !important; 
+                    background-color: #ffffff !important;
+                }
+                /* Dropdown arrow */
+                .stMultiSelect [data-baseweb="select"] svg,
+                .stSelectbox [data-baseweb="select"] svg {
+                    fill: #1a1a1a !important;
+                    color: #1a1a1a !important;
+                }
+                /* Dropdown menu items */
+                [data-baseweb="popover"],
+                [data-baseweb="popover"] > div,
+                [data-baseweb="menu"],
+                ul[role="listbox"] {
+                    background-color: #ffffff !important;
+                    border: 1px solid #d0d0d0 !important;
+                }
+                [data-baseweb="popover"] li, 
+                [data-baseweb="popover"] span, 
+                [data-baseweb="popover"] div,
+                [data-baseweb="menu"] li, 
+                [data-baseweb="menu"] span, 
+                [data-baseweb="menu"] div,
+                ul[role="listbox"] li, 
+                ul[role="listbox"] span, 
+                ul[role="listbox"] div,
+                li[role="option"],
+                li[role="option"] span,
+                li[role="option"] div { 
+                    color: #1a1a1a !important; 
+                    background-color: #ffffff !important;
+                }
+                li[role="option"]:hover,
+                li[role="option"]:hover span {
+                    background-color: #f0f0f0 !important;
+                }
+                li[role="option"][aria-selected="true"] {
+                    background-color: #e50914 !important;
+                    color: #ffffff !important;
+                }
+                /* Tags in multiselect */
+                [data-baseweb="tag"] {
+                    background-color: #e50914 !important;
+                    border: none !important;
+                }
+                [data-baseweb="tag"] span,
+                [data-baseweb="tag"] * {
+                    color: #ffffff !important;
+                    background-color: transparent !important;
+                }
+                [data-baseweb="tag"] svg {
+                    fill: #ffffff !important;
+                }
+                /* Toggle button */
+                .stToggle [data-baseweb="switch"],
+                .stToggle label > div:first-of-type {
+                    background-color: #d0d0d0 !important;
+                }
+                .stToggle [data-baseweb="switch"][aria-checked="true"],
+                .stToggle label > div:first-of-type[aria-checked="true"] {
+                    background-color: #e50914 !important;
+                }
+                
                 .footer { text-align: center; color: #999999; padding: 3rem 0 1rem 0; }
             </style>
             <script>
