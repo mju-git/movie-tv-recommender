@@ -177,10 +177,9 @@ def main():
                    Customizes sidebar appearance with dark theme colors and spacing.
                 */
                 section[data-testid="stSidebar"] { 
-                    background-color: #2d2d2d; 
+                    background-color: #333333; 
                     min-width: 280px !important;
                     display: block !important;
-                    border-right: 1px solid rgba(255,255,255,0.1) !important;
                 }
                 section[data-testid="stSidebar"] * { color: #ffffff !important; }
                 section[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.2) !important; margin: 0.5rem 0 !important; }
@@ -289,7 +288,7 @@ def main():
                     background-color: #333333 !important;
                     border: 1px solid rgba(255,255,255,0.2) !important;
                 }
-                /* Dropdown menu items - force white text */
+                /* Dropdown menu items - force white text, no outline/border */
                 [data-baseweb="popover"] li, 
                 [data-baseweb="popover"] span, 
                 [data-baseweb="popover"] div,
@@ -307,20 +306,40 @@ def main():
                 [data-baseweb="option"] div { 
                     color: #ffffff !important; 
                     background-color: #333333 !important;
+                    outline: none !important;
+                    border: none !important;
+                    box-shadow: none !important;
                 }
-                /* Dropdown hover state */
+                /* Remove focus outline on dropdown items */
+                li[role="option"]:focus,
+                li[role="option"]:focus-visible,
+                [data-baseweb="option"]:focus,
+                [data-baseweb="option"]:focus-visible,
+                [data-highlighted="true"] {
+                    outline: none !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+                /* Dropdown hover state - background only, no border */
                 li[role="option"]:hover,
                 li[role="option"]:hover span,
                 li[role="option"]:hover div,
-                [data-baseweb="option"]:hover {
+                [data-baseweb="option"]:hover,
+                [data-highlighted="true"] {
                     background-color: #444444 !important;
                     color: #ffffff !important;
+                    outline: none !important;
+                    border: none !important;
                 }
-                /* Selected/highlighted option */
+                /* Selected option - solid red background */
                 li[role="option"][aria-selected="true"],
+                li[role="option"][aria-selected="true"] span,
+                li[role="option"][aria-selected="true"] div,
                 [data-baseweb="option"][aria-selected="true"] {
                     background-color: #e50914 !important;
                     color: #ffffff !important;
+                    outline: none !important;
+                    border: none !important;
                 }
                 
                 /* Fix toggle button visibility in dark mode - aggressive targeting */
@@ -408,11 +427,11 @@ def main():
                 }
                 
                 .footer { text-align: center; color: #ffffff !important; opacity: 0.6; padding: 3rem 0 1rem 0; }
-                /* Expander/Details styling - matches app background */
+                /* Expander/Details styling - matches sidebar background */
                 details, 
                 [data-testid="stExpander"],
                 [data-testid="stExpander"] > div {
-                    background: #333333 !important; 
+                    background: #3a3a3a !important; 
                     border-radius: 8px;
                 }
                 details summary, 
@@ -511,13 +530,18 @@ def main():
                    Sidebar Styling (Light Theme)
                    ============================================
                    Customizes sidebar appearance with light theme colors and spacing.
+                   Slightly darker than main area for subtle separation without border.
                 */
                 section[data-testid="stSidebar"] { 
-                    background-color: #ffffff; 
+                    background-color: #f0f0f0; 
                     min-width: 280px !important;
                     display: block !important;
                 }
-                section[data-testid="stSidebar"] hr { border-color: #e0e0e0 !important; margin: 0.5rem 0 !important; }
+                /* Force dark text on all sidebar elements */
+                section[data-testid="stSidebar"] * { 
+                    color: #1a1a1a !important; 
+                }
+                section[data-testid="stSidebar"] hr { border-color: #d0d0d0 !important; margin: 0.5rem 0 !important; }
                 section[data-testid="stSidebar"] .stMarkdown { margin-bottom: 0.25rem !important; margin-top: 0.25rem !important; }
                 section[data-testid="stSidebar"] .stRadio, section[data-testid="stSidebar"] .stMultiSelect, section[data-testid="stSidebar"] .stSlider, section[data-testid="stSidebar"] .stToggle, section[data-testid="stSidebar"] .stButton { margin-bottom: 0.5rem !important; }
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
@@ -565,11 +589,11 @@ def main():
                     background-color: #fafafa !important;
                 }
                 
-                /* Expander/Details styling (Light Theme) */
+                /* Expander/Details styling (Light Theme) - matches sidebar */
                 details, 
                 [data-testid="stExpander"],
                 [data-testid="stExpander"] > div {
-                    background: #f0f0f0 !important; 
+                    background: #e8e8e8 !important; 
                     border-radius: 8px;
                 }
                 details summary, 
@@ -636,6 +660,7 @@ def main():
                     background-color: #ffffff !important;
                     border: 1px solid #d0d0d0 !important;
                 }
+                /* Dropdown menu items - no outline/border */
                 [data-baseweb="popover"] li, 
                 [data-baseweb="popover"] span, 
                 [data-baseweb="popover"] div,
@@ -650,14 +675,31 @@ def main():
                 li[role="option"] div { 
                     color: #1a1a1a !important; 
                     background-color: #ffffff !important;
+                    outline: none !important;
+                    border: none !important;
+                    box-shadow: none !important;
                 }
+                /* Remove focus outline */
+                li[role="option"]:focus,
+                li[role="option"]:focus-visible,
+                [data-highlighted="true"] {
+                    outline: none !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                }
+                /* Hover state - background only */
                 li[role="option"]:hover,
-                li[role="option"]:hover span {
+                li[role="option"]:hover span,
+                [data-highlighted="true"] {
                     background-color: #f0f0f0 !important;
+                    outline: none !important;
                 }
-                li[role="option"][aria-selected="true"] {
+                /* Selected option */
+                li[role="option"][aria-selected="true"],
+                li[role="option"][aria-selected="true"] span {
                     background-color: #e50914 !important;
                     color: #ffffff !important;
+                    outline: none !important;
                 }
                 /* Tags in multiselect */
                 [data-baseweb="tag"] {
