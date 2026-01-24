@@ -320,13 +320,17 @@ def main():
                     border: none !important;
                     box-shadow: none !important;
                 }
-                /* Dropdown hover state - background only, no border */
+                /* Dropdown hover state - full red background */
                 li[role="option"]:hover,
                 li[role="option"]:hover span,
                 li[role="option"]:hover div,
+                li[role="option"]:hover *,
                 [data-baseweb="option"]:hover,
-                [data-highlighted="true"] {
-                    background-color: #444444 !important;
+                [data-baseweb="option"]:hover *,
+                [data-highlighted="true"],
+                [data-highlighted="true"] * {
+                    background-color: #e50914 !important;
+                    background: #e50914 !important;
                     color: #ffffff !important;
                     outline: none !important;
                     border: none !important;
@@ -335,8 +339,11 @@ def main():
                 li[role="option"][aria-selected="true"],
                 li[role="option"][aria-selected="true"] span,
                 li[role="option"][aria-selected="true"] div,
-                [data-baseweb="option"][aria-selected="true"] {
+                li[role="option"][aria-selected="true"] *,
+                [data-baseweb="option"][aria-selected="true"],
+                [data-baseweb="option"][aria-selected="true"] * {
                     background-color: #e50914 !important;
+                    background: #e50914 !important;
                     color: #ffffff !important;
                     outline: none !important;
                     border: none !important;
@@ -687,40 +694,79 @@ def main():
                     border: none !important;
                     box-shadow: none !important;
                 }
-                /* Hover state - background only */
+                /* Hover state - full red background */
                 li[role="option"]:hover,
                 li[role="option"]:hover span,
-                [data-highlighted="true"] {
-                    background-color: #f0f0f0 !important;
+                li[role="option"]:hover div,
+                li[role="option"]:hover *,
+                [data-highlighted="true"],
+                [data-highlighted="true"] span,
+                [data-highlighted="true"] div {
+                    background-color: #e50914 !important;
+                    background: #e50914 !important;
+                    color: #ffffff !important;
                     outline: none !important;
                 }
                 /* Selected option */
                 li[role="option"][aria-selected="true"],
-                li[role="option"][aria-selected="true"] span {
+                li[role="option"][aria-selected="true"] span,
+                li[role="option"][aria-selected="true"] div,
+                li[role="option"][aria-selected="true"] * {
                     background-color: #e50914 !important;
+                    background: #e50914 !important;
                     color: #ffffff !important;
                     outline: none !important;
                 }
-                /* Tags in multiselect */
-                [data-baseweb="tag"] {
+                /* Tags in multiselect - red button style */
+                [data-baseweb="tag"],
+                span[data-baseweb="tag"],
+                div[data-baseweb="tag"],
+                .stMultiSelect [data-baseweb="tag"],
+                [class*="st-emotion-cache"][data-baseweb="tag"] {
                     background-color: #e50914 !important;
+                    background: #e50914 !important;
                     border: none !important;
+                    border-radius: 4px !important;
                 }
                 [data-baseweb="tag"] span,
-                [data-baseweb="tag"] * {
+                [data-baseweb="tag"] div,
+                [data-baseweb="tag"] *,
+                .stMultiSelect [data-baseweb="tag"] * {
                     color: #ffffff !important;
                     background-color: transparent !important;
+                    background: transparent !important;
                 }
                 [data-baseweb="tag"] svg {
                     fill: #ffffff !important;
                 }
-                /* Toggle button */
+                
+                /* Radio buttons - visible background */
+                .stRadio > div[role="radiogroup"] > label,
+                .stRadio [data-baseweb="radio"] {
+                    background-color: transparent !important;
+                }
+                .stRadio > div[role="radiogroup"] > label > div:first-child,
+                .stRadio [data-baseweb="radio"] > div:first-child {
+                    background-color: #ffffff !important;
+                    border: 2px solid #999999 !important;
+                }
+                .stRadio > div[role="radiogroup"] > label[data-checked="true"] > div:first-child,
+                .stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child {
+                    background-color: #e50914 !important;
+                    border-color: #e50914 !important;
+                }
+                
+                /* Toggle button - darker gray for visibility */
                 .stToggle [data-baseweb="switch"],
-                .stToggle label > div:first-of-type {
-                    background-color: #d0d0d0 !important;
+                .stToggle label > div:first-of-type,
+                .stToggle label > div:first-of-type > div,
+                .stToggle [role="switch"] {
+                    background-color: #b0b0b0 !important;
                 }
                 .stToggle [data-baseweb="switch"][aria-checked="true"],
-                .stToggle label > div:first-of-type[aria-checked="true"] {
+                .stToggle label > div:first-of-type[aria-checked="true"],
+                .stToggle label > div:first-of-type[aria-checked="true"] > div,
+                .stToggle [role="switch"][aria-checked="true"] {
                     background-color: #e50914 !important;
                 }
                 
