@@ -637,10 +637,32 @@ def main():
                 
                 .no-poster { width: 100%; aspect-ratio: 2/3; background: #f0f0f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #999999; }
                 
-                /* Fix dropdown styling (Light Theme) - explicit colors */
+                /* ============================================
+                   LABELS - Make all labels visible (dark text)
+                   ============================================ */
+                .stSelectbox label,
+                .stMultiSelect label,
+                [data-testid="stWidgetLabel"],
+                [data-testid="stWidgetLabel"] p,
+                [data-testid="stWidgetLabel"] span,
+                .stSelectbox > label > div,
+                .stMultiSelect > label > div {
+                    color: #1a1a1a !important;
+                }
+                
+                /* ============================================
+                   DROPDOWNS - Styling
+                   ============================================ */
+                /* Genre dropdown - lighter border */
+                section[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] {
+                    border: 1px solid #c0c0c0 !important;
+                    border-radius: 8px !important;
+                    background-color: #ffffff !important;
+                }
+                /* Main dropdown */
                 .stSelectbox [data-baseweb="select"],
                 .stMultiSelect [data-baseweb="select"] { 
-                    border: 1px solid #d0d0d0 !important; 
+                    border: 1px solid #999999 !important; 
                     border-radius: 8px !important; 
                     background-color: #ffffff !important;
                 }
@@ -659,115 +681,164 @@ def main():
                     fill: #1a1a1a !important;
                     color: #1a1a1a !important;
                 }
-                /* Dropdown menu items */
+                
+                /* ============================================
+                   DROPDOWN MENU - Items
+                   ============================================ */
                 [data-baseweb="popover"],
                 [data-baseweb="popover"] > div,
                 [data-baseweb="menu"],
                 ul[role="listbox"] {
                     background-color: #ffffff !important;
-                    border: 1px solid #d0d0d0 !important;
+                    border: 1px solid #999999 !important;
                 }
-                /* Dropdown menu items - no outline/border */
+                /* Default state - white background, dark text */
                 [data-baseweb="popover"] li, 
-                [data-baseweb="popover"] span, 
-                [data-baseweb="popover"] div,
-                [data-baseweb="menu"] li, 
-                [data-baseweb="menu"] span, 
-                [data-baseweb="menu"] div,
-                ul[role="listbox"] li, 
-                ul[role="listbox"] span, 
-                ul[role="listbox"] div,
-                li[role="option"],
-                li[role="option"] span,
-                li[role="option"] div { 
+                [data-baseweb="menu"] li,
+                ul[role="listbox"] li,
+                li[role="option"] { 
                     color: #1a1a1a !important; 
                     background-color: #ffffff !important;
+                    background: #ffffff !important;
                     outline: none !important;
                     border: none !important;
                     box-shadow: none !important;
                 }
-                /* Remove focus outline */
-                li[role="option"]:focus,
-                li[role="option"]:focus-visible,
-                [data-highlighted="true"] {
-                    outline: none !important;
-                    border: none !important;
-                    box-shadow: none !important;
+                li[role="option"] span,
+                li[role="option"] div {
+                    color: #1a1a1a !important; 
+                    background-color: transparent !important;
+                    background: transparent !important;
                 }
-                /* Hover state - full red background */
+                /* Hover state - RED background */
                 li[role="option"]:hover,
+                [data-highlighted="true"] {
+                    background-color: #e50914 !important;
+                    background: #e50914 !important;
+                    color: #ffffff !important;
+                    outline: none !important;
+                }
                 li[role="option"]:hover span,
                 li[role="option"]:hover div,
                 li[role="option"]:hover *,
-                [data-highlighted="true"],
                 [data-highlighted="true"] span,
-                [data-highlighted="true"] div {
+                [data-highlighted="true"] div,
+                [data-highlighted="true"] * {
+                    background-color: transparent !important;
+                    background: transparent !important;
+                    color: #ffffff !important;
+                }
+                /* Selected option - RED */
+                li[role="option"][aria-selected="true"] {
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     color: #ffffff !important;
-                    outline: none !important;
                 }
-                /* Selected option */
-                li[role="option"][aria-selected="true"],
                 li[role="option"][aria-selected="true"] span,
-                li[role="option"][aria-selected="true"] div,
-                li[role="option"][aria-selected="true"] * {
-                    background-color: #e50914 !important;
-                    background: #e50914 !important;
+                li[role="option"][aria-selected="true"] div {
                     color: #ffffff !important;
-                    outline: none !important;
+                    background: transparent !important;
                 }
-                /* Tags in multiselect - red button style */
-                [data-baseweb="tag"],
-                span[data-baseweb="tag"],
-                div[data-baseweb="tag"],
-                .stMultiSelect [data-baseweb="tag"],
-                [class*="st-emotion-cache"][data-baseweb="tag"] {
+                
+                /* ============================================
+                   MULTISELECT TAGS - Red buttons
+                   ============================================ */
+                [data-baseweb="tag"] {
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     border: none !important;
-                    border-radius: 4px !important;
+                    border-radius: 16px !important;
+                    padding: 2px 8px !important;
                 }
                 [data-baseweb="tag"] span,
-                [data-baseweb="tag"] div,
-                [data-baseweb="tag"] *,
-                .stMultiSelect [data-baseweb="tag"] * {
+                [data-baseweb="tag"] div {
                     color: #ffffff !important;
                     background-color: transparent !important;
                     background: transparent !important;
                 }
-                [data-baseweb="tag"] svg {
+                [data-baseweb="tag"] svg,
+                [data-baseweb="tag"] path {
                     fill: #ffffff !important;
+                    color: #ffffff !important;
+                }
+                /* Clear all button */
+                .stMultiSelect [data-baseweb="select"] > div > div:last-child svg {
+                    fill: #666666 !important;
                 }
                 
-                /* Radio buttons - visible background */
-                .stRadio > div[role="radiogroup"] > label,
-                .stRadio [data-baseweb="radio"] {
-                    background-color: transparent !important;
-                }
-                .stRadio > div[role="radiogroup"] > label > div:first-child,
-                .stRadio [data-baseweb="radio"] > div:first-child {
+                /* ============================================
+                   RADIO BUTTONS - White bg, red when selected
+                   ============================================ */
+                .stRadio [data-baseweb="radio"] > div:first-child,
+                .stRadio label > div:first-child > div {
                     background-color: #ffffff !important;
-                    border: 2px solid #999999 !important;
+                    border: 2px solid #888888 !important;
+                    border-radius: 50% !important;
                 }
-                .stRadio > div[role="radiogroup"] > label[data-checked="true"] > div:first-child,
-                .stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child {
+                .stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child,
+                .stRadio label[data-checked="true"] > div:first-child > div,
+                .stRadio input[type="radio"]:checked + div {
                     background-color: #e50914 !important;
                     border-color: #e50914 !important;
                 }
                 
-                /* Toggle button - darker gray for visibility */
+                /* ============================================
+                   TOGGLE BUTTON - Dark gray, visible
+                   ============================================ */
                 .stToggle [data-baseweb="switch"],
+                .stToggle [data-baseweb="switch"] > div,
                 .stToggle label > div:first-of-type,
                 .stToggle label > div:first-of-type > div,
-                .stToggle [role="switch"] {
-                    background-color: #b0b0b0 !important;
+                .stToggle [role="switch"],
+                .stToggle [role="switch"] > div {
+                    background-color: #888888 !important;
                 }
                 .stToggle [data-baseweb="switch"][aria-checked="true"],
+                .stToggle [data-baseweb="switch"][aria-checked="true"] > div,
                 .stToggle label > div:first-of-type[aria-checked="true"],
                 .stToggle label > div:first-of-type[aria-checked="true"] > div,
-                .stToggle [role="switch"][aria-checked="true"] {
+                .stToggle [role="switch"][aria-checked="true"],
+                .stToggle [role="switch"][aria-checked="true"] > div {
                     background-color: #e50914 !important;
+                }
+                
+                /* ============================================
+                   TOOLTIP/HELP ICON - Make visible
+                   ============================================ */
+                .stTooltipIcon,
+                [data-testid="stTooltipIcon"],
+                .stToggle svg,
+                [data-testid="tooltipHoverTarget"] svg {
+                    fill: #666666 !important;
+                    color: #666666 !important;
+                }
+                
+                /* ============================================
+                   ANALYTICS BUTTON - White text
+                   ============================================ */
+                .stButton > button {
+                    background: #e50914 !important; 
+                    color: #ffffff !important; 
+                    border: none !important;
+                }
+                .stButton > button span,
+                .stButton > button div,
+                .stButton > button p {
+                    color: #ffffff !important;
+                }
+                
+                /* ============================================
+                   HOW IT WORKS EXPANDER - Darker border
+                   ============================================ */
+                [data-testid="stExpander"],
+                details {
+                    border: 1px solid #999999 !important;
+                    border-radius: 8px !important;
+                    background: #e8e8e8 !important;
+                }
+                [data-testid="stExpander"] summary,
+                details summary {
+                    color: #1a1a1a !important;
                 }
                 
                 .footer { text-align: center; color: #999999; padding: 3rem 0 1rem 0; }
