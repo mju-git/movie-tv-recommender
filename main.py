@@ -736,6 +736,7 @@ def main():
                     border-radius: 8px !important;
                     box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
                     overflow: hidden !important;
+                    color-scheme: light !important;
                     /* Hide scrollbar */
                     scrollbar-width: none !important;
                     scrollbar-color: transparent transparent !important;
@@ -821,7 +822,10 @@ def main():
                 /* Red pill buttons for selected items */
                 [data-baseweb="tag"],
                 span[data-baseweb="tag"],
-                .stMultiSelect [data-baseweb="tag"] {
+                div[data-baseweb="tag"],
+                .stMultiSelect [data-baseweb="tag"],
+                .stMultiSelect span[data-baseweb="tag"],
+                .stMultiSelect div[data-baseweb="tag"] {
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     border: none !important;
@@ -830,6 +834,8 @@ def main():
                     margin: 2px !important;
                     display: inline-flex !important;
                     align-items: center !important;
+                    color: #ffffff !important;
+                    box-shadow: none !important;
                 }
                 /* Tag text and children - white on transparent */
                 [data-baseweb="tag"] span,
@@ -863,23 +869,32 @@ def main():
                     background-color: transparent !important;
                     background: transparent !important;
                 }
+                .stRadio label:hover,
+                .stRadio label:focus,
+                .stRadio label[data-checked="true"],
+                .stRadio label[data-checked="true"] * {
+                    background-color: transparent !important;
+                    background: transparent !important;
+                }
                 /* Outer ring - white with gray border */
                 .stRadio div[data-baseweb="radio"] > div:first-child {
                     background-color: #ffffff !important;
                     border: 2px solid #888888 !important;
                     border-radius: 50% !important;
+                    box-shadow: none !important;
                 }
-                /* ALL inner dots - white by default */
+                /* Inner dot - white by default */
                 .stRadio div[data-baseweb="radio"] > div > div {
                     background-color: #ffffff !important;
                 }
-                /* Inner dot - RED only when selected */
+                /* Inner dot - RED only when selected (fallback) */
                 .stRadio div[data-baseweb="radio"][aria-checked="true"] > div > div {
                     background-color: #e50914 !important;
                 }
                 /* Outer ring border - RED when selected */
                 .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child {
                     border-color: #e50914 !important;
+                    box-shadow: inset 0 0 0 6px #e50914 !important;
                 }
                 
                 /* ============================================
@@ -889,6 +904,7 @@ def main():
                 div[data-baseweb="switch"],
                 .stToggle div[data-baseweb="switch"] {
                     background-color: #333333 !important;
+                    border: 1px solid #555555 !important;
                 }
                 /* Track when ON - red */
                 div[data-baseweb="switch"][aria-checked="true"],
