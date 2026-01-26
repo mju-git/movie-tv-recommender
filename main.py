@@ -729,7 +729,6 @@ def main():
                 [data-baseweb="popover"],
                 [data-baseweb="popover"] > div,
                 [data-baseweb="menu"],
-                [data-baseweb="menu"] > div,
                 ul[role="listbox"] {
                     background-color: #ffffff !important;
                     border: 1px solid #d0d0d0 !important;
@@ -738,31 +737,14 @@ def main():
                     overflow: hidden !important;
                     /* Hide scrollbar */
                     scrollbar-width: none !important;
-                    scrollbar-color: transparent transparent !important;
                     -ms-overflow-style: none !important;
                 }
                 [data-baseweb="popover"]::-webkit-scrollbar,
                 [data-baseweb="popover"] > div::-webkit-scrollbar,
                 [data-baseweb="menu"]::-webkit-scrollbar,
-                [data-baseweb="menu"] > div::-webkit-scrollbar,
                 ul[role="listbox"]::-webkit-scrollbar {
                     display: none !important;
                     width: 0 !important;
-                    background: transparent !important;
-                }
-                [data-baseweb="popover"]::-webkit-scrollbar-thumb,
-                [data-baseweb="popover"] > div::-webkit-scrollbar-thumb,
-                [data-baseweb="menu"]::-webkit-scrollbar-thumb,
-                [data-baseweb="menu"] > div::-webkit-scrollbar-thumb,
-                ul[role="listbox"]::-webkit-scrollbar-thumb {
-                    background: transparent !important;
-                }
-                [data-baseweb="popover"]::-webkit-scrollbar-track,
-                [data-baseweb="popover"] > div::-webkit-scrollbar-track,
-                [data-baseweb="menu"]::-webkit-scrollbar-track,
-                [data-baseweb="menu"] > div::-webkit-scrollbar-track,
-                ul[role="listbox"]::-webkit-scrollbar-track {
-                    background: transparent !important;
                 }
                 /* Items - NO margin, full width, clean */
                 [data-baseweb="popover"] li, 
@@ -778,8 +760,6 @@ def main():
                     margin: 0 !important;
                     border-radius: 0 !important;
                     padding: 10px 16px !important;
-                    width: 100% !important;
-                    box-sizing: border-box !important;
                 }
                 li[role="option"] span,
                 li[role="option"] div {
@@ -821,31 +801,24 @@ def main():
                    MULTISELECT TAGS - Red pill buttons
                    ============================================ */
                 /* Red pill buttons for selected items */
-                [data-baseweb="tag"],
-                span[data-baseweb="tag"],
-                .stMultiSelect [data-baseweb="tag"] {
+                [data-baseweb="tag"] {
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     border: none !important;
                     border-radius: 16px !important;
                     padding: 4px 12px !important;
                     margin: 2px !important;
-                    display: inline-flex !important;
-                    align-items: center !important;
                 }
                 /* Tag text and children - white on transparent */
                 [data-baseweb="tag"] span,
-                [data-baseweb="tag"] div,
-                [data-baseweb="tag"] * {
+                [data-baseweb="tag"] div {
                     color: #ffffff !important;
                     background-color: transparent !important;
                     background: transparent !important;
                 }
                 /* Tag close button (X) - white */
-                [data-baseweb="tag"] svg,
-                [data-baseweb="tag"] path {
+                [data-baseweb="tag"] svg {
                     fill: #ffffff !important;
-                    color: #ffffff !important;
                 }
                 /* Clear all button - gray */
                 .stMultiSelect [data-baseweb="select"] > div > div:last-child svg {
@@ -871,15 +844,17 @@ def main():
                     border-radius: 50% !important;
                 }
                 /* ALL inner dots - white by default */
-                .stRadio div[data-baseweb="radio"] > div > div {
+                .stRadio [data-baseweb="radio"] > div > div,
+                .stRadio div[data-baseweb="radio"] > div:first-child > div {
                     background-color: #ffffff !important;
                 }
                 /* Inner dot - RED only when selected */
-                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div > div {
+                .stRadio [data-baseweb="radio"][aria-checked="true"] > div > div,
+                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child > div {
                     background-color: #e50914 !important;
                 }
                 /* Outer ring border - RED when selected */
-                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child {
+                .stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child {
                     border-color: #e50914 !important;
                 }
                 
@@ -887,18 +862,21 @@ def main():
                    TOGGLE BUTTON - Dark gray track, white thumb
                    ============================================ */
                 /* Track (background) - dark gray for visibility */
-                div[data-baseweb="switch"],
-                .stToggle div[data-baseweb="switch"] {
+                .stToggle [data-baseweb="switch"],
+                .stToggle [role="switch"],
+                .stToggle > label > div:first-child {
                     background-color: #333333 !important;
                 }
                 /* Track when ON - red */
-                div[data-baseweb="switch"][aria-checked="true"],
-                .stToggle div[data-baseweb="switch"][aria-checked="true"] {
+                .stToggle [data-baseweb="switch"][aria-checked="true"],
+                .stToggle [role="switch"][aria-checked="true"],
+                .stToggle > label > div:first-child[aria-checked="true"] {
                     background-color: #e50914 !important;
                 }
                 /* Thumb (the moving circle) - always white */
-                div[data-baseweb="switch"] > div:last-child,
-                .stToggle div[data-baseweb="switch"] > div:last-child {
+                .stToggle [data-baseweb="switch"] > div,
+                .stToggle [role="switch"] > div,
+                .stToggle > label > div > div:last-child {
                     background-color: #ffffff !important;
                 }
                 
