@@ -693,20 +693,18 @@ def main():
                 }
                 
                 /* ============================================
-                   DROPDOWNS - Styling
+                   DROPDOWNS - Styling (Lighter borders)
                    ============================================ */
-                /* Genre dropdown - lighter border */
-                section[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] {
-                    border: 1px solid #c0c0c0 !important;
-                    border-radius: 8px !important;
-                    background-color: #ffffff !important;
-                }
-                /* Main dropdown */
+                /* All dropdowns - light gray border */
                 .stSelectbox [data-baseweb="select"],
                 .stMultiSelect [data-baseweb="select"] { 
-                    border: 1px solid #999999 !important; 
+                    border: 1px solid #c0c0c0 !important;
                     border-radius: 8px !important; 
                     background-color: #ffffff !important;
+                }
+                /* Sidebar dropdown - even lighter */
+                section[data-testid="stSidebar"] .stSelectbox [data-baseweb="select"] {
+                    border: 1px solid #d0d0d0 !important;
                 }
                 .stSelectbox [data-baseweb="select"] span, 
                 .stSelectbox [data-baseweb="select"] div, 
@@ -725,15 +723,18 @@ def main():
                 }
                 
                 /* ============================================
-                   DROPDOWN MENU - Items
+                   DROPDOWN MENU - Clean, no black edges
                    ============================================ */
+                /* Container - clean white, light border, overflow hidden */
                 [data-baseweb="popover"],
                 [data-baseweb="popover"] > div,
                 [data-baseweb="menu"],
                 ul[role="listbox"] {
                     background-color: #ffffff !important;
-                    border: 1px solid #999999 !important;
+                    border: 1px solid #d0d0d0 !important;
                     border-radius: 8px !important;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+                    overflow: hidden !important;
                     /* Hide scrollbar */
                     scrollbar-width: none !important;
                     -ms-overflow-style: none !important;
@@ -745,7 +746,7 @@ def main():
                     display: none !important;
                     width: 0 !important;
                 }
-                /* Default state - white background, dark text */
+                /* Items - NO margin, full width, clean */
                 [data-baseweb="popover"] li, 
                 [data-baseweb="menu"] li,
                 ul[role="listbox"] li,
@@ -756,8 +757,9 @@ def main():
                     outline: none !important;
                     border: none !important;
                     box-shadow: none !important;
-                    margin: 2px 4px !important;
-                    border-radius: 6px !important;
+                    margin: 0 !important;
+                    border-radius: 0 !important;
+                    padding: 10px 16px !important;
                 }
                 li[role="option"] span,
                 li[role="option"] div {
@@ -765,14 +767,13 @@ def main():
                     background-color: transparent !important;
                     background: transparent !important;
                 }
-                /* Hover state - RED background with rounded edges */
+                /* Hover state - full width RED */
                 li[role="option"]:hover,
                 [data-highlighted="true"] {
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     color: #ffffff !important;
                     outline: none !important;
-                    border-radius: 6px !important;
                 }
                 li[role="option"]:hover span,
                 li[role="option"]:hover div,
@@ -789,7 +790,6 @@ def main():
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     color: #ffffff !important;
-                    border-radius: 6px !important;
                 }
                 li[role="option"][aria-selected="true"] span,
                 li[role="option"][aria-selected="true"] div {
@@ -800,48 +800,37 @@ def main():
                 /* ============================================
                    MULTISELECT TAGS - Red pill buttons
                    ============================================ */
-                /* Target all possible tag elements */
-                [data-baseweb="tag"],
-                .stMultiSelect [data-baseweb="tag"],
-                .stMultiSelect span[data-baseweb="tag"],
-                [class*="multiValue"],
-                [class*="MultiValue"],
-                .stMultiSelect [data-baseweb="select"] [data-baseweb="tag"] {
+                /* Red pill buttons for selected items */
+                [data-baseweb="tag"] {
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     border: none !important;
                     border-radius: 16px !important;
-                    padding: 4px 10px !important;
+                    padding: 4px 12px !important;
                     margin: 2px !important;
                 }
-                /* Tag text - white */
+                /* Tag text and children - white on transparent */
                 [data-baseweb="tag"] span,
-                [data-baseweb="tag"] div,
-                [data-baseweb="tag"] *,
-                .stMultiSelect [data-baseweb="tag"] span,
-                .stMultiSelect [data-baseweb="tag"] * {
+                [data-baseweb="tag"] div {
                     color: #ffffff !important;
                     background-color: transparent !important;
                     background: transparent !important;
                 }
                 /* Tag close button (X) - white */
-                [data-baseweb="tag"] svg,
-                [data-baseweb="tag"] path,
-                .stMultiSelect [data-baseweb="tag"] svg {
+                [data-baseweb="tag"] svg {
                     fill: #ffffff !important;
-                    color: #ffffff !important;
                 }
                 /* Clear all button - gray */
                 .stMultiSelect [data-baseweb="select"] > div > div:last-child svg {
                     fill: #666666 !important;
                 }
-                /* Ensure multiselect input area has proper background */
+                /* Multiselect input area - white background */
                 .stMultiSelect [data-baseweb="select"] > div {
                     background-color: #ffffff !important;
                 }
                 
                 /* ============================================
-                   RADIO BUTTONS - Clean professional styling
+                   RADIO BUTTONS - Simple, clean styling
                    ============================================ */
                 /* Container - always transparent */
                 .stRadio label {
@@ -854,12 +843,14 @@ def main():
                     border: 2px solid #888888 !important;
                     border-radius: 50% !important;
                 }
-                /* Inner dot - WHITE when NOT selected */
-                .stRadio [data-baseweb="radio"]:not([aria-checked="true"]) > div:first-child > div {
+                /* ALL inner dots - white by default */
+                .stRadio [data-baseweb="radio"] > div > div,
+                .stRadio div[data-baseweb="radio"] > div:first-child > div {
                     background-color: #ffffff !important;
                 }
-                /* Inner dot - RED when selected */
-                .stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child > div {
+                /* Inner dot - RED only when selected */
+                .stRadio [data-baseweb="radio"][aria-checked="true"] > div > div,
+                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child > div {
                     background-color: #e50914 !important;
                 }
                 /* Outer ring border - RED when selected */
@@ -868,28 +859,23 @@ def main():
                 }
                 
                 /* ============================================
-                   TOGGLE BUTTON - Very dark track for visibility
+                   TOGGLE BUTTON - Dark gray track, white thumb
                    ============================================ */
-                /* Track (background) - very dark gray */
+                /* Track (background) - dark gray for visibility */
                 .stToggle [data-baseweb="switch"],
-                .stToggle label > div:first-of-type,
                 .stToggle [role="switch"],
-                .stToggle > label > div,
-                .stToggle > label > div > div:first-child {
-                    background-color: #4a4a4a !important;
+                .stToggle > label > div:first-child {
+                    background-color: #333333 !important;
                 }
                 /* Track when ON - red */
                 .stToggle [data-baseweb="switch"][aria-checked="true"],
-                .stToggle label > div:first-of-type[aria-checked="true"],
                 .stToggle [role="switch"][aria-checked="true"],
-                .stToggle > label > div[aria-checked="true"],
-                .stToggle > label > div[aria-checked="true"] > div:first-child {
+                .stToggle > label > div:first-child[aria-checked="true"] {
                     background-color: #e50914 !important;
                 }
                 /* Thumb (the moving circle) - always white */
-                .stToggle [data-baseweb="switch"] > div:last-child,
-                .stToggle label > div:first-of-type > div:last-child,
-                .stToggle [role="switch"] > div:last-child,
+                .stToggle [data-baseweb="switch"] > div,
+                .stToggle [role="switch"] > div,
                 .stToggle > label > div > div:last-child {
                     background-color: #ffffff !important;
                 }
