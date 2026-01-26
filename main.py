@@ -725,19 +725,19 @@ def main():
                 /* ============================================
                    DROPDOWN MENU - Clean, no black edges
                    ============================================ */
-                /* Container - clean white, light border, overflow hidden */
+                /* Container - clean white, light border */
                 [data-baseweb="popover"],
                 [data-baseweb="popover"] > div,
                 [data-baseweb="menu"],
                 [data-baseweb="menu"] > div,
-                ul[role="listbox"] {
+                ul[role="listbox"],
+                div[role="listbox"] {
                     background-color: #ffffff !important;
                     border: 1px solid #d0d0d0 !important;
                     border-radius: 8px !important;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
                     overflow: hidden !important;
                     color-scheme: light !important;
-                    /* Hide scrollbar */
                     scrollbar-width: none !important;
                     scrollbar-color: transparent transparent !important;
                     -ms-overflow-style: none !important;
@@ -746,23 +746,27 @@ def main():
                 [data-baseweb="popover"] > div::-webkit-scrollbar,
                 [data-baseweb="menu"]::-webkit-scrollbar,
                 [data-baseweb="menu"] > div::-webkit-scrollbar,
-                ul[role="listbox"]::-webkit-scrollbar {
+                ul[role="listbox"]::-webkit-scrollbar,
+                div[role="listbox"]::-webkit-scrollbar {
                     display: none !important;
                     width: 0 !important;
+                    height: 0 !important;
                     background: transparent !important;
                 }
                 [data-baseweb="popover"]::-webkit-scrollbar-thumb,
                 [data-baseweb="popover"] > div::-webkit-scrollbar-thumb,
                 [data-baseweb="menu"]::-webkit-scrollbar-thumb,
                 [data-baseweb="menu"] > div::-webkit-scrollbar-thumb,
-                ul[role="listbox"]::-webkit-scrollbar-thumb {
+                ul[role="listbox"]::-webkit-scrollbar-thumb,
+                div[role="listbox"]::-webkit-scrollbar-thumb {
                     background: transparent !important;
                 }
                 [data-baseweb="popover"]::-webkit-scrollbar-track,
                 [data-baseweb="popover"] > div::-webkit-scrollbar-track,
                 [data-baseweb="menu"]::-webkit-scrollbar-track,
                 [data-baseweb="menu"] > div::-webkit-scrollbar-track,
-                ul[role="listbox"]::-webkit-scrollbar-track {
+                ul[role="listbox"]::-webkit-scrollbar-track,
+                div[role="listbox"]::-webkit-scrollbar-track {
                     background: transparent !important;
                 }
                 /* Items - NO margin, full width, clean */
@@ -819,10 +823,6 @@ def main():
                 /* ============================================
                    MULTISELECT TAGS - Red pill buttons
                    ============================================ */
-                /* Red pill buttons for selected items */
-                [data-baseweb="tag"],
-                span[data-baseweb="tag"],
-                div[data-baseweb="tag"],
                 .stMultiSelect [data-baseweb="tag"],
                 .stMultiSelect span[data-baseweb="tag"],
                 .stMultiSelect div[data-baseweb="tag"] {
@@ -838,9 +838,9 @@ def main():
                     box-shadow: none !important;
                 }
                 /* Tag text and children - white on transparent */
-                [data-baseweb="tag"] span,
-                [data-baseweb="tag"] div,
-                [data-baseweb="tag"] * {
+                .stMultiSelect [data-baseweb="tag"] span,
+                .stMultiSelect [data-baseweb="tag"] div,
+                .stMultiSelect [data-baseweb="tag"] * {
                     color: #ffffff !important;
                     background-color: transparent !important;
                     background: transparent !important;
@@ -869,13 +869,6 @@ def main():
                     background-color: transparent !important;
                     background: transparent !important;
                 }
-                .stRadio label:hover,
-                .stRadio label:focus,
-                .stRadio label[data-checked="true"],
-                .stRadio label[data-checked="true"] * {
-                    background-color: transparent !important;
-                    background: transparent !important;
-                }
                 /* Outer ring - white with gray border */
                 .stRadio div[data-baseweb="radio"] > div:first-child {
                     background-color: #ffffff !important;
@@ -887,29 +880,26 @@ def main():
                 .stRadio div[data-baseweb="radio"] > div > div {
                     background-color: #ffffff !important;
                 }
-                /* Inner dot - RED only when selected (fallback) */
-                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div > div {
-                    background-color: #e50914 !important;
-                }
-                /* Outer ring border - RED when selected */
+                /* Selected: red inner dot using inset ring */
                 .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child {
                     border-color: #e50914 !important;
-                    box-shadow: inset 0 0 0 6px #e50914 !important;
+                    box-shadow: inset 0 0 0 5px #e50914 !important;
                 }
                 
                 /* ============================================
                    TOGGLE BUTTON - Dark gray track, white thumb
                    ============================================ */
-                /* Track (background) - dark gray for visibility */
+                /* Track (background) - darker gray for visibility */
                 div[data-baseweb="switch"],
                 .stToggle div[data-baseweb="switch"] {
-                    background-color: #333333 !important;
-                    border: 1px solid #555555 !important;
+                    background-color: #2f2f2f !important;
+                    border: 1px solid #5a5a5a !important;
                 }
                 /* Track when ON - red */
                 div[data-baseweb="switch"][aria-checked="true"],
                 .stToggle div[data-baseweb="switch"][aria-checked="true"] {
                     background-color: #e50914 !important;
+                    border-color: #e50914 !important;
                 }
                 /* Thumb (the moving circle) - always white */
                 div[data-baseweb="switch"] > div:last-child,
