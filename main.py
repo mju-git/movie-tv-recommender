@@ -578,7 +578,7 @@ def main():
                    Dialog Styling (Light Theme)
                    ============================================
                    Hides default dialog title and reduces padding for cleaner appearance.
-                   Explicit background color to match app theme.
+                   Explicit background and TEXT colors for visibility.
                 */
                 [data-testid="stDialog"],
                 [data-testid="stDialog"] > div,
@@ -594,6 +594,48 @@ def main():
                 [data-testid="stDialog"] .block-container {
                     padding-top: 0.5rem !important;
                     background-color: #fafafa !important;
+                }
+                
+                /* Analytics/Dialog - Force ALL text to be dark */
+                [data-testid="stDialog"] h1,
+                [data-testid="stDialog"] h2,
+                [data-testid="stDialog"] h3,
+                [data-testid="stDialog"] h4,
+                [data-testid="stDialog"] p,
+                [data-testid="stDialog"] span,
+                [data-testid="stDialog"] div,
+                [data-testid="stDialog"] label,
+                [role="dialog"] h1,
+                [role="dialog"] h2,
+                [role="dialog"] h3,
+                [role="dialog"] h4,
+                [role="dialog"] p,
+                [role="dialog"] span,
+                [role="dialog"] div,
+                [role="dialog"] label {
+                    color: #1a1a1a !important;
+                }
+                /* Dialog title styling */
+                [data-testid="stDialog"] .main-title,
+                [role="dialog"] .main-title {
+                    color: #e50914 !important;
+                }
+                /* Plotly charts - ensure axis labels visible */
+                [data-testid="stDialog"] .js-plotly-plot text,
+                [data-testid="stDialog"] .plotly text,
+                [role="dialog"] .js-plotly-plot text,
+                [role="dialog"] .plotly text {
+                    fill: #1a1a1a !important;
+                }
+                /* Expander inside dialog */
+                [data-testid="stDialog"] details,
+                [data-testid="stDialog"] [data-testid="stExpander"] {
+                    background-color: #e8e8e8 !important;
+                    border: 1px solid #999999 !important;
+                }
+                [data-testid="stDialog"] details summary,
+                [data-testid="stDialog"] [data-testid="stExpander"] summary {
+                    color: #1a1a1a !important;
                 }
                 
                 /* Expander/Details styling (Light Theme) - matches sidebar */
@@ -691,6 +733,17 @@ def main():
                 ul[role="listbox"] {
                     background-color: #ffffff !important;
                     border: 1px solid #999999 !important;
+                    border-radius: 8px !important;
+                    /* Hide scrollbar */
+                    scrollbar-width: none !important;
+                    -ms-overflow-style: none !important;
+                }
+                [data-baseweb="popover"]::-webkit-scrollbar,
+                [data-baseweb="popover"] > div::-webkit-scrollbar,
+                [data-baseweb="menu"]::-webkit-scrollbar,
+                ul[role="listbox"]::-webkit-scrollbar {
+                    display: none !important;
+                    width: 0 !important;
                 }
                 /* Default state - white background, dark text */
                 [data-baseweb="popover"] li, 
@@ -703,6 +756,8 @@ def main():
                     outline: none !important;
                     border: none !important;
                     box-shadow: none !important;
+                    margin: 2px 4px !important;
+                    border-radius: 6px !important;
                 }
                 li[role="option"] span,
                 li[role="option"] div {
@@ -710,13 +765,14 @@ def main():
                     background-color: transparent !important;
                     background: transparent !important;
                 }
-                /* Hover state - RED background */
+                /* Hover state - RED background with rounded edges */
                 li[role="option"]:hover,
                 [data-highlighted="true"] {
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     color: #ffffff !important;
                     outline: none !important;
+                    border-radius: 6px !important;
                 }
                 li[role="option"]:hover span,
                 li[role="option"]:hover div,
@@ -733,6 +789,7 @@ def main():
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     color: #ffffff !important;
+                    border-radius: 6px !important;
                 }
                 li[role="option"][aria-selected="true"] span,
                 li[role="option"][aria-selected="true"] div {
@@ -767,39 +824,51 @@ def main():
                 }
                 
                 /* ============================================
-                   RADIO BUTTONS - White bg, red when selected
+                   RADIO BUTTONS - Only inner circle changes
                    ============================================ */
-                .stRadio [data-baseweb="radio"] > div:first-child,
-                .stRadio label > div:first-child > div {
+                /* Radio button container - transparent */
+                .stRadio label,
+                .stRadio [data-baseweb="radio"] {
+                    background-color: transparent !important;
+                    background: transparent !important;
+                }
+                /* Outer circle - white with gray border */
+                .stRadio [data-baseweb="radio"] > div:first-child {
                     background-color: #ffffff !important;
                     border: 2px solid #888888 !important;
                     border-radius: 50% !important;
                 }
-                .stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child,
-                .stRadio label[data-checked="true"] > div:first-child > div,
-                .stRadio input[type="radio"]:checked + div {
+                /* Inner dot when selected - red */
+                .stRadio [data-baseweb="radio"] > div:first-child > div,
+                .stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child > div {
                     background-color: #e50914 !important;
+                }
+                /* Keep outer circle border when selected */
+                .stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child {
                     border-color: #e50914 !important;
+                    background-color: #ffffff !important;
                 }
                 
                 /* ============================================
-                   TOGGLE BUTTON - Dark gray, visible
+                   TOGGLE BUTTON - Dark gray track, white thumb
                    ============================================ */
+                /* Track (background) - dark gray */
                 .stToggle [data-baseweb="switch"],
-                .stToggle [data-baseweb="switch"] > div,
                 .stToggle label > div:first-of-type,
-                .stToggle label > div:first-of-type > div,
-                .stToggle [role="switch"],
-                .stToggle [role="switch"] > div {
-                    background-color: #888888 !important;
+                .stToggle [role="switch"] {
+                    background-color: #666666 !important;
                 }
+                /* Track when ON - red */
                 .stToggle [data-baseweb="switch"][aria-checked="true"],
-                .stToggle [data-baseweb="switch"][aria-checked="true"] > div,
                 .stToggle label > div:first-of-type[aria-checked="true"],
-                .stToggle label > div:first-of-type[aria-checked="true"] > div,
-                .stToggle [role="switch"][aria-checked="true"],
-                .stToggle [role="switch"][aria-checked="true"] > div {
+                .stToggle [role="switch"][aria-checked="true"] {
                     background-color: #e50914 !important;
+                }
+                /* Thumb (the circle) - always white */
+                .stToggle [data-baseweb="switch"] > div,
+                .stToggle label > div:first-of-type > div,
+                .stToggle [role="switch"] > div {
+                    background-color: #ffffff !important;
                 }
                 
                 /* ============================================
