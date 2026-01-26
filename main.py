@@ -798,76 +798,99 @@ def main():
                 }
                 
                 /* ============================================
-                   MULTISELECT TAGS - Red buttons
+                   MULTISELECT TAGS - Red pill buttons
                    ============================================ */
-                [data-baseweb="tag"] {
+                /* Target all possible tag elements */
+                [data-baseweb="tag"],
+                .stMultiSelect [data-baseweb="tag"],
+                .stMultiSelect span[data-baseweb="tag"],
+                [class*="multiValue"],
+                [class*="MultiValue"],
+                .stMultiSelect [data-baseweb="select"] [data-baseweb="tag"] {
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     border: none !important;
                     border-radius: 16px !important;
-                    padding: 2px 8px !important;
+                    padding: 4px 10px !important;
+                    margin: 2px !important;
                 }
+                /* Tag text - white */
                 [data-baseweb="tag"] span,
-                [data-baseweb="tag"] div {
+                [data-baseweb="tag"] div,
+                [data-baseweb="tag"] *,
+                .stMultiSelect [data-baseweb="tag"] span,
+                .stMultiSelect [data-baseweb="tag"] * {
                     color: #ffffff !important;
                     background-color: transparent !important;
                     background: transparent !important;
                 }
+                /* Tag close button (X) - white */
                 [data-baseweb="tag"] svg,
-                [data-baseweb="tag"] path {
+                [data-baseweb="tag"] path,
+                .stMultiSelect [data-baseweb="tag"] svg {
                     fill: #ffffff !important;
                     color: #ffffff !important;
                 }
-                /* Clear all button */
+                /* Clear all button - gray */
                 .stMultiSelect [data-baseweb="select"] > div > div:last-child svg {
                     fill: #666666 !important;
                 }
+                /* Ensure multiselect input area has proper background */
+                .stMultiSelect [data-baseweb="select"] > div {
+                    background-color: #ffffff !important;
+                }
                 
                 /* ============================================
-                   RADIO BUTTONS - Only inner circle changes
+                   RADIO BUTTONS - Clean professional styling
                    ============================================ */
-                /* Radio button container - transparent */
-                .stRadio label,
-                .stRadio [data-baseweb="radio"] {
+                /* Container - always transparent */
+                .stRadio label {
                     background-color: transparent !important;
                     background: transparent !important;
                 }
-                /* Outer circle - white with gray border */
+                /* Outer ring - white with gray border */
                 .stRadio [data-baseweb="radio"] > div:first-child {
                     background-color: #ffffff !important;
                     border: 2px solid #888888 !important;
                     border-radius: 50% !important;
                 }
-                /* Inner dot when selected - red */
-                .stRadio [data-baseweb="radio"] > div:first-child > div,
+                /* Inner dot - WHITE when NOT selected */
+                .stRadio [data-baseweb="radio"]:not([aria-checked="true"]) > div:first-child > div {
+                    background-color: #ffffff !important;
+                }
+                /* Inner dot - RED when selected */
                 .stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child > div {
                     background-color: #e50914 !important;
                 }
-                /* Keep outer circle border when selected */
+                /* Outer ring border - RED when selected */
                 .stRadio [data-baseweb="radio"][aria-checked="true"] > div:first-child {
                     border-color: #e50914 !important;
-                    background-color: #ffffff !important;
                 }
                 
                 /* ============================================
-                   TOGGLE BUTTON - Dark gray track, white thumb
+                   TOGGLE BUTTON - Very dark track for visibility
                    ============================================ */
-                /* Track (background) - dark gray */
+                /* Track (background) - very dark gray */
                 .stToggle [data-baseweb="switch"],
                 .stToggle label > div:first-of-type,
-                .stToggle [role="switch"] {
-                    background-color: #666666 !important;
+                .stToggle [role="switch"],
+                .stToggle > label > div,
+                .stToggle > label > div > div:first-child {
+                    background-color: #4a4a4a !important;
                 }
                 /* Track when ON - red */
                 .stToggle [data-baseweb="switch"][aria-checked="true"],
                 .stToggle label > div:first-of-type[aria-checked="true"],
-                .stToggle [role="switch"][aria-checked="true"] {
+                .stToggle [role="switch"][aria-checked="true"],
+                .stToggle > label > div[aria-checked="true"],
+                .stToggle > label > div[aria-checked="true"] > div:first-child {
                     background-color: #e50914 !important;
                 }
-                /* Thumb (the circle) - always white */
-                .stToggle [data-baseweb="switch"] > div,
-                .stToggle label > div:first-of-type > div,
-                .stToggle [role="switch"] > div {
+                /* Thumb (the moving circle) - always white */
+                .stToggle [data-baseweb="switch"] > div:last-child,
+                .stToggle label > div:first-of-type > div:last-child,
+                .stToggle [role="switch"] > div:last-child,
+                .stToggle > label > div > div:last-child {
                     background-color: #ffffff !important;
                 }
                 
