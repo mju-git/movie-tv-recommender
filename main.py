@@ -477,6 +477,30 @@ def main():
                 window.addEventListener('load', centerMainContent);
                 setInterval(centerMainContent, 100);
                 
+                function updateRadioDots() {
+                    const radios = document.querySelectorAll('.stRadio input[type="radio"]');
+                    radios.forEach((input) => {
+                        const container = input.nextElementSibling;
+                        if (!container) return;
+                        container.style.position = 'relative';
+                        let dot = container.querySelector('.custom-radio-dot');
+                        if (!dot) {
+                            dot = document.createElement('span');
+                            dot.className = 'custom-radio-dot';
+                            container.appendChild(dot);
+                        }
+                        dot.style.opacity = input.checked ? '1' : '0';
+                    });
+                }
+                
+                window.addEventListener('load', updateRadioDots);
+                document.addEventListener('change', (event) => {
+                    if (event.target && event.target.matches('.stRadio input[type="radio"]')) {
+                        updateRadioDots();
+                    }
+                }, true);
+                setInterval(updateRadioDots, 300);
+                
                 // Watch for sidebar toggle
                 const observer = new MutationObserver(centerMainContent);
                 const sidebar = document.querySelector('section[data-testid="stSidebar"]');
@@ -928,37 +952,18 @@ def main():
                     background: #e50914 !important;
                     border-radius: 50% !important;
                 }
-                /* ============================================
-                   RADIO BUTTONS - Toggle/segmented fallback
-                   ============================================ */
-                .stRadio [role="radiogroup"] {
-                    display: flex !important;
-                    flex-wrap: wrap !important;
-                    gap: 8px !important;
-                }
-                .stRadio label {
-                    display: inline-flex !important;
-                    align-items: center !important;
-                    border: 1px solid #c0c0c0 !important;
-                    border-radius: 999px !important;
-                    padding: 6px 12px !important;
-                    background-color: #ffffff !important;
-                    color: #1a1a1a !important;
-                }
-                /* Hide the native radio circle */
-                .stRadio div[data-baseweb="radio"] > div:first-child {
-                    display: none !important;
-                }
-                /* Selected pill */
-                .stRadio div[data-baseweb="radio"][aria-checked="true"],
-                .stRadio div[data-baseweb="radio"] input:checked + div {
+                /* JS fallback dot (injected span) */
+                .stRadio .custom-radio-dot {
+                    position: absolute !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    width: 10px !important;
+                    height: 10px !important;
+                    transform: translate(-50%, -50%) !important;
                     background-color: #e50914 !important;
-                    border-color: #e50914 !important;
-                    border-radius: 999px !important;
-                }
-                .stRadio div[data-baseweb="radio"][aria-checked="true"] * ,
-                .stRadio div[data-baseweb="radio"] input:checked + div * {
-                    color: #ffffff !important;
+                    border-radius: 50% !important;
+                    opacity: 0 !important;
+                    pointer-events: none !important;
                 }
                 
                 /* ============================================
