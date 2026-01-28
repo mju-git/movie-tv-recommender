@@ -744,6 +744,16 @@ def main():
                     scrollbar-color: transparent transparent !important;
                     -ms-overflow-style: none !important;
                 }
+                /* Inner list container - remove scroll gutter/track */
+                [data-baseweb="menu"] div[role="listbox"],
+                [data-baseweb="menu"] ul[role="listbox"],
+                [data-baseweb="popover"] div[role="listbox"],
+                [data-baseweb="popover"] ul[role="listbox"] {
+                    overflow: hidden !important;
+                    scrollbar-gutter: auto !important;
+                    padding-right: 0 !important;
+                    margin-right: 0 !important;
+                }
                 [data-baseweb="popover"]::-webkit-scrollbar,
                 [data-baseweb="popover"] > div::-webkit-scrollbar,
                 [data-baseweb="menu"]::-webkit-scrollbar,
@@ -888,12 +898,20 @@ def main():
                 .stRadio div[data-baseweb="radio"] > div > div,
                 .stRadio div[data-baseweb="radio"] input + div > div {
                     background-color: #ffffff !important;
+                    opacity: 1 !important;
+                    transform: none !important;
                 }
                 /* Selected: red inner dot using inset ring */
                 .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child,
                 .stRadio div[data-baseweb="radio"] input:checked + div {
                     border-color: #e50914 !important;
                     box-shadow: inset 0 0 0 5px #e50914 !important;
+                }
+                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div > div,
+                .stRadio div[data-baseweb="radio"] input:checked + div > div {
+                    background-color: #e50914 !important;
+                    opacity: 1 !important;
+                    transform: none !important;
                 }
                 
                 /* ============================================
