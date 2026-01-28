@@ -928,6 +928,38 @@ def main():
                     background: #e50914 !important;
                     border-radius: 50% !important;
                 }
+                /* ============================================
+                   RADIO BUTTONS - Toggle/segmented fallback
+                   ============================================ */
+                .stRadio [role="radiogroup"] {
+                    display: flex !important;
+                    flex-wrap: wrap !important;
+                    gap: 8px !important;
+                }
+                .stRadio label {
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    border: 1px solid #c0c0c0 !important;
+                    border-radius: 999px !important;
+                    padding: 6px 12px !important;
+                    background-color: #ffffff !important;
+                    color: #1a1a1a !important;
+                }
+                /* Hide the native radio circle */
+                .stRadio div[data-baseweb="radio"] > div:first-child {
+                    display: none !important;
+                }
+                /* Selected pill */
+                .stRadio div[data-baseweb="radio"][aria-checked="true"],
+                .stRadio div[data-baseweb="radio"] input:checked + div {
+                    background-color: #e50914 !important;
+                    border-color: #e50914 !important;
+                    border-radius: 999px !important;
+                }
+                .stRadio div[data-baseweb="radio"][aria-checked="true"] * ,
+                .stRadio div[data-baseweb="radio"] input:checked + div * {
+                    color: #ffffff !important;
+                }
                 
                 /* ============================================
                    TOGGLE BUTTON - Dark gray track, white thumb
