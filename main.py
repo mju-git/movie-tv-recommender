@@ -40,9 +40,9 @@ def main():
     # Import everything inside main() - safe for Cloud
     import sys
     from pathlib import Path
-    import requests
+import requests
     import pickle
-    import pandas as pd
+import pandas as pd
     from ast import literal_eval
     import importlib.util
     
@@ -89,7 +89,7 @@ def main():
                 st.session_state.migration_run = True
             except Exception:
                 st.session_state.migration_run = True
-    else:
+        else:
         # Set dummy functions if database not available
         get_all_titles = None
         get_all_genres = None
@@ -477,29 +477,21 @@ def main():
                 window.addEventListener('load', centerMainContent);
                 setInterval(centerMainContent, 100);
                 
-                function updateRadioDots() {
-                    const radios = document.querySelectorAll('.stRadio input[type="radio"]');
-                    radios.forEach((input) => {
-                        const container = input.nextElementSibling;
-                        if (!container) return;
-                        container.style.position = 'relative';
-                        let dot = container.querySelector('.custom-radio-dot');
-                        if (!dot) {
-                            dot = document.createElement('span');
-                            dot.className = 'custom-radio-dot';
-                            container.appendChild(dot);
-                        }
-                        dot.style.opacity = input.checked ? '1' : '0';
+                function enableSelectClearOnFocus() {
+                    const inputs = document.querySelectorAll('.stSelectbox input, .stMultiSelect input');
+                    inputs.forEach((input) => {
+                        if (input.dataset.clearOnFocus === 'true') return;
+                        input.dataset.clearOnFocus = 'true';
+                        input.addEventListener('focus', () => {
+                            input.value = '';
+                            input.placeholder = 'Type to search...';
+                            input.dispatchEvent(new Event('input', { bubbles: true }));
+                        });
                     });
                 }
                 
-                window.addEventListener('load', updateRadioDots);
-                document.addEventListener('change', (event) => {
-                    if (event.target && event.target.matches('.stRadio input[type="radio"]')) {
-                        updateRadioDots();
-                    }
-                }, true);
-                setInterval(updateRadioDots, 300);
+                window.addEventListener('load', enableSelectClearOnFocus);
+                setInterval(enableSelectClearOnFocus, 500);
                 
                 // Watch for sidebar toggle
                 const observer = new MutationObserver(centerMainContent);
@@ -911,59 +903,20 @@ def main():
                     background-color: transparent !important;
                     background: transparent !important;
                 }
-                /* Outer ring - white with gray border */
-                .stRadio div[data-baseweb="radio"] > div:first-child,
-                .stRadio div[data-baseweb="radio"] input + div {
-                    background-color: #ffffff !important;
-                    border: 2px solid #888888 !important;
-                    border-radius: 50% !important;
-                    box-shadow: none !important;
-                    position: relative !important;
-                }
-                /* Inner dot - white by default */
-                .stRadio div[data-baseweb="radio"] > div > div,
-                .stRadio div[data-baseweb="radio"] input + div > div {
-                    background-color: #ffffff !important;
+                /* Use native radio input to ensure visibility */
+                .stRadio input[type="radio"] {
+                    appearance: auto !important;
+                    -webkit-appearance: radio !important;
+                    accent-color: #e50914 !important;
+                    width: 16px !important;
+                    height: 16px !important;
                     opacity: 1 !important;
-                    transform: none !important;
+                    position: static !important;
+                    margin: 0 8px 0 0 !important;
                 }
-                /* Selected: red inner dot using inset ring */
-                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child,
-                .stRadio div[data-baseweb="radio"] input:checked + div {
-                    border-color: #e50914 !important;
-                    box-shadow: inset 0 0 0 5px #e50914 !important;
-                }
-                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div > div,
-                .stRadio div[data-baseweb="radio"] input:checked + div > div {
-                    background-color: #e50914 !important;
-                    opacity: 1 !important;
-                    transform: none !important;
-                }
-                /* Fallback dot - pseudo element */
-                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child::after,
-                .stRadio div[data-baseweb="radio"] input:checked + div::after {
-                    content: "" !important;
-                    position: absolute !important;
-                    top: 50% !important;
-                    left: 50% !important;
-                    width: 10px !important;
-                    height: 10px !important;
-                    transform: translate(-50%, -50%) !important;
-                    background: #e50914 !important;
-                    border-radius: 50% !important;
-                }
-                /* JS fallback dot (injected span) */
-                .stRadio .custom-radio-dot {
-                    position: absolute !important;
-                    top: 50% !important;
-                    left: 50% !important;
-                    width: 10px !important;
-                    height: 10px !important;
-                    transform: translate(-50%, -50%) !important;
-                    background-color: #e50914 !important;
-                    border-radius: 50% !important;
-                    opacity: 0 !important;
-                    pointer-events: none !important;
+                /* Hide BaseWeb custom circle */
+                .stRadio div[data-baseweb="radio"] > div:first-child {
+                    display: none !important;
                 }
                 
                 /* ============================================
@@ -1054,6 +1007,22 @@ def main():
                 // Run on load and when sidebar state changes
                 window.addEventListener('load', centerMainContent);
                 setInterval(centerMainContent, 100);
+                
+                function enableSelectClearOnFocus() {
+                    const inputs = document.querySelectorAll('.stSelectbox input, .stMultiSelect input');
+                    inputs.forEach((input) => {
+                        if (input.dataset.clearOnFocus === 'true') return;
+                        input.dataset.clearOnFocus = 'true';
+                        input.addEventListener('focus', () => {
+                            input.value = '';
+                            input.placeholder = 'Type to search...';
+                            input.dispatchEvent(new Event('input', { bubbles: true }));
+                        });
+                    });
+                }
+                
+                window.addEventListener('load', enableSelectClearOnFocus);
+                setInterval(enableSelectClearOnFocus, 500);
                 
                 // Watch for sidebar toggle
                 const observer = new MutationObserver(centerMainContent);
