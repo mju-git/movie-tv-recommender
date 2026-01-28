@@ -740,16 +740,16 @@ def main():
                     color-scheme: light !important;
                     scrollbar-gutter: auto !important;
                     padding-right: 0 !important;
-                    scrollbar-width: none !important;
-                    scrollbar-color: transparent transparent !important;
-                    -ms-overflow-style: none !important;
+                    scrollbar-width: thin !important;
+                    scrollbar-color: #9a9a9a #f0f0f0 !important;
+                    -ms-overflow-style: auto !important;
                 }
                 /* Inner list container - remove scroll gutter/track */
                 [data-baseweb="menu"] div[role="listbox"],
                 [data-baseweb="menu"] ul[role="listbox"],
                 [data-baseweb="popover"] div[role="listbox"],
                 [data-baseweb="popover"] ul[role="listbox"] {
-                    overflow: hidden !important;
+                    overflow-y: auto !important;
                     scrollbar-gutter: auto !important;
                     padding-right: 0 !important;
                     margin-right: 0 !important;
@@ -760,10 +760,10 @@ def main():
                 [data-baseweb="menu"] > div::-webkit-scrollbar,
                 ul[role="listbox"]::-webkit-scrollbar,
                 div[role="listbox"]::-webkit-scrollbar {
-                    display: none !important;
-                    width: 0 !important;
-                    height: 0 !important;
-                    background: transparent !important;
+                    display: block !important;
+                    width: 8px !important;
+                    height: 8px !important;
+                    background: #f0f0f0 !important;
                 }
                 [data-baseweb="popover"]::-webkit-scrollbar-thumb,
                 [data-baseweb="popover"] > div::-webkit-scrollbar-thumb,
@@ -771,7 +771,8 @@ def main():
                 [data-baseweb="menu"] > div::-webkit-scrollbar-thumb,
                 ul[role="listbox"]::-webkit-scrollbar-thumb,
                 div[role="listbox"]::-webkit-scrollbar-thumb {
-                    background: transparent !important;
+                    background: #9a9a9a !important;
+                    border-radius: 8px !important;
                 }
                 [data-baseweb="popover"]::-webkit-scrollbar-track,
                 [data-baseweb="popover"] > div::-webkit-scrollbar-track,
@@ -779,7 +780,7 @@ def main():
                 [data-baseweb="menu"] > div::-webkit-scrollbar-track,
                 ul[role="listbox"]::-webkit-scrollbar-track,
                 div[role="listbox"]::-webkit-scrollbar-track {
-                    background: transparent !important;
+                    background: #f0f0f0 !important;
                 }
                 /* Items - NO margin, full width, clean */
                 [data-baseweb="popover"] li, 
@@ -893,6 +894,7 @@ def main():
                     border: 2px solid #888888 !important;
                     border-radius: 50% !important;
                     box-shadow: none !important;
+                    position: relative !important;
                 }
                 /* Inner dot - white by default */
                 .stRadio div[data-baseweb="radio"] > div > div,
@@ -912,6 +914,19 @@ def main():
                     background-color: #e50914 !important;
                     opacity: 1 !important;
                     transform: none !important;
+                }
+                /* Fallback dot - pseudo element */
+                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child::after,
+                .stRadio div[data-baseweb="radio"] input:checked + div::after {
+                    content: "" !important;
+                    position: absolute !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    width: 10px !important;
+                    height: 10px !important;
+                    transform: translate(-50%, -50%) !important;
+                    background: #e50914 !important;
+                    border-radius: 50% !important;
                 }
                 
                 /* ============================================
