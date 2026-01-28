@@ -40,9 +40,9 @@ def main():
     # Import everything inside main() - safe for Cloud
     import sys
     from pathlib import Path
-import requests
+    import requests
     import pickle
-import pandas as pd
+    import pandas as pd
     from ast import literal_eval
     import importlib.util
     
@@ -89,7 +89,7 @@ import pandas as pd
                 st.session_state.migration_run = True
             except Exception:
                 st.session_state.migration_run = True
-        else:
+    else:
         # Set dummy functions if database not available
         get_all_titles = None
         get_all_genres = None
