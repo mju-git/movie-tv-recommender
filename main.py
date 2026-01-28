@@ -738,6 +738,8 @@ def main():
                     box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
                     overflow: hidden !important;
                     color-scheme: light !important;
+                    scrollbar-gutter: auto !important;
+                    padding-right: 0 !important;
                     scrollbar-width: none !important;
                     scrollbar-color: transparent transparent !important;
                     -ms-overflow-style: none !important;
@@ -783,6 +785,9 @@ def main():
                     margin: 0 !important;
                     border-radius: 0 !important;
                     padding: 10px 16px !important;
+                    width: 100% !important;
+                    box-sizing: border-box !important;
+                    scrollbar-gutter: auto !important;
                 }
                 li[role="option"] span,
                 li[role="option"] div {
@@ -797,6 +802,7 @@ def main():
                     background: #e50914 !important;
                     color: #ffffff !important;
                     outline: none !important;
+                    border-radius: 8px !important;
                 }
                 li[role="option"]:hover span,
                 li[role="option"]:hover div,
@@ -813,6 +819,7 @@ def main():
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     color: #ffffff !important;
+                    border-radius: 8px !important;
                 }
                 li[role="option"][aria-selected="true"] span,
                 li[role="option"][aria-selected="true"] div {
@@ -870,18 +877,21 @@ def main():
                     background: transparent !important;
                 }
                 /* Outer ring - white with gray border */
-                .stRadio div[data-baseweb="radio"] > div:first-child {
+                .stRadio div[data-baseweb="radio"] > div:first-child,
+                .stRadio div[data-baseweb="radio"] input + div {
                     background-color: #ffffff !important;
                     border: 2px solid #888888 !important;
                     border-radius: 50% !important;
                     box-shadow: none !important;
                 }
                 /* Inner dot - white by default */
-                .stRadio div[data-baseweb="radio"] > div > div {
+                .stRadio div[data-baseweb="radio"] > div > div,
+                .stRadio div[data-baseweb="radio"] input + div > div {
                     background-color: #ffffff !important;
                 }
                 /* Selected: red inner dot using inset ring */
-                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child {
+                .stRadio div[data-baseweb="radio"][aria-checked="true"] > div:first-child,
+                .stRadio div[data-baseweb="radio"] input:checked + div {
                     border-color: #e50914 !important;
                     box-shadow: inset 0 0 0 5px #e50914 !important;
                 }
