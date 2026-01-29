@@ -187,6 +187,17 @@ def main():
                 section[data-testid="stSidebar"] .stRadio, section[data-testid="stSidebar"] .stMultiSelect, section[data-testid="stSidebar"] .stSlider, section[data-testid="stSidebar"] .stToggle, section[data-testid="stSidebar"] .stButton { margin-bottom: 0.5rem !important; }
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
                 
+                /* Radio alignment (Dark Theme) */
+                .stRadio label {
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    gap: 6px !important;
+                }
+                .stRadio [role="radiogroup"] {
+                    gap: 10px !important;
+                    row-gap: 6px !important;
+                }
+                
                 /* ============================================
                    Main Content Centering & Layout (Option 2)
                    ============================================
@@ -478,15 +489,19 @@ def main():
                 setInterval(centerMainContent, 100);
                 
                 function enableSelectClearOnFocus() {
-                    const inputs = document.querySelectorAll('.stSelectbox input, .stMultiSelect input');
-                    inputs.forEach((input) => {
-                        if (input.dataset.clearOnFocus === 'true') return;
-                        input.dataset.clearOnFocus = 'true';
-                        input.addEventListener('focus', () => {
+                    const selects = document.querySelectorAll('.stSelectbox [data-baseweb="select"], .stMultiSelect [data-baseweb="select"]');
+                    selects.forEach((select) => {
+                        if (select.dataset.clearOnFocus === 'true') return;
+                        select.dataset.clearOnFocus = 'true';
+                        const input = select.querySelector('input');
+                        if (!input) return;
+                        const clearValue = () => {
                             input.value = '';
                             input.placeholder = 'Type to search...';
                             input.dispatchEvent(new Event('input', { bubbles: true }));
-                        });
+                        };
+                        select.addEventListener('mousedown', clearValue);
+                        input.addEventListener('focus', clearValue);
                     });
                 }
                 
@@ -918,6 +933,16 @@ def main():
                 .stRadio div[data-baseweb="radio"] > div:first-child {
                     display: none !important;
                 }
+                /* Align label text with native radio and tighten spacing */
+                .stRadio label {
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    gap: 6px !important;
+                }
+                .stRadio [role="radiogroup"] {
+                    gap: 10px !important;
+                    row-gap: 6px !important;
+                }
                 
                 /* ============================================
                    TOGGLE BUTTON - Dark gray track, white thumb
@@ -1009,15 +1034,19 @@ def main():
                 setInterval(centerMainContent, 100);
                 
                 function enableSelectClearOnFocus() {
-                    const inputs = document.querySelectorAll('.stSelectbox input, .stMultiSelect input');
-                    inputs.forEach((input) => {
-                        if (input.dataset.clearOnFocus === 'true') return;
-                        input.dataset.clearOnFocus = 'true';
-                        input.addEventListener('focus', () => {
+                    const selects = document.querySelectorAll('.stSelectbox [data-baseweb="select"], .stMultiSelect [data-baseweb="select"]');
+                    selects.forEach((select) => {
+                        if (select.dataset.clearOnFocus === 'true') return;
+                        select.dataset.clearOnFocus = 'true';
+                        const input = select.querySelector('input');
+                        if (!input) return;
+                        const clearValue = () => {
                             input.value = '';
                             input.placeholder = 'Type to search...';
                             input.dispatchEvent(new Event('input', { bubbles: true }));
-                        });
+                        };
+                        select.addEventListener('mousedown', clearValue);
+                        input.addEventListener('focus', clearValue);
                     });
                 }
                 
@@ -1751,6 +1780,18 @@ def main():
         
         st.divider()
         
+        st.markdown("**Number of Results**")
+        num_recommendations = st.slider(
+            "Results",
+            min_value=5,
+            max_value=30,
+            value=10,
+            step=5,
+            label_visibility="collapsed"
+        )
+        
+        st.divider()
+        
         st.markdown("**Genre Filter**")
         if all_genres:
             genre_filter = st.multiselect(
@@ -1763,18 +1804,6 @@ def main():
         else:
             st.info("Loading genres…")
             genre_filter = []
-        
-        st.divider()
-        
-        st.markdown("**Number of Results**")
-        num_recommendations = st.slider(
-            "Results",
-            min_value=5,
-            max_value=30,
-            value=10,
-            step=5,
-            label_visibility="collapsed"
-        )
         
         st.divider()
         
