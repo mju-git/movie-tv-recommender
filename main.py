@@ -191,7 +191,7 @@ def main():
                 .stRadio label {
                     display: inline-flex !important;
                     align-items: center !important;
-                    gap: 1px !important;
+                    gap: 2px !important;
                     padding: 0 !important;
                     margin: 0 !important;
                 }
@@ -310,27 +310,21 @@ def main():
                 [data-baseweb="popover"],
                 [data-baseweb="popover"] > div,
                 [data-baseweb="menu"],
+                [data-baseweb="menu"] > div,
                 ul[role="listbox"],
+                div[role="listbox"],
                 [class*="st-emotion-cache"][role="listbox"] {
                     background-color: #333333 !important;
                     border: 1px solid rgba(255,255,255,0.2) !important;
+                    border-radius: 8px !important;
+                    overflow: hidden !important;
                 }
                 /* Dropdown menu items - force white text, no outline/border */
                 [data-baseweb="popover"] li, 
-                [data-baseweb="popover"] span, 
-                [data-baseweb="popover"] div,
-                [data-baseweb="menu"] li, 
-                [data-baseweb="menu"] span, 
-                [data-baseweb="menu"] div,
-                ul[role="listbox"] li, 
-                ul[role="listbox"] span, 
-                ul[role="listbox"] div,
+                [data-baseweb="menu"] li,
+                ul[role="listbox"] li,
                 li[role="option"],
-                li[role="option"] span,
-                li[role="option"] div,
-                [data-baseweb="option"],
-                [data-baseweb="option"] span,
-                [data-baseweb="option"] div { 
+                [data-baseweb="option"] { 
                     color: #ffffff !important; 
                     background-color: #333333 !important;
                     outline: none !important;
@@ -339,6 +333,16 @@ def main():
                     margin: 0 !important;
                     border-radius: 0 !important;
                     padding: 10px 16px !important;
+                    width: 100% !important;
+                    box-sizing: border-box !important;
+                }
+                [data-baseweb="popover"] li span,
+                [data-baseweb="menu"] li span,
+                ul[role="listbox"] li span,
+                li[role="option"] span,
+                [data-baseweb="option"] span {
+                    color: #ffffff !important;
+                    background: transparent !important;
                 }
                 /* Remove focus outline on dropdown items */
                 li[role="option"]:focus,
@@ -352,13 +356,8 @@ def main():
                 }
                 /* Dropdown hover state - full red background */
                 li[role="option"]:hover,
-                li[role="option"]:hover span,
-                li[role="option"]:hover div,
-                li[role="option"]:hover *,
                 [data-baseweb="option"]:hover,
-                [data-baseweb="option"]:hover *,
-                [data-highlighted="true"],
-                [data-highlighted="true"] * {
+                [data-highlighted="true"] {
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     color: #ffffff !important;
@@ -368,17 +367,18 @@ def main():
                 }
                 /* Selected option - solid red background */
                 li[role="option"][aria-selected="true"],
-                li[role="option"][aria-selected="true"] span,
-                li[role="option"][aria-selected="true"] div,
-                li[role="option"][aria-selected="true"] *,
-                [data-baseweb="option"][aria-selected="true"],
-                [data-baseweb="option"][aria-selected="true"] * {
+                [data-baseweb="option"][aria-selected="true"] {
                     background-color: #e50914 !important;
                     background: #e50914 !important;
                     color: #ffffff !important;
                     outline: none !important;
                     border: none !important;
                     border-radius: 8px !important;
+                }
+                li[role="option"][aria-selected="true"] span,
+                [data-baseweb="option"][aria-selected="true"] span {
+                    color: #ffffff !important;
+                    background: transparent !important;
                 }
                 
                 /* Fix toggle button visibility in dark mode - aggressive targeting */
@@ -389,7 +389,8 @@ def main():
                 .stToggle [data-testid="stToggle"] > div,
                 div[data-baseweb="switch"],
                 div[data-baseweb="switch"] > div {
-                    background-color: #666666 !important;
+                    background-color: #6f6f6f !important;
+                    border: 1px solid #7a7a7a !important;
                 }
                 .stToggle > label > div:first-of-type[aria-checked="true"],
                 .stToggle > label > div:first-of-type[aria-checked="true"] > div,
@@ -404,7 +405,8 @@ def main():
                 .stToggle [class*="track"],
                 [class*="st-emotion-cache"][data-baseweb="switch"],
                 [class*="st-emotion-cache"][data-baseweb="switch"] > div:first-child {
-                    background-color: #666666 !important;
+                    background-color: #6f6f6f !important;
+                    border: 1px solid #7a7a7a !important;
                 }
                 [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"],
                 [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"] > div:first-child {
@@ -412,10 +414,9 @@ def main():
                 }
                 
                 /* Multiselect tags - selected items with red background */
-                [data-baseweb="tag"],
-                span[data-baseweb="tag"],
-                div[data-baseweb="tag"],
                 .stMultiSelect [data-baseweb="tag"],
+                .stMultiSelect span[data-baseweb="tag"],
+                .stMultiSelect div[data-baseweb="tag"],
                 [class*="st-emotion-cache"][data-baseweb="tag"] {
                     background-color: #e50914 !important;
                     border-color: #e50914 !important;
@@ -427,11 +428,8 @@ def main():
                     align-items: center !important;
                     color: #ffffff !important;
                 }
-                [data-baseweb="tag"] > span,
-                [data-baseweb="tag"] > div,
-                [data-baseweb="tag"] span,
-                [data-baseweb="tag"] div,
-                [data-baseweb="tag"] *,
+                .stMultiSelect [data-baseweb="tag"] span,
+                .stMultiSelect [data-baseweb="tag"] div,
                 .stMultiSelect [data-baseweb="tag"] *,
                 [class*="st-emotion-cache"][data-baseweb="tag"] * {
                     background-color: transparent !important;
@@ -446,13 +444,13 @@ def main():
                 }
                 
                 /* Tooltip styling (dark theme) */
-                [data-baseweb="tooltip"],
-                [role="tooltip"] {
+                body .stApp [data-baseweb="tooltip"],
+                body .stApp [role="tooltip"] {
                     background-color: #2d2d2d !important;
                     color: #ffffff !important;
                 }
-                [data-baseweb="tooltip"] * ,
-                [role="tooltip"] * {
+                body .stApp [data-baseweb="tooltip"] * ,
+                body .stApp [role="tooltip"] * {
                     color: #ffffff !important;
                 }
                 /* Target emotion-cache classes for tags */
