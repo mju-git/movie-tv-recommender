@@ -191,11 +191,17 @@ def main():
                 .stRadio label {
                     display: inline-flex !important;
                     align-items: center !important;
-                    gap: 4px !important;
+                    gap: 2px !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 8px !important;
-                    row-gap: 4px !important;
+                    gap: 6px !important;
+                    row-gap: 2px !important;
+                    margin-top: 0 !important;
+                }
+                .stRadio > label { 
+                    display: none !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
                 }
                 
                 /* ============================================
@@ -489,23 +495,25 @@ def main():
                 setInterval(centerMainContent, 100);
                 
                 function enableSelectClearOnFocus() {
-                    const selects = document.querySelectorAll(
-                        '.stSelectbox [data-baseweb="select"], .stMultiSelect [data-baseweb="select"], [role="combobox"]'
-                    );
-                    selects.forEach((select) => {
-                        if (select.dataset.clearOnFocus === 'true') return;
-                        select.dataset.clearOnFocus = 'true';
-                        const input = select.querySelector('input');
+                    const clearValue = (input) => {
                         if (!input) return;
-                        const clearValue = () => {
-                            input.value = '';
-                            input.placeholder = 'Type to search...';
-                            input.dispatchEvent(new Event('input', { bubbles: true }));
-                        };
-                        select.addEventListener('pointerdown', clearValue);
-                        select.addEventListener('mousedown', clearValue);
-                        input.addEventListener('focus', clearValue);
-                        input.addEventListener('keydown', clearValue);
+                        input.value = '';
+                        input.placeholder = 'Type to search...';
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                    };
+                    
+                    // Event delegation for dynamic re-renders
+                    document.addEventListener('pointerdown', (event) => {
+                        const combobox = event.target.closest('[role="combobox"]');
+                        if (!combobox) return;
+                        const input = combobox.querySelector('input');
+                        clearValue(input);
+                    });
+                    
+                    document.addEventListener('focusin', (event) => {
+                        if (event.target && event.target.matches('[role="combobox"] input')) {
+                            clearValue(event.target);
+                        }
                     });
                 }
                 
@@ -931,7 +939,7 @@ def main():
                     height: 16px !important;
                     opacity: 1 !important;
                     position: static !important;
-                    margin: 0 4px 0 0 !important;
+                    margin: 0 2px 0 0 !important;
                 }
                 /* Hide BaseWeb custom circle */
                 .stRadio div[data-baseweb="radio"] > div:first-child {
@@ -941,11 +949,17 @@ def main():
                 .stRadio label {
                     display: inline-flex !important;
                     align-items: center !important;
-                    gap: 4px !important;
+                    gap: 2px !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 8px !important;
-                    row-gap: 4px !important;
+                    gap: 6px !important;
+                    row-gap: 2px !important;
+                    margin-top: 0 !important;
+                }
+                .stRadio > label { 
+                    display: none !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
                 }
                 
                 /* ============================================
@@ -1038,23 +1052,25 @@ def main():
                 setInterval(centerMainContent, 100);
                 
                 function enableSelectClearOnFocus() {
-                    const selects = document.querySelectorAll(
-                        '.stSelectbox [data-baseweb="select"], .stMultiSelect [data-baseweb="select"], [role="combobox"]'
-                    );
-                    selects.forEach((select) => {
-                        if (select.dataset.clearOnFocus === 'true') return;
-                        select.dataset.clearOnFocus = 'true';
-                        const input = select.querySelector('input');
+                    const clearValue = (input) => {
                         if (!input) return;
-                        const clearValue = () => {
-                            input.value = '';
-                            input.placeholder = 'Type to search...';
-                            input.dispatchEvent(new Event('input', { bubbles: true }));
-                        };
-                        select.addEventListener('pointerdown', clearValue);
-                        select.addEventListener('mousedown', clearValue);
-                        input.addEventListener('focus', clearValue);
-                        input.addEventListener('keydown', clearValue);
+                        input.value = '';
+                        input.placeholder = 'Type to search...';
+                        input.dispatchEvent(new Event('input', { bubbles: true }));
+                    };
+                    
+                    // Event delegation for dynamic re-renders
+                    document.addEventListener('pointerdown', (event) => {
+                        const combobox = event.target.closest('[role="combobox"]');
+                        if (!combobox) return;
+                        const input = combobox.querySelector('input');
+                        clearValue(input);
+                    });
+                    
+                    document.addEventListener('focusin', (event) => {
+                        if (event.target && event.target.matches('[role="combobox"] input')) {
+                            clearValue(event.target);
+                        }
                     });
                 }
                 
@@ -1779,7 +1795,7 @@ def main():
         media_type = st.radio(
             "",
             options=['movies', 'tv'],
-            format_func=lambda x: '🎬 Movies' if x == 'movies' else '📺 TV Shows',
+            format_func=lambda x: 'Movies 🎬' if x == 'movies' else 'TV Shows 📺',
             key='media_type',
             horizontal=True,
             label_visibility="collapsed",
@@ -1828,7 +1844,7 @@ def main():
         theme_choice = st.radio(
             "",
             options=['light', 'dark'],
-            format_func=lambda x: '☀️ Light' if x == 'light' else '🌙 Dark',
+            format_func=lambda x: 'Light ☀️' if x == 'light' else 'Dark 🌙',
             key='theme',
             horizontal=True,
             label_visibility="collapsed"
