@@ -307,6 +307,15 @@ def main():
                     color: #ffffff !important;
                 }
                 
+                /* Ensure widget labels in main content stay light in dark mode */
+                section[data-testid="stMain"] .stSelectbox label,
+                section[data-testid="stMain"] .stMultiSelect label,
+                section[data-testid="stMain"] [data-testid="stWidgetLabel"],
+                section[data-testid="stMain"] [data-testid="stWidgetLabel"] p,
+                section[data-testid="stMain"] [data-testid="stWidgetLabel"] span {
+                    color: #ffffff !important;
+                }
+                
                 /* Fix dropdown popover/menu - force explicit colors */
                 [data-baseweb="popover"],
                 [data-baseweb="popover"] > div,
@@ -319,7 +328,8 @@ def main():
                     border: 1px solid rgba(255,255,255,0.2) !important;
                     border-radius: 8px !important;
                     overflow: hidden !important;
-                    padding: 4px !important;
+                    padding: 0 !important;
+                    box-shadow: none !important;
                     scrollbar-width: thin !important;
                     scrollbar-color: #a0a0a0 #333333 !important;
                 }
@@ -367,6 +377,10 @@ def main():
                     width: 100% !important;
                     box-sizing: border-box !important;
                     background-clip: padding-box !important;
+                }
+                ul[role="listbox"] *,
+                div[role="listbox"] * {
+                    background-color: transparent !important;
                 }
                 [data-baseweb="popover"] li span,
                 [data-baseweb="menu"] li span,
@@ -423,8 +437,8 @@ def main():
                 .stToggle [data-testid="stToggle"] > div,
                 div[data-baseweb="switch"],
                 div[data-baseweb="switch"] > div {
-                    background-color: #2f2f2f !important;
-                    border: 1px solid #5a5a5a !important;
+                    background-color: #5a5a5a !important;
+                    border: 1px solid #6a6a6a !important;
                 }
                 .stToggle > label > div:first-of-type[aria-checked="true"],
                 .stToggle > label > div:first-of-type[aria-checked="true"] > div,
@@ -439,8 +453,15 @@ def main():
                 .stToggle [class*="track"],
                 [class*="st-emotion-cache"][data-baseweb="switch"],
                 [class*="st-emotion-cache"][data-baseweb="switch"] > div:first-child {
-                    background-color: #2f2f2f !important;
-                    border: 1px solid #5a5a5a !important;
+                    background-color: #5a5a5a !important;
+                    border: 1px solid #6a6a6a !important;
+                }
+                
+                /* Toggle label text - lighter gray in dark mode */
+                section[data-testid="stSidebar"] .stToggle label,
+                section[data-testid="stSidebar"] .stToggle label span,
+                section[data-testid="stSidebar"] .stToggle label div {
+                    color: #d0d0d0 !important;
                 }
                 [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"],
                 [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"] > div:first-child {
