@@ -187,7 +187,29 @@ def main():
                 section[data-testid="stSidebar"] .stRadio, section[data-testid="stSidebar"] .stMultiSelect, section[data-testid="stSidebar"] .stSlider, section[data-testid="stSidebar"] .stToggle, section[data-testid="stSidebar"] .stButton { margin-bottom: 0.5rem !important; }
                 section[data-testid="stSidebar"] .stRadio[data-baseweb="radio"] { margin-top: 0 !important; margin-bottom: 0 !important; }
                 
-                /* Radio alignment (Dark Theme) */
+                /* Radio alignment (Dark Theme) - mirror light mode exactly */
+                /* Container - always transparent */
+                .stRadio label,
+                .stRadio label * {
+                    background-color: transparent !important;
+                    background: transparent !important;
+                }
+                /* Use native radio input to ensure visibility */
+                .stRadio input[type="radio"] {
+                    appearance: auto !important;
+                    -webkit-appearance: radio !important;
+                    accent-color: #e50914 !important;
+                    width: 16px !important;
+                    height: 16px !important;
+                    opacity: 1 !important;
+                    position: static !important;
+                    margin: 0 1px 0 0 !important;
+                }
+                /* Hide BaseWeb custom circle */
+                .stRadio div[data-baseweb="radio"] > div:first-child {
+                    display: none !important;
+                }
+                /* Align label text with native radio and tighten spacing */
                 .stRadio label {
                     display: inline-flex !important;
                     align-items: center !important;
@@ -361,6 +383,7 @@ def main():
                     background: #333333 !important;
                 }
                 /* Dropdown menu items - force white text, no outline/border */
+                /* Base state: NO border-radius to avoid white corner bleed */
                 [data-baseweb="popover"] li, 
                 [data-baseweb="menu"] li,
                 ul[role="listbox"] li,
@@ -372,11 +395,10 @@ def main():
                     border: none !important;
                     box-shadow: none !important;
                     margin: 0 !important;
-                    border-radius: 8px !important;
+                    border-radius: 0 !important;
                     padding: 10px 16px !important;
                     width: 100% !important;
                     box-sizing: border-box !important;
-                    background-clip: padding-box !important;
                 }
                 ul[role="listbox"] *,
                 div[role="listbox"] * {
@@ -429,32 +451,49 @@ def main():
                     background: transparent !important;
                 }
                 
-                /* Fix toggle button visibility in dark mode - aggressive targeting */
+                /* "No matches found" empty state - dark background, white text */
+                [data-baseweb="menu"] li:only-child,
+                ul[role="listbox"] li:only-child,
+                [data-baseweb="popover"] [class*="empty"],
+                [data-baseweb="menu"] [class*="empty"],
+                [class*="st-emotion-cache"][class*="empty"],
+                li[role="option"]:only-child {
+                    background-color: #333333 !important;
+                    color: #ffffff !important;
+                }
+                
+                /* Fix toggle button visibility in dark mode - match light mode pattern */
+                /* Track (background) - darker gray (#2f2f2f) stands out against #2d2d2d app bg */
                 .stToggle > label > div:first-of-type,
                 .stToggle > label > div:first-of-type > div,
                 .stToggle span[data-baseweb="switch"],
                 .stToggle span[data-baseweb="switch"] > div,
                 .stToggle [data-testid="stToggle"] > div,
                 div[data-baseweb="switch"],
-                div[data-baseweb="switch"] > div {
-                    background-color: #5a5a5a !important;
-                    border: 1px solid #6a6a6a !important;
+                div[data-baseweb="switch"] > div,
+                .stToggle [class*="Track"],
+                .stToggle [class*="track"],
+                [class*="st-emotion-cache"][data-baseweb="switch"],
+                [class*="st-emotion-cache"][data-baseweb="switch"] > div:first-child {
+                    background-color: #2f2f2f !important;
+                    border: 1px solid #5a5a5a !important;
                 }
+                /* Track when ON - red */
                 .stToggle > label > div:first-of-type[aria-checked="true"],
                 .stToggle > label > div:first-of-type[aria-checked="true"] > div,
                 .stToggle span[data-baseweb="switch"][aria-checked="true"],
                 .stToggle span[data-baseweb="switch"][aria-checked="true"] > div,
                 div[data-baseweb="switch"][aria-checked="true"],
-                div[data-baseweb="switch"][aria-checked="true"] > div {
+                div[data-baseweb="switch"][aria-checked="true"] > div,
+                [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"],
+                [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"] > div:first-child {
                     background-color: #e50914 !important;
+                    border-color: #e50914 !important;
                 }
-                /* Target the track background specifically */
-                .stToggle [class*="Track"],
-                .stToggle [class*="track"],
-                [class*="st-emotion-cache"][data-baseweb="switch"],
-                [class*="st-emotion-cache"][data-baseweb="switch"] > div:first-child {
-                    background-color: #5a5a5a !important;
-                    border: 1px solid #6a6a6a !important;
+                /* Thumb (the moving circle) - always white */
+                div[data-baseweb="switch"] > div:last-child,
+                .stToggle div[data-baseweb="switch"] > div:last-child {
+                    background-color: #ffffff !important;
                 }
                 
                 /* Toggle label text - lighter gray in dark mode */
@@ -462,10 +501,6 @@ def main():
                 section[data-testid="stSidebar"] .stToggle label span,
                 section[data-testid="stSidebar"] .stToggle label div {
                     color: #d0d0d0 !important;
-                }
-                [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"],
-                [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"] > div:first-child {
-                    background-color: #e50914 !important;
                 }
                 
                 /* Multiselect tags - selected items with red background */
