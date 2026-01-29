@@ -518,6 +518,7 @@ def main():
                         if (!combobox) return;
                         const input = combobox.querySelector('input');
                         clearValue(input);
+                        if (input) input.focus();
                         setTimeout(() => clearValue(input), 50);
                     });
                     
@@ -1087,6 +1088,7 @@ def main():
                         if (!combobox) return;
                         const input = combobox.querySelector('input');
                         clearValue(input);
+                        if (input) input.focus();
                         setTimeout(() => clearValue(input), 50);
                     });
                     
@@ -1819,7 +1821,7 @@ def main():
         media_type = st.radio(
             "",
             options=['movies', 'tv'],
-            format_func=lambda x: 'Movies 🎬' if x == 'movies' else 'TV Shows 📺',
+            format_func=lambda x: '🎬 Movies' if x == 'movies' else '📺 TV Shows',
             key='media_type',
             horizontal=True,
             label_visibility="collapsed",
@@ -1868,7 +1870,7 @@ def main():
         theme_choice = st.radio(
             "",
             options=['light', 'dark'],
-            format_func=lambda x: 'Light ☀️' if x == 'light' else 'Dark 🌙',
+            format_func=lambda x: '☀️ Light' if x == 'light' else '🌙 Dark',
             key='theme',
             horizontal=True,
             label_visibility="collapsed"
