@@ -192,11 +192,18 @@ def main():
                     display: inline-flex !important;
                     align-items: center !important;
                     gap: 2px !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                }
+                .stRadio label span {
+                    white-space: nowrap !important;
+                    font-size: 0.95rem !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 6px !important;
+                    gap: 4px !important;
                     row-gap: 2px !important;
                     margin-top: 0 !important;
+                    flex-wrap: nowrap !important;
                 }
                 .stRadio > label { 
                     display: none !important;
@@ -497,9 +504,12 @@ def main():
                 function enableSelectClearOnFocus() {
                     const clearValue = (input) => {
                         if (!input) return;
+                        input.removeAttribute('readonly');
+                        input.setAttribute('aria-readonly', 'false');
                         input.value = '';
                         input.placeholder = 'Type to search...';
                         input.dispatchEvent(new Event('input', { bubbles: true }));
+                        input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
                     };
                     
                     // Event delegation for dynamic re-renders
@@ -508,11 +518,13 @@ def main():
                         if (!combobox) return;
                         const input = combobox.querySelector('input');
                         clearValue(input);
+                        setTimeout(() => clearValue(input), 50);
                     });
                     
                     document.addEventListener('focusin', (event) => {
                         if (event.target && event.target.matches('[role="combobox"] input')) {
                             clearValue(event.target);
+                            setTimeout(() => clearValue(event.target), 50);
                         }
                     });
                 }
@@ -950,11 +962,18 @@ def main():
                     display: inline-flex !important;
                     align-items: center !important;
                     gap: 2px !important;
+                    padding: 0 !important;
+                    margin: 0 !important;
+                }
+                .stRadio label span {
+                    white-space: nowrap !important;
+                    font-size: 0.95rem !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 6px !important;
+                    gap: 4px !important;
                     row-gap: 2px !important;
                     margin-top: 0 !important;
+                    flex-wrap: nowrap !important;
                 }
                 .stRadio > label { 
                     display: none !important;
@@ -1054,9 +1073,12 @@ def main():
                 function enableSelectClearOnFocus() {
                     const clearValue = (input) => {
                         if (!input) return;
+                        input.removeAttribute('readonly');
+                        input.setAttribute('aria-readonly', 'false');
                         input.value = '';
                         input.placeholder = 'Type to search...';
                         input.dispatchEvent(new Event('input', { bubbles: true }));
+                        input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
                     };
                     
                     // Event delegation for dynamic re-renders
@@ -1065,11 +1087,13 @@ def main():
                         if (!combobox) return;
                         const input = combobox.querySelector('input');
                         clearValue(input);
+                        setTimeout(() => clearValue(input), 50);
                     });
                     
                     document.addEventListener('focusin', (event) => {
                         if (event.target && event.target.matches('[role="combobox"] input')) {
                             clearValue(event.target);
+                            setTimeout(() => clearValue(event.target), 50);
                         }
                     });
                 }
