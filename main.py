@@ -200,7 +200,7 @@ def main():
                     font-size: 0.95rem !important;
                     line-height: 1.0 !important;
                     position: relative !important;
-                    top: -1px !important;
+                    top: -2px !important;
                 }
                 .stRadio [role="radiogroup"] {
                     gap: 12px !important;
@@ -319,7 +319,7 @@ def main():
                     border-radius: 8px !important;
                     overflow: hidden !important;
                     scrollbar-width: thin !important;
-                    scrollbar-color: #a0a0a0 #2f2f2f !important;
+                    scrollbar-color: #a0a0a0 #333333 !important;
                 }
                 [data-baseweb="popover"]::-webkit-scrollbar,
                 [data-baseweb="popover"] > div::-webkit-scrollbar,
@@ -329,7 +329,7 @@ def main():
                 div[role="listbox"]::-webkit-scrollbar {
                     width: 8px !important;
                     height: 8px !important;
-                    background: #2f2f2f !important;
+                    background: #333333 !important;
                 }
                 [data-baseweb="popover"]::-webkit-scrollbar-thumb,
                 [data-baseweb="popover"] > div::-webkit-scrollbar-thumb,
@@ -346,7 +346,7 @@ def main():
                 [data-baseweb="menu"] > div::-webkit-scrollbar-track,
                 ul[role="listbox"]::-webkit-scrollbar-track,
                 div[role="listbox"]::-webkit-scrollbar-track {
-                    background: #2f2f2f !important;
+                    background: #333333 !important;
                 }
                 /* Dropdown menu items - force white text, no outline/border */
                 [data-baseweb="popover"] li, 
@@ -421,8 +421,8 @@ def main():
                 .stToggle [data-testid="stToggle"] > div,
                 div[data-baseweb="switch"],
                 div[data-baseweb="switch"] > div {
-                    background-color: #7a7a7a !important;
-                    border: 1px solid #8a8a8a !important;
+                    background-color: #2f2f2f !important;
+                    border: 1px solid #5a5a5a !important;
                 }
                 .stToggle > label > div:first-of-type[aria-checked="true"],
                 .stToggle > label > div:first-of-type[aria-checked="true"] > div,
@@ -437,8 +437,8 @@ def main():
                 .stToggle [class*="track"],
                 [class*="st-emotion-cache"][data-baseweb="switch"],
                 [class*="st-emotion-cache"][data-baseweb="switch"] > div:first-child {
-                    background-color: #7a7a7a !important;
-                    border: 1px solid #8a8a8a !important;
+                    background-color: #2f2f2f !important;
+                    border: 1px solid #5a5a5a !important;
                 }
                 [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"],
                 [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"] > div:first-child {
