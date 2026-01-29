@@ -89,7 +89,7 @@ def main():
                 st.session_state.migration_run = True
             except Exception:
                 st.session_state.migration_run = True
-        else:
+    else:
         # Set dummy functions if database not available
         get_all_titles = None
         get_all_genres = None
