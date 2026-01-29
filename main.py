@@ -198,6 +198,9 @@ def main():
                 .stRadio label span {
                     white-space: nowrap !important;
                     font-size: 0.95rem !important;
+                    line-height: 1.0 !important;
+                    position: relative !important;
+                    top: -1px !important;
                 }
                 .stRadio [role="radiogroup"] {
                     gap: 4px !important;
@@ -333,6 +336,9 @@ def main():
                     outline: none !important;
                     border: none !important;
                     box-shadow: none !important;
+                    margin: 0 !important;
+                    border-radius: 0 !important;
+                    padding: 10px 16px !important;
                 }
                 /* Remove focus outline on dropdown items */
                 li[role="option"]:focus,
@@ -358,6 +364,7 @@ def main():
                     color: #ffffff !important;
                     outline: none !important;
                     border: none !important;
+                    border-radius: 8px !important;
                 }
                 /* Selected option - solid red background */
                 li[role="option"][aria-selected="true"],
@@ -371,6 +378,7 @@ def main():
                     color: #ffffff !important;
                     outline: none !important;
                     border: none !important;
+                    border-radius: 8px !important;
                 }
                 
                 /* Fix toggle button visibility in dark mode - aggressive targeting */
@@ -412,6 +420,12 @@ def main():
                     background-color: #e50914 !important;
                     border-color: #e50914 !important;
                     border: none !important;
+                    border-radius: 16px !important;
+                    padding: 4px 12px !important;
+                    margin: 2px !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    color: #ffffff !important;
                 }
                 [data-baseweb="tag"] > span,
                 [data-baseweb="tag"] > div,
@@ -502,7 +516,7 @@ def main():
                 setInterval(centerMainContent, 100);
                 
                 function enableSelectClearOnFocus() {
-                    const clearValue = (input) => {
+                    const clearValue = (input, combobox) => {
                         if (!input) return;
                         input.removeAttribute('readonly');
                         input.setAttribute('aria-readonly', 'false');
@@ -510,6 +524,29 @@ def main():
                         input.placeholder = 'Type to search...';
                         input.dispatchEvent(new Event('input', { bubbles: true }));
                         input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
+                        
+                        if (combobox) {
+                            const selectRoot = combobox.querySelector('[data-baseweb="select"]');
+                            if (selectRoot) {
+                                const valueNode = Array.from(selectRoot.querySelectorAll('span, div'))
+                                    .find((node) => !node.querySelector('input') && node.textContent && node.textContent.trim().length > 0);
+                                if (valueNode) {
+                                    valueNode.dataset.prevText = valueNode.textContent;
+                                    valueNode.textContent = '';
+                                }
+                            }
+                        }
+                    };
+                    
+                    const restoreValue = (combobox) => {
+                        if (!combobox) return;
+                        const selectRoot = combobox.querySelector('[data-baseweb="select"]');
+                        if (!selectRoot) return;
+                        const valueNode = selectRoot.querySelector('[data-prev-text]');
+                        if (valueNode) {
+                            valueNode.textContent = valueNode.dataset.prevText || '';
+                            valueNode.removeAttribute('data-prev-text');
+                        }
                     };
                     
                     // Event delegation for dynamic re-renders
@@ -517,16 +554,23 @@ def main():
                         const combobox = event.target.closest('[role="combobox"]');
                         if (!combobox) return;
                         const input = combobox.querySelector('input');
-                        clearValue(input);
+                        clearValue(input, combobox);
                         if (input) input.focus();
-                        setTimeout(() => clearValue(input), 50);
+                        setTimeout(() => clearValue(input, combobox), 50);
                     });
                     
                     document.addEventListener('focusin', (event) => {
                         if (event.target && event.target.matches('[role="combobox"] input')) {
-                            clearValue(event.target);
-                            setTimeout(() => clearValue(event.target), 50);
+                            const combobox = event.target.closest('[role="combobox"]');
+                            clearValue(event.target, combobox);
+                            setTimeout(() => clearValue(event.target, combobox), 50);
                         }
+                    });
+                    
+                    document.addEventListener('focusout', (event) => {
+                        const combobox = event.target.closest('[role="combobox"]');
+                        if (!combobox) return;
+                        setTimeout(() => restoreValue(combobox), 100);
                     });
                 }
                 
@@ -969,6 +1013,9 @@ def main():
                 .stRadio label span {
                     white-space: nowrap !important;
                     font-size: 0.95rem !important;
+                    line-height: 1.0 !important;
+                    position: relative !important;
+                    top: -1px !important;
                 }
                 .stRadio [role="radiogroup"] {
                     gap: 4px !important;
@@ -1072,7 +1119,7 @@ def main():
                 setInterval(centerMainContent, 100);
                 
                 function enableSelectClearOnFocus() {
-                    const clearValue = (input) => {
+                    const clearValue = (input, combobox) => {
                         if (!input) return;
                         input.removeAttribute('readonly');
                         input.setAttribute('aria-readonly', 'false');
@@ -1080,6 +1127,29 @@ def main():
                         input.placeholder = 'Type to search...';
                         input.dispatchEvent(new Event('input', { bubbles: true }));
                         input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
+                        
+                        if (combobox) {
+                            const selectRoot = combobox.querySelector('[data-baseweb="select"]');
+                            if (selectRoot) {
+                                const valueNode = Array.from(selectRoot.querySelectorAll('span, div'))
+                                    .find((node) => !node.querySelector('input') && node.textContent && node.textContent.trim().length > 0);
+                                if (valueNode) {
+                                    valueNode.dataset.prevText = valueNode.textContent;
+                                    valueNode.textContent = '';
+                                }
+                            }
+                        }
+                    };
+                    
+                    const restoreValue = (combobox) => {
+                        if (!combobox) return;
+                        const selectRoot = combobox.querySelector('[data-baseweb="select"]');
+                        if (!selectRoot) return;
+                        const valueNode = selectRoot.querySelector('[data-prev-text]');
+                        if (valueNode) {
+                            valueNode.textContent = valueNode.dataset.prevText || '';
+                            valueNode.removeAttribute('data-prev-text');
+                        }
                     };
                     
                     // Event delegation for dynamic re-renders
@@ -1087,16 +1157,23 @@ def main():
                         const combobox = event.target.closest('[role="combobox"]');
                         if (!combobox) return;
                         const input = combobox.querySelector('input');
-                        clearValue(input);
+                        clearValue(input, combobox);
                         if (input) input.focus();
-                        setTimeout(() => clearValue(input), 50);
+                        setTimeout(() => clearValue(input, combobox), 50);
                     });
                     
                     document.addEventListener('focusin', (event) => {
                         if (event.target && event.target.matches('[role="combobox"] input')) {
-                            clearValue(event.target);
-                            setTimeout(() => clearValue(event.target), 50);
+                            const combobox = event.target.closest('[role="combobox"]');
+                            clearValue(event.target, combobox);
+                            setTimeout(() => clearValue(event.target, combobox), 50);
                         }
+                    });
+                    
+                    document.addEventListener('focusout', (event) => {
+                        const combobox = event.target.closest('[role="combobox"]');
+                        if (!combobox) return;
+                        setTimeout(() => restoreValue(combobox), 100);
                     });
                 }
                 
