@@ -40,9 +40,9 @@ def main():
     # Import everything inside main() - safe for Cloud
     import sys
     from pathlib import Path
-    import requests
+import requests
     import pickle
-    import pandas as pd
+import pandas as pd
     from ast import literal_eval
     import importlib.util
     
@@ -89,7 +89,7 @@ def main():
                 st.session_state.migration_run = True
             except Exception:
                 st.session_state.migration_run = True
-    else:
+        else:
         # Set dummy functions if database not available
         get_all_titles = None
         get_all_genres = None
@@ -158,7 +158,7 @@ def main():
                    ============================================
                    Base font: 17px, headings proportionally sized.
                 */
-                html, body, [class*="css"], p, span, label, div {
+                html, body, [class*="css"] {
                     font-family: 'Inter', system-ui, sans-serif;
                     font-size: 17px !important;
                     color: #ffffff !important;
@@ -191,7 +191,7 @@ def main():
                 .stRadio label {
                     display: inline-flex !important;
                     align-items: center !important;
-                    gap: 0 !important;
+                    gap: 1px !important;
                     padding: 0 !important;
                     margin: 0 !important;
                 }
@@ -203,10 +203,11 @@ def main():
                     top: -2px !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 12px !important;
+                    gap: 8px !important;
                     row-gap: 4px !important;
                     margin-top: 0 !important;
                     flex-wrap: nowrap !important;
+                    justify-content: flex-start !important;
                 }
                 .stRadio > label { 
                     display: none !important;
@@ -318,6 +319,7 @@ def main():
                     border: 1px solid rgba(255,255,255,0.2) !important;
                     border-radius: 8px !important;
                     overflow: hidden !important;
+                    padding: 4px !important;
                     scrollbar-width: thin !important;
                     scrollbar-color: #a0a0a0 #333333 !important;
                 }
@@ -360,7 +362,7 @@ def main():
                     border: none !important;
                     box-shadow: none !important;
                     margin: 0 !important;
-                    border-radius: 0 !important;
+                    border-radius: 8px !important;
                     padding: 10px 16px !important;
                     width: 100% !important;
                     box-sizing: border-box !important;
@@ -518,6 +520,7 @@ def main():
                 [data-testid="stExpander"],
                 [data-testid="stExpander"] > div {
                     background: #3a3a3a !important; 
+                    border: 1px solid rgba(255,255,255,0.2) !important;
                     border-radius: 8px;
                 }
                 details summary, 
@@ -821,7 +824,7 @@ def main():
                     scrollbar-gutter: auto !important;
                     padding-right: 0 !important;
                     scrollbar-width: thin !important;
-                    scrollbar-color: #9a9a9a #f0f0f0 !important;
+                    scrollbar-color: #9a9a9a #ffffff !important;
                     -ms-overflow-style: auto !important;
                 }
                 /* Inner list container - remove scroll gutter/track */
@@ -843,7 +846,7 @@ def main():
                     display: block !important;
                     width: 8px !important;
                     height: 8px !important;
-                    background: #f0f0f0 !important;
+                    background: #ffffff !important;
                 }
                 [data-baseweb="popover"]::-webkit-scrollbar-thumb,
                 [data-baseweb="popover"] > div::-webkit-scrollbar-thumb,
@@ -860,7 +863,7 @@ def main():
                 [data-baseweb="menu"] > div::-webkit-scrollbar-track,
                 ul[role="listbox"]::-webkit-scrollbar-track,
                 div[role="listbox"]::-webkit-scrollbar-track {
-                    background: #f0f0f0 !important;
+                    background: #ffffff !important;
                 }
                 /* Items - NO margin, full width, clean */
                 [data-baseweb="popover"] li, 
@@ -1002,6 +1005,7 @@ def main():
                     row-gap: 4px !important;
                     margin-top: 0 !important;
                     flex-wrap: nowrap !important;
+                    justify-content: flex-start !important;
                 }
                 .stRadio > label { 
                     display: none !important;
