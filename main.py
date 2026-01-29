@@ -191,7 +191,7 @@ def main():
                 .stRadio label {
                     display: inline-flex !important;
                     align-items: center !important;
-                    gap: 2px !important;
+                    gap: 0 !important;
                     padding: 0 !important;
                     margin: 0 !important;
                 }
@@ -203,7 +203,7 @@ def main():
                     top: -1px !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 8px !important;
+                    gap: 12px !important;
                     row-gap: 4px !important;
                     margin-top: 0 !important;
                     flex-wrap: nowrap !important;
@@ -318,6 +318,35 @@ def main():
                     border: 1px solid rgba(255,255,255,0.2) !important;
                     border-radius: 8px !important;
                     overflow: hidden !important;
+                    scrollbar-width: thin !important;
+                    scrollbar-color: #a0a0a0 #2f2f2f !important;
+                }
+                [data-baseweb="popover"]::-webkit-scrollbar,
+                [data-baseweb="popover"] > div::-webkit-scrollbar,
+                [data-baseweb="menu"]::-webkit-scrollbar,
+                [data-baseweb="menu"] > div::-webkit-scrollbar,
+                ul[role="listbox"]::-webkit-scrollbar,
+                div[role="listbox"]::-webkit-scrollbar {
+                    width: 8px !important;
+                    height: 8px !important;
+                    background: #2f2f2f !important;
+                }
+                [data-baseweb="popover"]::-webkit-scrollbar-thumb,
+                [data-baseweb="popover"] > div::-webkit-scrollbar-thumb,
+                [data-baseweb="menu"]::-webkit-scrollbar-thumb,
+                [data-baseweb="menu"] > div::-webkit-scrollbar-thumb,
+                ul[role="listbox"]::-webkit-scrollbar-thumb,
+                div[role="listbox"]::-webkit-scrollbar-thumb {
+                    background: #a0a0a0 !important;
+                    border-radius: 8px !important;
+                }
+                [data-baseweb="popover"]::-webkit-scrollbar-track,
+                [data-baseweb="popover"] > div::-webkit-scrollbar-track,
+                [data-baseweb="menu"]::-webkit-scrollbar-track,
+                [data-baseweb="menu"] > div::-webkit-scrollbar-track,
+                ul[role="listbox"]::-webkit-scrollbar-track,
+                div[role="listbox"]::-webkit-scrollbar-track {
+                    background: #2f2f2f !important;
                 }
                 /* Dropdown menu items - force white text, no outline/border */
                 [data-baseweb="popover"] li, 
@@ -335,6 +364,7 @@ def main():
                     padding: 10px 16px !important;
                     width: 100% !important;
                     box-sizing: border-box !important;
+                    background-clip: padding-box !important;
                 }
                 [data-baseweb="popover"] li span,
                 [data-baseweb="menu"] li span,
@@ -364,6 +394,7 @@ def main():
                     outline: none !important;
                     border: none !important;
                     border-radius: 8px !important;
+                    background-clip: padding-box !important;
                 }
                 /* Selected option - solid red background */
                 li[role="option"][aria-selected="true"],
@@ -374,6 +405,7 @@ def main():
                     outline: none !important;
                     border: none !important;
                     border-radius: 8px !important;
+                    background-clip: padding-box !important;
                 }
                 li[role="option"][aria-selected="true"] span,
                 [data-baseweb="option"][aria-selected="true"] span {
@@ -389,8 +421,8 @@ def main():
                 .stToggle [data-testid="stToggle"] > div,
                 div[data-baseweb="switch"],
                 div[data-baseweb="switch"] > div {
-                    background-color: #6f6f6f !important;
-                    border: 1px solid #7a7a7a !important;
+                    background-color: #7a7a7a !important;
+                    border: 1px solid #8a8a8a !important;
                 }
                 .stToggle > label > div:first-of-type[aria-checked="true"],
                 .stToggle > label > div:first-of-type[aria-checked="true"] > div,
@@ -405,8 +437,8 @@ def main():
                 .stToggle [class*="track"],
                 [class*="st-emotion-cache"][data-baseweb="switch"],
                 [class*="st-emotion-cache"][data-baseweb="switch"] > div:first-child {
-                    background-color: #6f6f6f !important;
-                    border: 1px solid #7a7a7a !important;
+                    background-color: #7a7a7a !important;
+                    border: 1px solid #8a8a8a !important;
                 }
                 [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"],
                 [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"] > div:first-child {
