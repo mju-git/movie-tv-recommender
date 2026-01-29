@@ -40,9 +40,9 @@ def main():
     # Import everything inside main() - safe for Cloud
     import sys
     from pathlib import Path
-import requests
+    import requests
     import pickle
-import pandas as pd
+    import pandas as pd
     from ast import literal_eval
     import importlib.util
     
