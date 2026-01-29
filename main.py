@@ -280,6 +280,38 @@ def main():
                     background-color: #2d2d2d !important;
                 }
                 
+                /* Analytics dialog - ALL text white in dark mode */
+                [data-testid="stDialog"] h1,
+                [data-testid="stDialog"] h2,
+                [data-testid="stDialog"] h3,
+                [data-testid="stDialog"] h4,
+                [data-testid="stDialog"] p,
+                [data-testid="stDialog"] span,
+                [data-testid="stDialog"] div,
+                [data-testid="stDialog"] label,
+                [role="dialog"] h1,
+                [role="dialog"] h2,
+                [role="dialog"] h3,
+                [role="dialog"] h4,
+                [role="dialog"] p,
+                [role="dialog"] span,
+                [role="dialog"] div,
+                [role="dialog"] label {
+                    color: #ffffff !important;
+                }
+                /* Keep main title red */
+                [data-testid="stDialog"] .main-title,
+                [role="dialog"] .main-title {
+                    color: #e50914 !important;
+                }
+                /* Plotly charts - ensure axis labels visible */
+                [data-testid="stDialog"] .js-plotly-plot text,
+                [data-testid="stDialog"] .plotly text,
+                [role="dialog"] .js-plotly-plot text,
+                [role="dialog"] .plotly text {
+                    fill: #ffffff !important;
+                }
+                
                 /* ============================================
                    Custom Component Styling
                    ============================================
@@ -341,11 +373,16 @@ def main():
                 /* Fix dropdown popover/menu - force explicit colors */
                 [data-baseweb="popover"],
                 [data-baseweb="popover"] > div,
+                [data-baseweb="popover"] > div > div,
                 [data-baseweb="menu"],
                 [data-baseweb="menu"] > div,
+                [data-baseweb="menu"] > div > div,
                 ul[role="listbox"],
+                ul[role="listbox"] > div,
                 div[role="listbox"],
-                [class*="st-emotion-cache"][role="listbox"] {
+                div[role="listbox"] > div,
+                [class*="st-emotion-cache"][role="listbox"],
+                [class*="st-emotion-cache"][role="listbox"] > div {
                     background-color: #333333 !important;
                     border: 1px solid rgba(255,255,255,0.2) !important;
                     border-radius: 8px !important;
@@ -354,6 +391,16 @@ def main():
                     box-shadow: none !important;
                     scrollbar-width: thin !important;
                     scrollbar-color: #a0a0a0 #333333 !important;
+                }
+                /* Fix input area in dropdown - no white edges */
+                [data-baseweb="popover"] input,
+                [data-baseweb="popover"] [data-baseweb="input"],
+                [data-baseweb="popover"] [data-baseweb="input"] > div,
+                [data-baseweb="menu"] input,
+                ul[role="listbox"] input {
+                    background-color: #333333 !important;
+                    border: none !important;
+                    color: #ffffff !important;
                 }
                 [data-baseweb="popover"]::-webkit-scrollbar,
                 [data-baseweb="popover"] > div::-webkit-scrollbar,
@@ -452,14 +499,28 @@ def main():
                 }
                 
                 /* "No matches found" empty state - dark background, white text */
+                /* Target all possible containers for "No results" message */
                 [data-baseweb="menu"] li:only-child,
                 ul[role="listbox"] li:only-child,
                 [data-baseweb="popover"] [class*="empty"],
                 [data-baseweb="menu"] [class*="empty"],
                 [class*="st-emotion-cache"][class*="empty"],
-                li[role="option"]:only-child {
+                li[role="option"]:only-child,
+                [data-baseweb="popover"] > div > ul,
+                [data-baseweb="popover"] > div > ul > li,
+                [data-baseweb="popover"] > div > div,
+                [data-baseweb="popover"] > div > div > ul,
+                [data-baseweb="popover"] > div > div > ul > li {
                     background-color: #333333 !important;
                     color: #ffffff !important;
+                }
+                /* Force all nested containers in popover to be dark */
+                [data-baseweb="popover"] *:not(svg):not(path) {
+                    background-color: transparent !important;
+                }
+                [data-baseweb="popover"],
+                [data-baseweb="popover"] > div:first-child {
+                    background-color: #333333 !important;
                 }
                 
                 /* Fix toggle button visibility in dark mode - match light mode pattern */
@@ -501,6 +562,18 @@ def main():
                 section[data-testid="stSidebar"] .stToggle label span,
                 section[data-testid="stSidebar"] .stToggle label div {
                     color: #d0d0d0 !important;
+                }
+                
+                /* Question mark / help icon - visible in dark mode */
+                .stTooltipIcon,
+                [data-testid="stTooltipIcon"],
+                .stToggle svg,
+                [data-testid="tooltipHoverTarget"] svg,
+                .stTooltipIcon svg,
+                [class*="stTooltip"] svg {
+                    fill: #a0a0a0 !important;
+                    color: #a0a0a0 !important;
+                    opacity: 1 !important;
                 }
                 
                 /* Multiselect tags - selected items with red background */
@@ -1854,11 +1927,17 @@ def main():
             return title_with_year.rsplit(' (', 1)[0]
         return title_with_year
     
-    # Default selection
-    if media_type == 'tv':
-        default_title = "Breaking Bad"
-    else:
-        default_title = "The Shawshank Redemption"
+    # Default selection - use session state if available, otherwise use defaults
+    fallback_title = "Breaking Bad" if media_type == 'tv' else "The Shawshank Redemption"
+    
+    # Get stored selections from session state (persists across mode changes)
+    stored_key = f'stored_selection_{media_type}'
+    if stored_key not in st.session_state:
+        st.session_state[stored_key] = [fallback_title]
+    
+    # Use first stored selection as default for single mode
+    stored_selections = st.session_state[stored_key]
+    default_title = stored_selections[0] if stored_selections else fallback_title
     
     # Find default index - check both with and without year format
     default_index = 0
@@ -2093,13 +2172,26 @@ def main():
     
     with col2:
         icon = "📺" if media_type == 'tv' else "🎬"
+        stored_key = f'stored_selection_{media_type}'
+        
         if multi_mode:
-            # For multiselect, find default with year format
-            default_with_year = next((t for t in all_titles if extract_title(t) == default_title), default_title)
+            # For multiselect, use stored selections as defaults
+            stored_selections = st.session_state.get(stored_key, [default_title])
+            default_titles_with_year = []
+            for sel in stored_selections:
+                match = next((t for t in all_titles if extract_title(t) == sel), None)
+                if match:
+                    default_titles_with_year.append(match)
+            # Ensure at least one default if no matches
+            if not default_titles_with_year:
+                default_with_year = next((t for t in all_titles if extract_title(t) == default_title), None)
+                if default_with_year:
+                    default_titles_with_year = [default_with_year]
+            
             selected_movies_with_year = st.multiselect(
                 f"{icon} Select {media_type} (up to 5)",
                 options=all_titles,
-                default=[default_with_year] if default_with_year in all_titles else [],
+                default=default_titles_with_year,
                 max_selections=5
             )
             # Extract just titles from "Title (Year)" format
@@ -2113,6 +2205,10 @@ def main():
             # Extract just the title from "Title (Year)" format
             selected_movie = extract_title(selected_movie_with_year) if selected_movie_with_year else None
             selected_movies = [selected_movie] if selected_movie else []
+        
+        # Store current selection for persistence across mode changes
+        if selected_movies:
+            st.session_state[stored_key] = selected_movies
         
         st.text("")
         
