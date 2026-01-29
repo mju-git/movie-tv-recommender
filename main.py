@@ -191,11 +191,11 @@ def main():
                 .stRadio label {
                     display: inline-flex !important;
                     align-items: center !important;
-                    gap: 6px !important;
+                    gap: 4px !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 10px !important;
-                    row-gap: 6px !important;
+                    gap: 8px !important;
+                    row-gap: 4px !important;
                 }
                 
                 /* ============================================
@@ -489,7 +489,9 @@ def main():
                 setInterval(centerMainContent, 100);
                 
                 function enableSelectClearOnFocus() {
-                    const selects = document.querySelectorAll('.stSelectbox [data-baseweb="select"], .stMultiSelect [data-baseweb="select"]');
+                    const selects = document.querySelectorAll(
+                        '.stSelectbox [data-baseweb="select"], .stMultiSelect [data-baseweb="select"], [role="combobox"]'
+                    );
                     selects.forEach((select) => {
                         if (select.dataset.clearOnFocus === 'true') return;
                         select.dataset.clearOnFocus = 'true';
@@ -500,8 +502,10 @@ def main():
                             input.placeholder = 'Type to search...';
                             input.dispatchEvent(new Event('input', { bubbles: true }));
                         };
+                        select.addEventListener('pointerdown', clearValue);
                         select.addEventListener('mousedown', clearValue);
                         input.addEventListener('focus', clearValue);
+                        input.addEventListener('keydown', clearValue);
                     });
                 }
                 
@@ -927,7 +931,7 @@ def main():
                     height: 16px !important;
                     opacity: 1 !important;
                     position: static !important;
-                    margin: 0 8px 0 0 !important;
+                    margin: 0 4px 0 0 !important;
                 }
                 /* Hide BaseWeb custom circle */
                 .stRadio div[data-baseweb="radio"] > div:first-child {
@@ -937,11 +941,11 @@ def main():
                 .stRadio label {
                     display: inline-flex !important;
                     align-items: center !important;
-                    gap: 6px !important;
+                    gap: 4px !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 10px !important;
-                    row-gap: 6px !important;
+                    gap: 8px !important;
+                    row-gap: 4px !important;
                 }
                 
                 /* ============================================
@@ -1034,7 +1038,9 @@ def main():
                 setInterval(centerMainContent, 100);
                 
                 function enableSelectClearOnFocus() {
-                    const selects = document.querySelectorAll('.stSelectbox [data-baseweb="select"], .stMultiSelect [data-baseweb="select"]');
+                    const selects = document.querySelectorAll(
+                        '.stSelectbox [data-baseweb="select"], .stMultiSelect [data-baseweb="select"], [role="combobox"]'
+                    );
                     selects.forEach((select) => {
                         if (select.dataset.clearOnFocus === 'true') return;
                         select.dataset.clearOnFocus = 'true';
@@ -1045,8 +1051,10 @@ def main():
                             input.placeholder = 'Type to search...';
                             input.dispatchEvent(new Event('input', { bubbles: true }));
                         };
+                        select.addEventListener('pointerdown', clearValue);
                         select.addEventListener('mousedown', clearValue);
                         input.addEventListener('focus', clearValue);
+                        input.addEventListener('keydown', clearValue);
                     });
                 }
                 
@@ -1769,7 +1777,7 @@ def main():
         # Media type toggle (Movies/TV)
         st.markdown("**Content Type**")
         media_type = st.radio(
-            "Media Type",
+            "",
             options=['movies', 'tv'],
             format_func=lambda x: '🎬 Movies' if x == 'movies' else '📺 TV Shows',
             key='media_type',
@@ -1818,7 +1826,7 @@ def main():
         
         st.markdown("**Theme**")
         theme_choice = st.radio(
-            "Theme",
+            "",
             options=['light', 'dark'],
             format_func=lambda x: '☀️ Light' if x == 'light' else '🌙 Dark',
             key='theme',
