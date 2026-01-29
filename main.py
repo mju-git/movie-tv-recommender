@@ -191,7 +191,7 @@ def main():
                 .stRadio label {
                     display: inline-flex !important;
                     align-items: center !important;
-                    gap: 2px !important;
+                    gap: 1px !important;
                     padding: 0 !important;
                     margin: 0 !important;
                 }
@@ -203,7 +203,7 @@ def main():
                     top: -1px !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 4px !important;
+                    gap: 6px !important;
                     row-gap: 2px !important;
                     margin-top: 0 !important;
                     flex-wrap: nowrap !important;
@@ -515,68 +515,7 @@ def main():
                 window.addEventListener('load', centerMainContent);
                 setInterval(centerMainContent, 100);
                 
-                function enableSelectClearOnFocus() {
-                    const clearValue = (input, combobox) => {
-                        if (!input) return;
-                        input.removeAttribute('readonly');
-                        input.setAttribute('aria-readonly', 'false');
-                        input.value = '';
-                        input.placeholder = 'Type to search...';
-                        input.dispatchEvent(new Event('input', { bubbles: true }));
-                        input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
-                        
-                        if (combobox) {
-                            const selectRoot = combobox.querySelector('[data-baseweb="select"]');
-                            if (selectRoot) {
-                                const valueNode = Array.from(selectRoot.querySelectorAll('span, div'))
-                                    .find((node) => !node.querySelector('input') && node.textContent && node.textContent.trim().length > 0);
-                                if (valueNode) {
-                                    valueNode.dataset.prevText = valueNode.textContent;
-                                    valueNode.textContent = '';
-                                }
-                            }
-                        }
-                    };
-                    
-                    const restoreValue = (combobox) => {
-                        if (!combobox) return;
-                        const selectRoot = combobox.querySelector('[data-baseweb="select"]');
-                        if (!selectRoot) return;
-                        const valueNode = selectRoot.querySelector('[data-prev-text]');
-                        if (valueNode) {
-                            valueNode.textContent = valueNode.dataset.prevText || '';
-                            valueNode.removeAttribute('data-prev-text');
-                        }
-                    };
-                    
-                    // Event delegation for dynamic re-renders
-                    document.addEventListener('pointerdown', (event) => {
-                        const combobox = event.target.closest('[role="combobox"]');
-                        if (!combobox) return;
-                        const input = combobox.querySelector('input');
-                        clearValue(input, combobox);
-                        if (input) input.focus();
-                        setTimeout(() => clearValue(input, combobox), 50);
-                    });
-                    
-                    document.addEventListener('focusin', (event) => {
-                        if (event.target && event.target.matches('[role="combobox"] input')) {
-                            const combobox = event.target.closest('[role="combobox"]');
-                            clearValue(event.target, combobox);
-                            setTimeout(() => clearValue(event.target, combobox), 50);
-                        }
-                    });
-                    
-                    document.addEventListener('focusout', (event) => {
-                        const combobox = event.target.closest('[role="combobox"]');
-                        if (!combobox) return;
-                        setTimeout(() => restoreValue(combobox), 100);
-                    });
-                }
-                
-                window.addEventListener('load', enableSelectClearOnFocus);
-                setInterval(enableSelectClearOnFocus, 500);
-                
+                // Note: selectbox clearing reverted (kept default Streamlit behavior)
                 // Watch for sidebar toggle
                 const observer = new MutationObserver(centerMainContent);
                 const sidebar = document.querySelector('section[data-testid="stSidebar"]');
@@ -996,7 +935,7 @@ def main():
                     height: 16px !important;
                     opacity: 1 !important;
                     position: static !important;
-                    margin: 0 2px 0 0 !important;
+                    margin: 0 1px 0 0 !important;
                 }
                 /* Hide BaseWeb custom circle */
                 .stRadio div[data-baseweb="radio"] > div:first-child {
@@ -1006,7 +945,7 @@ def main():
                 .stRadio label {
                     display: inline-flex !important;
                     align-items: center !important;
-                    gap: 2px !important;
+                    gap: 1px !important;
                     padding: 0 !important;
                     margin: 0 !important;
                 }
@@ -1015,10 +954,10 @@ def main():
                     font-size: 0.95rem !important;
                     line-height: 1.0 !important;
                     position: relative !important;
-                    top: -1px !important;
+                    top: -2px !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 4px !important;
+                    gap: 6px !important;
                     row-gap: 2px !important;
                     margin-top: 0 !important;
                     flex-wrap: nowrap !important;
@@ -1118,68 +1057,7 @@ def main():
                 window.addEventListener('load', centerMainContent);
                 setInterval(centerMainContent, 100);
                 
-                function enableSelectClearOnFocus() {
-                    const clearValue = (input, combobox) => {
-                        if (!input) return;
-                        input.removeAttribute('readonly');
-                        input.setAttribute('aria-readonly', 'false');
-                        input.value = '';
-                        input.placeholder = 'Type to search...';
-                        input.dispatchEvent(new Event('input', { bubbles: true }));
-                        input.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, key: 'Backspace' }));
-                        
-                        if (combobox) {
-                            const selectRoot = combobox.querySelector('[data-baseweb="select"]');
-                            if (selectRoot) {
-                                const valueNode = Array.from(selectRoot.querySelectorAll('span, div'))
-                                    .find((node) => !node.querySelector('input') && node.textContent && node.textContent.trim().length > 0);
-                                if (valueNode) {
-                                    valueNode.dataset.prevText = valueNode.textContent;
-                                    valueNode.textContent = '';
-                                }
-                            }
-                        }
-                    };
-                    
-                    const restoreValue = (combobox) => {
-                        if (!combobox) return;
-                        const selectRoot = combobox.querySelector('[data-baseweb="select"]');
-                        if (!selectRoot) return;
-                        const valueNode = selectRoot.querySelector('[data-prev-text]');
-                        if (valueNode) {
-                            valueNode.textContent = valueNode.dataset.prevText || '';
-                            valueNode.removeAttribute('data-prev-text');
-                        }
-                    };
-                    
-                    // Event delegation for dynamic re-renders
-                    document.addEventListener('pointerdown', (event) => {
-                        const combobox = event.target.closest('[role="combobox"]');
-                        if (!combobox) return;
-                        const input = combobox.querySelector('input');
-                        clearValue(input, combobox);
-                        if (input) input.focus();
-                        setTimeout(() => clearValue(input, combobox), 50);
-                    });
-                    
-                    document.addEventListener('focusin', (event) => {
-                        if (event.target && event.target.matches('[role="combobox"] input')) {
-                            const combobox = event.target.closest('[role="combobox"]');
-                            clearValue(event.target, combobox);
-                            setTimeout(() => clearValue(event.target, combobox), 50);
-                        }
-                    });
-                    
-                    document.addEventListener('focusout', (event) => {
-                        const combobox = event.target.closest('[role="combobox"]');
-                        if (!combobox) return;
-                        setTimeout(() => restoreValue(combobox), 100);
-                    });
-                }
-                
-                window.addEventListener('load', enableSelectClearOnFocus);
-                setInterval(enableSelectClearOnFocus, 500);
-                
+                // Note: selectbox clearing reverted (kept default Streamlit behavior)
                 // Watch for sidebar toggle
                 const observer = new MutationObserver(centerMainContent);
                 const sidebar = document.querySelector('section[data-testid="stSidebar"]');
@@ -1896,7 +1774,7 @@ def main():
         # Media type toggle (Movies/TV)
         st.markdown("**Content Type**")
         media_type = st.radio(
-            "",
+            "Media Type",
             options=['movies', 'tv'],
             format_func=lambda x: '🎬 Movies' if x == 'movies' else '📺 TV Shows',
             key='media_type',
@@ -1945,7 +1823,7 @@ def main():
         
         st.markdown("**Theme**")
         theme_choice = st.radio(
-            "",
+            "Theme",
             options=['light', 'dark'],
             format_func=lambda x: '☀️ Light' if x == 'light' else '🌙 Dark',
             key='theme',
