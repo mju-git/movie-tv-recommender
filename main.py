@@ -203,8 +203,8 @@ def main():
                     top: -1px !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 6px !important;
-                    row-gap: 2px !important;
+                    gap: 8px !important;
+                    row-gap: 4px !important;
                     margin-top: 0 !important;
                     flex-wrap: nowrap !important;
                 }
@@ -389,7 +389,7 @@ def main():
                 .stToggle [data-testid="stToggle"] > div,
                 div[data-baseweb="switch"],
                 div[data-baseweb="switch"] > div {
-                    background-color: #505050 !important;
+                    background-color: #666666 !important;
                 }
                 .stToggle > label > div:first-of-type[aria-checked="true"],
                 .stToggle > label > div:first-of-type[aria-checked="true"] > div,
@@ -404,7 +404,7 @@ def main():
                 .stToggle [class*="track"],
                 [class*="st-emotion-cache"][data-baseweb="switch"],
                 [class*="st-emotion-cache"][data-baseweb="switch"] > div:first-child {
-                    background-color: #505050 !important;
+                    background-color: #666666 !important;
                 }
                 [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"],
                 [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"] > div:first-child {
@@ -442,6 +442,17 @@ def main():
                 [data-baseweb="tag"] svg,
                 [data-baseweb="tag"] path {
                     fill: #ffffff !important;
+                    color: #ffffff !important;
+                }
+                
+                /* Tooltip styling (dark theme) */
+                [data-baseweb="tooltip"],
+                [role="tooltip"] {
+                    background-color: #2d2d2d !important;
+                    color: #ffffff !important;
+                }
+                [data-baseweb="tooltip"] * ,
+                [role="tooltip"] * {
                     color: #ffffff !important;
                 }
                 /* Target emotion-cache classes for tags */
@@ -957,8 +968,8 @@ def main():
                     top: -2px !important;
                 }
                 .stRadio [role="radiogroup"] {
-                    gap: 6px !important;
-                    row-gap: 2px !important;
+                    gap: 8px !important;
+                    row-gap: 4px !important;
                     margin-top: 0 !important;
                     flex-wrap: nowrap !important;
                 }
