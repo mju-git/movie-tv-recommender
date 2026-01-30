@@ -523,37 +523,22 @@ def main():
                     background-color: #333333 !important;
                 }
                 
-                /* Fix toggle button visibility in dark mode - match light mode pattern */
-                /* Track (background) - darker gray (#2f2f2f) stands out against #2d2d2d app bg */
-                .stToggle > label > div:first-of-type,
-                .stToggle > label > div:first-of-type > div,
-                .stToggle span[data-baseweb="switch"],
-                .stToggle span[data-baseweb="switch"] > div,
-                .stToggle [data-testid="stToggle"] > div,
-                div[data-baseweb="switch"],
-                div[data-baseweb="switch"] > div,
-                .stToggle [class*="Track"],
-                .stToggle [class*="track"],
-                [class*="st-emotion-cache"][data-baseweb="switch"],
-                [class*="st-emotion-cache"][data-baseweb="switch"] > div:first-child {
-                    background-color: #2f2f2f !important;
-                    border: 1px solid #5a5a5a !important;
+                /* Fix toggle button visibility in dark mode - Option 3: :where() wrapper */
+                /* Using :where() to potentially bypass specificity conflicts */
+                :where([data-baseweb="switch"]),
+                :where(div[data-baseweb="switch"]),
+                :where(.stToggle [data-baseweb="switch"]) {
+                    background-color: #808080 !important;
+                    border: 1px solid #909090 !important;
                 }
                 /* Track when ON - red */
-                .stToggle > label > div:first-of-type[aria-checked="true"],
-                .stToggle > label > div:first-of-type[aria-checked="true"] > div,
-                .stToggle span[data-baseweb="switch"][aria-checked="true"],
-                .stToggle span[data-baseweb="switch"][aria-checked="true"] > div,
-                div[data-baseweb="switch"][aria-checked="true"],
-                div[data-baseweb="switch"][aria-checked="true"] > div,
-                [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"],
-                [class*="st-emotion-cache"][data-baseweb="switch"][aria-checked="true"] > div:first-child {
+                :where([data-baseweb="switch"][aria-checked="true"]),
+                :where(div[data-baseweb="switch"][aria-checked="true"]) {
                     background-color: #e50914 !important;
                     border-color: #e50914 !important;
                 }
                 /* Thumb (the moving circle) - always white */
-                div[data-baseweb="switch"] > div:last-child,
-                .stToggle div[data-baseweb="switch"] > div:last-child {
+                :where([data-baseweb="switch"] > div:last-child) {
                     background-color: #ffffff !important;
                 }
                 
