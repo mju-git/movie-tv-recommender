@@ -20,10 +20,10 @@ Data Sources:
 Author: Movie Recommender Team
 License: MIT
 """
-# CLOUD-SAFE: Only Streamlit imports and config at module level
+# Only Streamlit imports and config at module level (required for Streamlit Cloud)
 import streamlit as st
 
-# CRITICAL: st.set_page_config() MUST be the FIRST Streamlit command
+# st.set_page_config() MUST be the FIRST Streamlit command
 st.set_page_config(
     page_title="Movie Recommender", 
     layout="wide",
@@ -120,8 +120,16 @@ def main():
     
     # ============ THEME ============
     
-    def get_theme_css(is_dark):
-        """Industry standard themes."""
+    def get_theme_css(is_dark: bool) -> str:
+        """
+        Generate CSS theme stylesheet for the application.
+        
+        Args:
+            is_dark: If True, returns dark theme CSS; otherwise returns light theme CSS.
+        
+        Returns:
+            Complete CSS stylesheet as HTML string including styles and JavaScript.
+        """
         
         if is_dark:
             return """
@@ -523,8 +531,8 @@ def main():
                     background-color: #333333 !important;
                 }
                 
-                /* Fix toggle button visibility in dark mode - match light mode pattern */
-                /* Track (background) - darker gray (#2f2f2f) stands out against #2d2d2d app bg */
+                /* Toggle button styling - dark mode */
+                /* Track background (unchecked state) */
                 .stToggle > label > div:first-of-type,
                 .stToggle > label > div:first-of-type > div,
                 .stToggle span[data-baseweb="switch"],
@@ -539,7 +547,7 @@ def main():
                     background-color: #2f2f2f !important;
                     border: 1px solid #5a5a5a !important;
                 }
-                /* Track when ON - red */
+                /* Track background (checked state) */
                 .stToggle > label > div:first-of-type[aria-checked="true"],
                 .stToggle > label > div:first-of-type[aria-checked="true"] > div,
                 .stToggle span[data-baseweb="switch"][aria-checked="true"],
@@ -551,13 +559,13 @@ def main():
                     background-color: #e50914 !important;
                     border-color: #e50914 !important;
                 }
-                /* Thumb (the moving circle) - always white */
+                /* Toggle thumb (sliding circle) */
                 div[data-baseweb="switch"] > div:last-child,
                 .stToggle div[data-baseweb="switch"] > div:last-child {
                     background-color: #ffffff !important;
                 }
                 
-                /* Toggle label text - lighter gray in dark mode */
+                /* Toggle label text */
                 section[data-testid="stSidebar"] .stToggle label,
                 section[data-testid="stSidebar"] .stToggle label span,
                 section[data-testid="stSidebar"] .stToggle label div {
@@ -684,12 +692,11 @@ def main():
                     }
                 }
                 
-                // Run on load and when sidebar state changes
+                // Initialize and update on sidebar state changes
                 window.addEventListener('load', centerMainContent);
                 setInterval(centerMainContent, 100);
                 
-                // Note: selectbox clearing reverted (kept default Streamlit behavior)
-                // Watch for sidebar toggle
+                // Watch for sidebar toggle changes
                 const observer = new MutationObserver(centerMainContent);
                 const sidebar = document.querySelector('section[data-testid="stSidebar"]');
                 if (sidebar) {
@@ -1227,12 +1234,11 @@ def main():
                     }
                 }
                 
-                // Run on load and when sidebar state changes
+                // Initialize and update on sidebar state changes
                 window.addEventListener('load', centerMainContent);
                 setInterval(centerMainContent, 100);
                 
-                // Note: selectbox clearing reverted (kept default Streamlit behavior)
-                // Watch for sidebar toggle
+                // Watch for sidebar toggle changes
                 const observer = new MutationObserver(centerMainContent);
                 const sidebar = document.querySelector('section[data-testid="stSidebar"]');
                 if (sidebar) {
@@ -1244,7 +1250,16 @@ def main():
     # ============ DATA FUNCTIONS ============
     
     @st.cache_data(show_spinner=False)
-    def load_pickle(file):
+    def load_pickle(file: str) -> any:
+        """
+        Load and deserialize a pickle file.
+        
+        Args:
+            file: Path to the pickle file to load.
+        
+        Returns:
+            Deserialized Python object from the pickle file.
+        """
         with open(file, 'rb') as f:
             return pickle.load(f)
     
@@ -1279,8 +1294,19 @@ def main():
         return ""
     
     @st.cache_data(show_spinner=False)
-    def get_genres_from_df(movies_df):
-        """Extract genres from DataFrame (fallback when no database)."""
+    def get_genres_from_df(movies_df: pd.DataFrame) -> list[str]:
+        """
+        Extract unique genres from DataFrame column.
+        
+        Used as fallback when database is not available. Parses genre strings
+        and returns a sorted list of unique genre names.
+        
+        Args:
+            movies_df: DataFrame containing a 'genres' column with genre data.
+        
+        Returns:
+            Sorted list of unique genre names (strings).
+        """
         all_genres = set()
         for genres_str in movies_df['genres'].dropna():
             try:
@@ -1296,11 +1322,45 @@ def main():
                 pass
         return sorted(list(all_genres))
     
-    def imdb_url(imdb_id):
+    def imdb_url(imdb_id: str) -> str:
+        """
+        Generate IMDb URL for a given movie/TV show ID.
+        
+        Args:
+            imdb_id: IMDb identifier (e.g., 'tt0111161').
+        
+        Returns:
+            Complete IMDb URL string.
+        """
         return f'https://www.imdb.com/title/{imdb_id}/'
     
-    def get_recommendations_pickle(titles, cosine_sim_mat, df, num_of_rec=16, genre_filter=None):
-        """Get recommendations using pickle data (fallback method)."""
+    def get_recommendations_pickle(
+        titles: str | list[str], 
+        cosine_sim_mat: any, 
+        df: pd.DataFrame, 
+        num_of_rec: int = 16, 
+        genre_filter: list[str] | None = None
+    ) -> tuple[list[str], list[str], list[str], list[list], None]:
+        """
+        Get recommendations using pickle data (fallback method when database unavailable).
+        
+        Uses TF-IDF cosine similarity matrix to find similar movies/TV shows.
+        
+        Args:
+            titles: Single title string or list of title strings to base recommendations on.
+            cosine_sim_mat: Pre-computed cosine similarity matrix.
+            df: DataFrame containing movie/TV show data with 'title' column.
+            num_of_rec: Maximum number of recommendations to return. Defaults to 16.
+            genre_filter: Optional list of genre names to filter results. Defaults to None.
+        
+        Returns:
+            Tuple containing:
+            - List of recommended titles
+            - List of poster URLs
+            - List of IMDb URLs
+            - List of watch provider lists (currently empty)
+            - Error (always None for this function)
+        """
         combined = df.reset_index()
         indices = pd.Series(combined.index, index=combined['title'])
         
@@ -1521,7 +1581,7 @@ def main():
     
     # Provider name to logo filename mapping
     # Multiple variations map to the same logo file
-    # Note: Filenames match what was actually downloaded
+    # Filenames match what was actually downloaded
     PROVIDER_LOGO_MAP = {
         # Netflix
         'Netflix': 'netflix.png',
@@ -1618,7 +1678,15 @@ def main():
         return None
     
     def _encode_logo_to_base64(logo_path: Path) -> str:
-        """Helper to encode logo file to base64."""
+        """
+        Encode logo image file to base64 data URI.
+        
+        Args:
+            logo_path: Path object pointing to the logo image file.
+        
+        Returns:
+            Base64-encoded data URI string (e.g., 'data:image/png;base64,...').
+        """
         import base64
         try:
             image_bytes = logo_path.read_bytes()
@@ -1642,16 +1710,31 @@ def main():
                 return f"https://image.tmdb.org/t/p/w45/{logo_path}"  # w45 is small logo size
         return None
     
-    def get_provider_name(provider_data) -> str:
-        """Extract provider name from provider_data (dict or string)."""
+    def get_provider_name(provider_data: dict | str) -> str:
+        """
+        Extract provider name from provider data structure.
+        
+        Args:
+            provider_data: Either a dict with 'name' key or a string provider name.
+        
+        Returns:
+            Provider name as string, or empty string if not found.
+        """
         if isinstance(provider_data, dict):
             return provider_data.get('name', '')
         return str(provider_data) if provider_data else ''
     
-    def parse_watch_providers_from_json(watch_providers_json, region: str) -> list:
+    def parse_watch_providers_from_json(watch_providers_json: str | dict, region: str) -> list[dict | str]:
         """
         Parse watch providers from JSON string or dict.
-        Returns list of provider dicts with 'name' and 'logo_path', or provider names (for backward compatibility).
+        
+        Args:
+            watch_providers_json: JSON string or dict containing watch provider data.
+            region: Region code (e.g., 'US') for filtering providers.
+        
+        Returns:
+            List of provider dicts with 'name' and 'logo_path', or provider names
+            (for backward compatibility with old format).
         """
         import json
         
@@ -1711,8 +1794,20 @@ def main():
         return []
     
     
-    def get_watch_providers_from_db(item_id: int, media_type: str, region: str) -> list:
-        """Get watch providers for a movie/TV show from database (fallback method)."""
+    def get_watch_providers_from_db(item_id: int, media_type: str, region: str) -> list[dict | str]:
+        """
+        Get watch providers for a movie/TV show from database.
+        
+        Used as fallback method when direct API access is unavailable.
+        
+        Args:
+            item_id: Database ID of the movie or TV show.
+            media_type: Either 'movies' or 'tv'.
+            region: Region code (e.g., 'US') for filtering providers.
+        
+        Returns:
+            List of provider dicts or provider names.
+        """
         import json
         from src.database import get_connection
         
@@ -1729,8 +1824,31 @@ def main():
         return []
     
     
-    def get_recommendations_db(titles, num_of_rec=16, genre_filter=None, media_type='movies'):
-        """Get recommendations using SQLite database. Supports multi-title mode."""
+    def get_recommendations_db(
+        titles: str | list[str], 
+        num_of_rec: int = 16, 
+        genre_filter: list[str] | None = None, 
+        media_type: str = 'movies'
+    ) -> tuple[list[str], list[str], list[str], list[list], str | None]:
+        """
+        Get recommendations using SQLite database. Supports multi-title mode.
+        
+        Combines recommendations from multiple titles when provided, using weighted scoring.
+        
+        Args:
+            titles: Single title string or list of title strings to base recommendations on.
+            num_of_rec: Maximum number of recommendations to return. Defaults to 16.
+            genre_filter: Optional list of genre names to filter results. Defaults to None.
+            media_type: Either 'movies' or 'tv'. Defaults to 'movies'.
+        
+        Returns:
+            Tuple containing:
+            - List of recommended titles
+            - List of poster URLs
+            - List of IMDb URLs
+            - List of watch provider lists
+            - Error message (None if successful)
+        """
         if isinstance(titles, str):
             titles = [titles]
         
@@ -1871,9 +1989,8 @@ def main():
             else:
                 urls.append('#')
             
-            # Get watch providers from recommendation result (more efficient)
-            # COMMENTED OUT: Watch providers temporarily disabled
-            providers = []  # Empty list for now
+            # Watch providers feature currently disabled
+            providers = []
             providers_list.append(providers)
         
         return recommended_items, recommended_posters, urls, providers_list, None
@@ -1921,8 +2038,16 @@ def main():
         all_genres = get_genres_from_df(movies_df)
     
     # Helper function to extract title from "Title (Year)" format
-    def extract_title(title_with_year):
-        """Extract just the title from 'Title (Year)' format."""
+    def extract_title(title_with_year: str) -> str:
+        """
+        Extract title from 'Title (Year)' format string.
+        
+        Args:
+            title_with_year: String in format 'Movie Title (2023)'.
+        
+        Returns:
+            Title string without the year suffix.
+        """
         if ' (' in title_with_year and title_with_year.endswith(')'):
             return title_with_year.rsplit(' (', 1)[0]
         return title_with_year
@@ -2040,64 +2165,6 @@ def main():
     st.markdown(f'<h1 class="main-title" id="main-title">{header_title}</h1>', unsafe_allow_html=True)
     st.markdown(f'<p class="subtitle" id="main-subtitle">{header_subtitle}</p>', unsafe_allow_html=True)
     
-    # JavaScript to keep title visible - scroll to top when recommendations load (Option 4: DISABLED)
-    # st.markdown("""
-    # <script>
-    #     (function() {
-    #         let hasScrolled = false;
-    #         const titleElement = document.getElementById('main-title');
-    #         
-    #         function scrollToTitle() {
-    #             if (titleElement && !hasScrolled) {
-    #                 // Small delay to ensure DOM is ready
-    #                 setTimeout(() => {
-    #                     titleElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    #                     hasScrolled = true;
-    #                     // Reset flag after a delay to allow re-scrolling if needed
-    #                     setTimeout(() => { hasScrolled = false; }, 2000);
-    #                 }, 100);
-    #             }
-    #         }
-    #         
-    #         // Watch for recommendations section appearing
-    #         const observer = new MutationObserver((mutations) => {
-    #             mutations.forEach((mutation) => {
-    #                 mutation.addedNodes.forEach((node) => {
-    #                     if (node.nodeType === 1) { // Element node
-    #                         // Check if this is the recommendations header
-    #                         if (node.classList && node.classList.contains('rec-header')) {
-    #                             scrollToTitle();
-    #                         }
-    #                         // Also check children
-    #                         const recHeader = node.querySelector && node.querySelector('.rec-header');
-    #                         if (recHeader) {
-    #                             scrollToTitle();
-    #                         }
-    #                     }
-    #                 });
-    #             });
-    #         });
-    #         
-    #         // Start observing after page load
-    #         if (document.readyState === 'loading') {
-    #             document.addEventListener('DOMContentLoaded', () => {
-    #                 observer.observe(document.body, { childList: true, subtree: true });
-    #             });
-    #         } else {
-    #             observer.observe(document.body, { childList: true, subtree: true });
-    #         }
-    #         
-    #         // Also check periodically for rec-header (fallback)
-    #         setInterval(() => {
-    #             const recHeader = document.querySelector('.rec-header');
-    #             if (recHeader && recHeader.offsetParent !== null) {
-    #                 scrollToTitle();
-    #             }
-    #         }, 500);
-    #     })();
-    # </script>
-    # """, unsafe_allow_html=True)
-    
     # ===== ANALYTICS (Dialog popup) =====
     if render_analytics:
         @st.dialog(" ", width="large")
@@ -2157,12 +2224,12 @@ def main():
             }
         }
         
-        // Run on load, resize, and periodically to catch sidebar changes
+        // Initialize and update on window resize and sidebar changes
         window.addEventListener('load', updateScaling);
         window.addEventListener('resize', updateScaling);
         setInterval(updateScaling, 100);
         
-        // Also watch for sidebar state changes
+        // Watch for sidebar state changes
         const observer = new MutationObserver(updateScaling);
         observer.observe(document.body, { childList: true, subtree: true, attributes: true });
     </script>
