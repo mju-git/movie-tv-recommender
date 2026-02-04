@@ -1339,7 +1339,8 @@ def main():
         cosine_sim_mat: any, 
         df: pd.DataFrame, 
         num_of_rec: int = 16, 
-        genre_filter: list[str] | None = None
+        genre_filter: list[str] | None = None,
+        min_imdb_score: float = 0.0
     ) -> tuple[list[str], list[str], list[str], list[list], None]:
         """
         Get recommendations using pickle data (fallback method when database unavailable).
@@ -1352,6 +1353,7 @@ def main():
             df: DataFrame containing movie/TV show data with 'title' column.
             num_of_rec: Maximum number of recommendations to return. Defaults to 16.
             genre_filter: Optional list of genre names to filter results. Defaults to None.
+            min_imdb_score: Minimum IMDb rating to filter results. Defaults to 0.0 (no filter).
         
         Returns:
             Tuple containing:
@@ -1402,6 +1404,15 @@ def main():
                         filtered_scores.append(idx_score)
                 except:
                     pass
+            sim_scores_list = filtered_scores
+        
+        # Apply IMDb score filter if specified
+        if min_imdb_score > 0.0:
+            filtered_scores = []
+            for idx_score in sim_scores_list:
+                vote_avg = combined.iloc[idx_score[0]].get('vote_average', 0.0)
+                if pd.notna(vote_avg) and vote_avg >= min_imdb_score:
+                    filtered_scores.append(idx_score)
             sim_scores_list = filtered_scores
         
         sim_scores_list = sim_scores_list[:num_of_rec]
@@ -1827,7 +1838,8 @@ def main():
     def get_recommendations_db(
         titles: str | list[str], 
         num_of_rec: int = 16, 
-        genre_filter: list[str] | None = None, 
+        genre_filter: list[str] | None = None,
+        min_imdb_score: float = 0.0,
         media_type: str = 'movies'
     ) -> tuple[list[str], list[str], list[str], list[list], str | None]:
         """
@@ -1839,6 +1851,7 @@ def main():
             titles: Single title string or list of title strings to base recommendations on.
             num_of_rec: Maximum number of recommendations to return. Defaults to 16.
             genre_filter: Optional list of genre names to filter results. Defaults to None.
+            min_imdb_score: Minimum IMDb rating to filter results. Defaults to 0.0 (no filter).
             media_type: Either 'movies' or 'tv'. Defaults to 'movies'.
         
         Returns:
@@ -1940,6 +1953,15 @@ def main():
                     movie_genres = get_movie_genres(rec['id'])
                     if any(g.title() in [mg.title() for mg in movie_genres] for g in genre_filter):
                         filtered_recs.append(rec)
+            recs = filtered_recs
+        
+        # Apply IMDb score filter if specified
+        if min_imdb_score > 0.0:
+            filtered_recs = []
+            for rec in recs:
+                vote_avg = rec.get('vote_average')
+                if vote_avg is not None and vote_avg >= min_imdb_score:
+                    filtered_recs.append(rec)
             recs = filtered_recs
         
         recs = recs[:num_of_rec]
@@ -2097,6 +2119,20 @@ def main():
             max_value=30,
             value=10,
             step=5,
+            label_visibility="collapsed"
+        )
+        
+        st.divider()
+        
+        st.markdown("**Minimum IMDb Score**")
+        default_min_score = 7.0 if media_type == 'tv' else 6.0
+        min_imdb_score = st.slider(
+            "Minimum rating",
+            min_value=0.0,
+            max_value=10.0,
+            value=default_min_score,
+            step=0.1,
+            help="Filter out movies/TV shows below this rating",
             label_visibility="collapsed"
         )
         
@@ -2293,8 +2329,14 @@ def main():
         else:
             st.markdown(f'<p class="rec-header">Based on your selection</p>', unsafe_allow_html=True)
         
+        # Display active filters
+        filter_parts = []
+        if min_imdb_score > 0.0:
+            filter_parts.append(f"IMDb ≥ {min_imdb_score:.1f}")
         if genre_filter:
-            st.markdown(f'<p class="rec-subheader">Filtered: {", ".join(genre_filter)}</p>', unsafe_allow_html=True)
+            filter_parts.append(f"Genres: {', '.join(genre_filter)}")
+        if filter_parts:
+            st.markdown(f'<p class="rec-subheader">Filtered: {", ".join(filter_parts)}</p>', unsafe_allow_html=True)
         
         with st.spinner(f"Finding {media_label}..."):
             # Use appropriate data source
@@ -2303,6 +2345,7 @@ def main():
                     selected_movies,
                     num_of_rec=num_recommendations,
                     genre_filter=genre_filter if genre_filter else None,
+                    min_imdb_score=min_imdb_score,
                     media_type=media_type
                 )
             else:
@@ -2311,7 +2354,8 @@ def main():
                     cosine_sim_mat=tfidf,
                     df=movies_df,
                     num_of_rec=num_recommendations,
-                    genre_filter=genre_filter if genre_filter else None
+                    genre_filter=genre_filter if genre_filter else None,
+                    min_imdb_score=min_imdb_score
                 )
                 providers_list = None  # Not available in pickle mode yet
         
