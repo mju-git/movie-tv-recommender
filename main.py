@@ -1391,6 +1391,14 @@ def main():
         input_indices = [indices[t] for t in valid_titles]
         sim_scores_list = [s for s in sim_scores_list if s[0] not in input_indices]
         
+        # Get larger pool before filtering if filters are active
+        if min_imdb_score > 0.0 or (genre_filter and len(genre_filter) > 0):
+            # Get 5x more recommendations before filtering to ensure enough results
+            sim_scores_list = sim_scores_list[:num_of_rec * 5]
+        else:
+            # Normal case: get 2x more for safety
+            sim_scores_list = sim_scores_list[:num_of_rec * 2]
+        
         if genre_filter and len(genre_filter) > 0:
             filtered_scores = []
             for idx_score in sim_scores_list:
@@ -1415,6 +1423,7 @@ def main():
                     filtered_scores.append(idx_score)
             sim_scores_list = filtered_scores
         
+        # Limit to final count AFTER filtering
         sim_scores_list = sim_scores_list[:num_of_rec]
         
         if len(sim_scores_list) == 0:
@@ -1883,10 +1892,12 @@ def main():
             selected_ids.add(item['id'])
             
             # Get recommendations for this item
+            # Request up to 30 (max stored) to have enough for filtering
+            cache_limit = min(30, num_of_rec * 3)
             if media_type == 'tv':
-                recs = get_tv_recommendations_from_cache(item['id'], limit=num_of_rec * 3)
+                recs = get_tv_recommendations_from_cache(item['id'], limit=cache_limit)
             else:
-                recs = get_recommendations_from_cache(item['id'], limit=num_of_rec * 3)
+                recs = get_recommendations_from_cache(item['id'], limit=cache_limit)
             
             if recs:
                 # Combine scores (average if multiple titles)
@@ -1936,7 +1947,8 @@ def main():
                     rec_dict['score'] = score
                     recs_list.append(rec_dict)
         
-        recs = recs_list[:num_of_rec * 2]  # Get more for filtering
+        # Use all available recommendations (don't limit before filtering)
+        recs = recs_list
         
         if len(recs) == 0:
             return None, None, None, None, "No recommendations found."
@@ -1964,6 +1976,7 @@ def main():
                     filtered_recs.append(rec)
             recs = filtered_recs
         
+        # Limit to final count AFTER filtering
         recs = recs[:num_of_rec]
         
         if len(recs) == 0:
@@ -2133,7 +2146,8 @@ def main():
             value=default_min_score,
             step=0.1,
             help="Filter out movies/TV shows below this rating",
-            label_visibility="collapsed"
+            label_visibility="collapsed",
+            format="%.1f"
         )
         
         st.divider()
